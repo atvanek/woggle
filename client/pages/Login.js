@@ -1,10 +1,16 @@
 import React from 'react';
-import Nav from '../components/Nav';
+import { Link } from 'react-router-dom';
+
+
 function Login() {
+
+
 	return (
-    <>
-			<Nav />
+		<>
 			<h2>This is the login-page</h2>
+			<Link to='/'>
+				<p>Return to Home Page</p>
+			</Link>
 		</>
 	);
 }

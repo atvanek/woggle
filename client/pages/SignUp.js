@@ -1,11 +1,10 @@
 import React from 'react';
-import Nav from '../components/Nav';
-import { Navigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
-function SignUp() {
+function SignUp({ user }) {
+	const navigate = useNavigate();
 	return (
 		<>
-			<Nav />
 			<h2>This is the Sign-Up Page</h2>
 			<form
 				onSubmit={(e) => {
@@ -25,10 +24,13 @@ function SignUp() {
 						headers: { 'Content-Type': 'application/json' },
 						body: JSON.stringify({ username, password }),
 					}).then((res) => {
-						window.location.replace('/');
 						window.alert(
 							`Successfully created account for ${e.target[0].value}`
 						);
+						navigate('/', {
+							replace: true,
+							state: { user: username, loggedIn: true },
+						});
 					});
 				}}>
 				<label>Username</label>
@@ -37,6 +39,9 @@ function SignUp() {
 				<input type='password' />
 				<button type='submit'>Create Account</button>
 			</form>
+			<Link to='/'>
+				<p>Return to Home Page</p>
+			</Link>
 		</>
 	);
 }
