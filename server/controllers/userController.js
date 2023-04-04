@@ -18,4 +18,28 @@ userController.createUser = function (req, res, next) {
 	}
 };
 
+userController.verifyUser = async function (req, res, next) {
+	try {
+		const { username, password } = req.body;
+		console.log(username);
+		const user = await userModel.findOne({ username: username });
+		console.log(user);
+		if (user === null) {
+			return res.json({ verified: false });
+		}
+		bcrypt.compare(password, user.password, (err, result) => {
+			if (err) {
+				return next(err);
+			}
+			if (result) {
+				return next();
+			} else {
+				return res.send(JSON.stringify({ verified: false }));
+			}
+		});
+	} catch (err) {
+		return next(err);
+	}
+};
+
 module.exports = userController;

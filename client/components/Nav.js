@@ -6,15 +6,15 @@ function Nav({ loggedIn, setLoggedIn, user, setUser }) {
 		<nav id='nav' className='flex width-100'>
 			<ul className='flex'>
 				<Link to='/' state={JSON.stringify({ setLoggedIn })}>
-					<li>Home</li>
+					<li className='pointer'>Home</li>
 				</Link>
 				{!loggedIn ? (
 					<>
 						<Link to='/login'>
-							<li>Login</li>
+							<li className='pointer'>Login</li>
 						</Link>
 						<Link to='/signup' state={user}>
-							<li>Sign-Up</li>
+							<li className='pointer'>Sign-Up</li>
 						</Link>
 					</>
 				) : (
@@ -25,7 +25,8 @@ function Nav({ loggedIn, setLoggedIn, user, setUser }) {
 								console.log(user);
 								setLoggedIn(false);
 								setUser('');
-							}}>
+							}}
+							className='pointer'>
 							Logout
 						</li>
 					</>

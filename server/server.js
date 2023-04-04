@@ -5,6 +5,9 @@ const userController = require('./controllers/userController');
 
 app.use(express.json());
 
+app.post('/api/login', userController.verifyUser, (req, res) => {
+	res.status(200).json({ verified: true });
+});
 app.post('/api/user', userController.createUser, (req, res) => {
 	res.status(200).json(res.locals.newUser);
 });

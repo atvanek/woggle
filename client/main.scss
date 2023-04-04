@@ -25,7 +25,14 @@
 	li {
 		margin: 5px;
 		font-size: 20px;
+
+		&:hover {
+			color: purple;
+		}
+	}
+	a {
 		text-decoration: none;
+		color: black;
 	}
 }
 
