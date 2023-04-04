@@ -43,15 +43,15 @@ function Board() {
 			const randomLetterIndex = Math.floor(Math.random() * 6);
 			currentRow.push(randomBlock[randomLetterIndex]);
 			blocks.splice(randomIndex, 1);
-			if (id % 4 === 0) {
+			coordinates[id] = [row, column];
+			column++;
+			id++;
+			if (column === 4) {
 				lettersGrid.push(currentRow);
 				currentRow = [];
 				column = 0;
 				row++;
 			}
-			column++;
-			coordinates[id] = [column, row];
-			id++;
 		}
 
 		setLetters(lettersGrid);
@@ -151,16 +151,16 @@ function Board() {
 
 	return (
 		<>
-			<main id='board' className='border flex column'>
+			<section id='board' className='border flex column'>
 				{rows}
-			</main>
-			<div id='score'>{score}</div>
-			<button class='button-size' onClick={validateWord}>
+			</section>
+			<div id='score'>Score: {score}</div>
+			<button className='button-size' onClick={validateWord}>
 				Validate word
 			</button>
 
 			<button
-				class='button-size'
+				className='button-size'
 				onClick={() => {
 					console.log(currentWord);
 					clearBoard();
@@ -168,6 +168,6 @@ function Board() {
 				Reset Word
 			</button>
 		</>
-	);
+	)
 }
 export default Board;
