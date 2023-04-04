@@ -14,17 +14,46 @@ function Board() {
 	function populateBoard() {
 		const coordinates = {};
 		const lettersGrid = [];
+		const blocks = [
+			'AAEEGN',
+			'ABBJOO',
+			'ACHOPS',
+			'AFFKPS',
+			'AOOTTW',
+			'CIMOTU',
+			'DEILRX',
+			'DELRVY',
+			'DISTTY',
+			'EEGHNW',
+			'EEINSU',
+			'EHRTVW',
+			'EIOSST',
+			'ELRTTY',
+			'HIMNQU',
+			'HLNNRZ',
+		];
+
+		let column = 0;
+		let row = 0;
 		let id = 1;
-		for (let i = 0; i < 4; i++) {
-			const letters = [];
-			for (let j = 0; j < 4; j++) {
-				const letter = String.fromCharCode(Math.floor(Math.random() * 26) + 65);
-				letters.push(letter);
-				coordinates[id] = [i, j];
-				id++;
+		let currentRow = [];
+		while (blocks.length) {
+			const randomIndex = Math.floor(Math.random() * blocks.length);
+			const randomBlock = blocks[randomIndex];
+			const randomLetterIndex = Math.floor(Math.random() * 6);
+			currentRow.push(randomBlock[randomLetterIndex]);
+			blocks.splice(randomIndex, 1);
+			if (id % 4 === 0) {
+				lettersGrid.push(currentRow);
+				currentRow = [];
+				column = 0;
+				row++;
 			}
-			lettersGrid.push(letters);
+			column++;
+			coordinates[id] = [column, row];
+			id++;
 		}
+
 		setLetters(lettersGrid);
 		setBoxCoords(coordinates);
 	}
@@ -122,13 +151,16 @@ function Board() {
 
 	return (
 		<>
-			<main id='board' className='border flex'>
+			<main id='board' className='border flex column'>
 				{rows}
 			</main>
 			<div id='score'>{score}</div>
-			<button onClick={validateWord}>Validate word</button>
+			<button class='button-size' onClick={validateWord}>
+				Validate word
+			</button>
 
 			<button
+				class='button-size'
 				onClick={() => {
 					console.log(currentWord);
 					clearBoard();

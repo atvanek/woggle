@@ -2,6 +2,14 @@
 	border: black 2px solid;
 }
 
+.column {
+	flex-flow: column nowrap;
+}
+
+.width-100 {
+	width: 100%;
+}
+
 .center-all {
 	justify-content: center;
 	align-items: center;
@@ -11,10 +19,13 @@
 	display: flex;
 }
 
+.button-size {
+	width: 200px;
+}
+
 #board {
 	height: 600px;
 	width: 600px;
-	flex-flow: column nowrap;
 }
 
 .row {
