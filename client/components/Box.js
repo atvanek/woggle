@@ -5,7 +5,7 @@ function Box({ letter, id, handleClick, className }) {
 		<div
 			id={id}
 			onClick={handleClick}
-			className={`${className} box border flex center-all`}>
+			className={`${className} box border flex center-all pointer`}>
 			{letter}
 		</div>
 	);

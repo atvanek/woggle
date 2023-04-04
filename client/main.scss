@@ -2,12 +2,31 @@
 	border: black 2px solid;
 }
 
+.pointer {
+	&:hover {
+		cursor: pointer;
+	}
+}
+
 .column {
 	flex-flow: column nowrap;
 }
 
 .width-100 {
 	width: 100%;
+}
+
+#nav {
+	justify-content: flex-end;
+	ul {
+		list-style: none;
+	}
+
+	li {
+		margin: 5px;
+		font-size: 20px;
+		text-decoration: none;
+	}
 }
 
 .center-all {

@@ -1,15 +1,13 @@
 import React from 'react';
 import Board from './Board';
+import Nav from './Nav';
 import '../main.scss';
-import { Link } from 'react-router-dom';
 
 function App() {
 	return (
 		<>
+			<Nav />
 			<Board />
-			<Link to='/login'>
-				<p>Login</p>
-			</Link>
 		</>
 	);
 }

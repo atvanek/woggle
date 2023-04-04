@@ -1,8 +1,13 @@
 const express = require('express');
 const app = express();
 const PORT = 3000;
+const userController = require('./controllers/userController');
 
 app.use(express.json());
+
+app.post('/api/user', userController.createUser, (req, res) => {
+	res.status(200).json(res.locals.newUser);
+});
 
 app.use('/api/testWord', (req, res) => {
 	console.log(req.body);
@@ -21,6 +26,11 @@ app.use('/api/testWord', (req, res) => {
 				res.json({ word: 'valid' });
 			}
 		});
+});
+
+app.use((err, req, res, next) => {
+	console.log(err);
+	res.status(500).send({ error: err });
 });
 
 app.listen(PORT, () => {
