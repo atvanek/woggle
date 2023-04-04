@@ -8,6 +8,7 @@ function Board() {
 	const [possibleMoves, setPossibleMoves] = React.useState(new Set());
 	const [currentWord, setCurrentWord] = React.useState('');
 	const [score, setScore] = React.useState(0);
+	const [playedWords, setPlayedWords] = React.useState(new Set());
 	const [boxCoords, setBoxCoords] = React.useState({});
 
 	function populateBoard() {
@@ -40,11 +41,8 @@ function Board() {
 					}
 			}
 		}
-		setSelectedBoxes((prev) => {
-			const newSet = prev;
-			newSet.add(String(coordinates));
-			return newSet;
-		});
+		setSelectedBoxes((prev) => new Set(prev).add(String(coordinates)));
+
 		setPossibleMoves(adjacent);
 	}
 
@@ -68,19 +66,7 @@ function Board() {
 			const newWord = prev + e.target.innerText;
 			return newWord;
 		});
-		// setSelectedBoxes((prev) => [...prev, [coordinates]]);
 		e.target.classList.add('selected');
-
-		// 	- if not, checks if target is in selectedCubes list
-		// 		- if so,
-		// 			- word started is false
-		// 			- selectedCubes empties
-		// 			- possible moves empties
-		// 			- current cube empties
-		// 		- if not,
-		// 			- nothing happens
-		// - if so, current cube is target
-		// - calculatePossibleMoves is invoked
 	}
 
 	function clearBoard() {
@@ -98,7 +84,10 @@ function Board() {
 			window.alert('word must be at least 3 letters');
 			return;
 		}
-		//also check if word is already in submittedWords list
+		if (playedWords.has(currentWord)) {
+			window.alert('word has already been played. Please choose new word.');
+			return;
+		}
 		e.preventDefault();
 		fetch('/api/testWord', {
 			method: 'POST',
@@ -112,6 +101,7 @@ function Board() {
 				if (word === 'valid') {
 					setScore((prev) => prev + 1);
 				}
+				setPlayedWords((prev) => new Set(prev).add(currentWord));
 				clearBoard();
 			});
 	}

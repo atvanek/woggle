@@ -38,4 +38,8 @@
 
 .selected {
 	background-color: plum;
+
+	&:hover {
+		background-color: plum;
+	}
 }
