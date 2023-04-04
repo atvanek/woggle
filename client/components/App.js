@@ -1,7 +1,9 @@
 import React from 'react';
+import Board from './Board';
+import '../main.scss';
 
 function App() {
-	return <p>Hello World!</p>;
+	return <Board />;
 }
 
 export default App;

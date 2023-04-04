@@ -1,0 +1,41 @@
+.border {
+	border: black 2px solid;
+}
+
+.center-all {
+	justify-content: center;
+	align-items: center;
+}
+
+.flex {
+	display: flex;
+}
+
+#board {
+	height: 600px;
+	width: 600px;
+	flex-flow: column nowrap;
+}
+
+.row {
+	width: 100%;
+	height: 25%;
+}
+
+.box {
+	width: 25%;
+	font-size: 36px;
+}
+
+.box:hover {
+	background-color: aquamarine;
+}
+
+#score {
+	font-size: 24px;
+	margin-left: 300px;
+}
+
+.selected {
+	background-color: plum;
+}

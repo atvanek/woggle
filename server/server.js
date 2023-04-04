@@ -3,19 +3,11 @@ const app = express();
 const PORT = 3000;
 
 app.use(express.json());
-app.use('/api', (req, res) => {
-	console.log('request received AGAIN');
-	res.json('this is the API');
-});
 
-app.use('/other', (req, res) => {
-	console.log('request received AGAIN');
-	res.json('this is the OTHER');
-});
-
-app.use('/testWord', (req, res) => {
+app.use('/api/testWord', (req, res) => {
 	console.log(req.body);
 	const { word } = req.body;
+	console.log(req.body);
 	fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`)
 		.then((res) => {
 			return res.json();
