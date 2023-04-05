@@ -1,12 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-function Rooms() {
-	
+function Rooms({ user }) {
 	return (
 		<section id='rooms' className='flex border column'>
 			<h3>Join a room</h3>
-			<Link to='/room/1'>
+			<Link to='/room/1' state={{ user }}>
 				<button
 					onClick={(e) => {
 						fetch('api/room/1')
@@ -20,7 +19,7 @@ function Rooms() {
 					Room 1
 				</button>
 			</Link>
-			<Link to='/room/2'>
+			<Link to='/room/2' state={{ user }}>
 				<button
 					onClick={(e) => {
 						fetch('api/room/2')
@@ -34,7 +33,7 @@ function Rooms() {
 					Room 2
 				</button>
 			</Link>
-			<Link to='/room/3'>
+			<Link to='/room/3' state={{ user }}>
 				<button
 					onClick={(e) => {
 						fetch('api/room/3')
@@ -48,7 +47,7 @@ function Rooms() {
 					Room 3
 				</button>
 			</Link>
-			<Link to='/room/4'>
+			<Link to='/room/4' state={{ user }}>
 				<button
 					onClick={(e) => {
 						fetch('api/room/4')
