@@ -2,7 +2,7 @@ import React from 'react';
 import Row from './Row';
 import { Link } from 'react-router-dom';
 
-function Board() {
+function Board({ serverLetters }) {
 	const [letters, setLetters] = React.useState([]);
 	const [wordStarted, setWordStarted] = React.useState(false);
 	const [selectedBoxes, setSelectedBoxes] = React.useState(new Set());
@@ -153,6 +153,9 @@ function Board() {
 
 	React.useEffect(() => {
 		populateBoard();
+		if (serverLetters?.length) {
+			setLetters(serverLetters);
+		}
 	}, []);
 
 	const rows = letters.map((arr, i) => (
