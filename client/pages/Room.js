@@ -6,16 +6,21 @@ import { useLocation, useNavigate } from 'react-router-dom';
 function Room() {
 	const { state } = useLocation();
 	const navigate = useNavigate();
-	console.log(state);
 	const { id } = useParams();
 	const socket = io('http://localhost:4000/');
+	const [users, setUsers] = React.useState([]);
 
-	socket.on('connect', () => {
-		socket.emit('room-enter', id, state.user);
-		console.log(`Room ${id} is connected to websocket server`);
-	});
+	React.useEffect(() => {
+		socket.emit('new-user', state.user, id);
+		console.log('entered into room');
+	}, []);
+
 	socket.on('disconnect', () => {
 		console.log('disconnected');
+	});
+	socket.on('user-added', (newUsers) => {
+		console.log(newUsers, 'new users event');
+		setUsers(newUsers);
 	});
 
 	return (
@@ -29,12 +34,16 @@ function Room() {
 			<button
 				className='button-size'
 				onClick={() => {
-					socket.emit('room-leave', state.user);
+					socket.emit('room-leave', state.user, id);
 					socket.disconnect();
 					navigate('/');
 				}}>
 				Leave Room
 			</button>
+			<div>
+				<h4>Current Players</h4>
+				{users.length && users.map((user) => <p>{user}</p>)}
+			</div>
 		</>
 	);
 }
