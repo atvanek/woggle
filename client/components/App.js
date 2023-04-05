@@ -24,6 +24,7 @@ function App() {
 				user={user}
 				setUser={setUser}
 			/>
+			<h1>Woggle</h1>
 			<Board />
 		</>
 	);

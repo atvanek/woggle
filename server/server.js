@@ -5,6 +5,11 @@ const userController = require('./controllers/userController');
 
 app.use(express.json());
 
+app.get('/api/room/:id', (req, res) => {
+	const { id } = req.params;
+	res.status(200).json(`You are in room ${id}`);
+});
+
 app.post('/api/login', userController.verifyUser, (req, res) => {
 	res.status(200).json({ verified: true });
 });

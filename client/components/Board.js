@@ -1,5 +1,6 @@
 import React from 'react';
 import Row from './Row';
+import { Link } from 'react-router-dom';
 
 function Board() {
 	const [letters, setLetters] = React.useState([]);
@@ -128,9 +129,24 @@ function Board() {
 				const { word } = data;
 				console.log(word);
 				if (word === 'valid') {
-					setScore((prev) => prev + 1);
+					setPlayedWords((prev) => new Set(prev).add(currentWord));
+					//determines points of word
+					let points;
+					if (currentWord.length < 5) {
+						points = 1;
+					} else if (currentWord.length < 6) {
+						points = 2;
+					} else if (currentWord.length < 7) {
+						points = 3;
+					} else if (currentWord.length < 8) {
+						points = 5;
+					} else {
+						points = 11;
+					}
+					setScore((prev) => prev + points);
+				} else {
+					window.alert(`${currentWord} is not a word!`);
 				}
-				setPlayedWords((prev) => new Set(prev).add(currentWord));
 				clearBoard();
 			});
 	}
@@ -150,24 +166,90 @@ function Board() {
 	));
 
 	return (
-		<>
-			<section id='board' className='border flex column'>
+		<main className='flex around'>
+			<section id='board' className='flex column center'>
 				{rows}
-			</section>
-			<div id='score'>Score: {score}</div>
-			<button className='button-size' onClick={validateWord}>
-				Validate word
-			</button>
+				<div id='score'>Score: {score}</div>
+				<div className='flex around m-10'>
+					<button className='button-size' onClick={validateWord}>
+						Validate word
+					</button>
 
-			<button
-				className='button-size'
-				onClick={() => {
-					console.log(currentWord);
-					clearBoard();
-				}}>
-				Reset Word
-			</button>
-		</>
-	)
+					<button
+						className='button-size'
+						onClick={() => {
+							console.log(currentWord);
+							clearBoard();
+						}}>
+						Reset Word
+					</button>
+				</div>
+			</section>
+			<section id='played-list' className='flex border column'>
+				<h3>Played words</h3>
+				{playedWords.size > 0 &&
+					[...playedWords].map((word, i) => <p key={i}>{word}</p>)}
+			</section>
+			<section id='rooms' className='flex border column'>
+				<h3>Join a room</h3>
+				<Link to='/room/1'>
+					<button
+						onClick={(e) => {
+							fetch('api/room/1')
+								.then((res) => {
+									return res.json();
+								})
+								.then((data) => {
+									console.log(data);
+								});
+						}}>
+						Room 1
+					</button>
+				</Link>
+				<Link to='/room/2'>
+					<button
+						onClick={(e) => {
+							fetch('api/room/2')
+								.then((res) => {
+									return res.json();
+								})
+								.then((data) => {
+									console.log(data);
+								});
+						}}>
+						Room 2
+					</button>
+				</Link>
+				<Link to='/room/3'>
+					<button
+						onClick={(e) => {
+							fetch('api/room/3')
+								.then((res) => {
+									return res.json();
+								})
+								.then((data) => {
+									console.log(data);
+								});
+						}}>
+						Room 3
+					</button>
+				</Link>
+				<Link to='/room/4'>
+					<button
+						onClick={(e) => {
+							fetch('api/room/4')
+								.then((res) => {
+									return res.json();
+								})
+								.then((data) => {
+									console.log(data);
+								});
+						}}>
+						Room 4
+					</button>
+				</Link>
+			</section>
+		</main>
+	);
 }
 export default Board;

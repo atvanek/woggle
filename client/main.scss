@@ -1,3 +1,11 @@
+h1 {
+	text-align: center;
+	font-size: 40px;
+}
+main {
+	margin: 10px;
+}
+
 .border {
 	border: black 2px solid;
 }
@@ -14,6 +22,22 @@
 
 .width-100 {
 	width: 100%;
+}
+
+.m-10 {
+	margin: 10px;
+}
+
+.p-10 {
+	padding: 10px;
+}
+
+.around {
+	justify-content: space-around;
+}
+
+.username {
+	color: rgb(0, 102, 255);
 }
 
 #nav {
@@ -35,7 +59,6 @@
 		color: black;
 	}
 }
-
 .center-all {
 	justify-content: center;
 	align-items: center;
@@ -79,4 +102,10 @@
 	&:hover {
 		background-color: plum;
 	}
+}
+
+#played-list,
+#rooms {
+	width: 300px;
+	padding: 15px;
 }

@@ -19,7 +19,9 @@ function Nav({ loggedIn, setLoggedIn, user, setUser }) {
 					</>
 				) : (
 					<>
-						<li>Welcome, {user}</li>
+						<li>
+							Welcome <span className='username'>{user}</span>
+						</li>
 						<li
 							onClick={() => {
 								console.log(user);
