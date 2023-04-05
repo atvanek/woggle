@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 function Rooms() {
+	
 	return (
 		<section id='rooms' className='flex border column'>
 			<h3>Join a room</h3>

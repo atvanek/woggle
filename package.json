@@ -6,7 +6,7 @@
 	"scripts": {
 		"start": "node server/server.js",
 		"build": "NODE_ENV=production webpack",
-		"dev": "nodemon server/server.js & NODE_ENV=development webpack serve --open"
+		"dev": "nodemon server/server.js & nodemon server/ws-server.js &NODE_ENV=development webpack serve --open"
 	},
 	"repository": {
 		"type": "git",
@@ -28,6 +28,8 @@
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
 		"react-router-dom": "^6.10.0",
+		"socket.io": "^4.6.1",
+		"socket.io-client": "^4.6.1",
 		"webpack-cli": "^5.0.1"
 	},
 	"devDependencies": {
