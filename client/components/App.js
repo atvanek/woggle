@@ -3,6 +3,7 @@ import Board from './Board';
 import Nav from './Nav';
 import '../main.scss';
 import { useLocation } from 'react-router-dom';
+import Rooms from './Rooms';
 
 function App() {
 	const [loggedIn, setLoggedIn] = React.useState(false);
@@ -26,6 +27,7 @@ function App() {
 			/>
 			<h1>Woggle</h1>
 			<Board />
+			<Rooms/>
 		</>
 	);
 }
