@@ -11,20 +11,19 @@ const rooms = {
 	4: [],
 };
 
-const users = [];
-
 io.on('connect', (socket) => {
 	//USER JOINS A ROOM
-	socket.on('join-room', (user, id) => {
-		users.push(socket.id);
-		socket.join(id);
-		if (user === 'guest') {
-			rooms[id].push(`${user}${rooms[id].length + 1}`);
-		} else {
-			rooms[id].push(user);
-		}
-		console.log('joined room', id, users, rooms);
-		io.in(id).emit('user-added', rooms[id]);
+	socket.on('join-room', (user, room, socketId) => {
+		socket.join(room);
+		const username =
+			user === 'guest' ? `guest${rooms[room].length + 1}` : 'guest';
+		rooms[room].push({ user: { username: username, socketId: socketId } });
+		console.log('joined room', rooms);
+		io.in(room).emit('user-added', JSON.stringify(rooms[room]), username);
+		io.to(socketId).emit('username-generated', username);
+	});
+	socket.on('new-board', (room) => {
+		socket.join(room);
 	});
 
 	//SERVER GENERATED LETTERS (WILL MOVE TO OWN MODULE)
@@ -75,11 +74,24 @@ io.on('connect', (socket) => {
 		const letters = generateLetters();
 		io.in(id).emit('letters-ready', letters);
 	});
+	//UPDATE SCORE
+	socket.on('update-score', (user, room, score, socketId) => {
+		console.log(socketId);
+		const target = rooms[room];
+		console.log(target);
+		for (let obj of target) {
+			console.log(obj.user);
+			if (obj.user.socketId === socketId) {
+				obj.user.score = score;
+				console.log('it worked');
+			}
+		}
+		io.in(room).emit('new-scores', JSON.stringify(rooms[room]));
+	});
 	//USER LEAVES ROOM
-	socket.on('room-leave', (user, id) => {
+	socket.on('room-leave', (user, room, socketId) => {
 		console.log('disconnecting', socket.id);
-		rooms[id].splice(rooms[id].indexOf(user), 1);
-		users.splice(users.indexOf(socket.id), 1);
-		console.log(rooms, users);
+		rooms[room] = rooms[room].filter((obj) => obj.user.socketId !== socketId);
+		console.log(rooms);
 	});
 });

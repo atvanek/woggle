@@ -1,8 +1,9 @@
 import React from 'react';
 import Row from './Row';
 import { Link } from 'react-router-dom';
+import { io } from 'socket.io-client';
 
-function Board({ serverLetters }) {
+function Board({ serverLetters, room, socketId, user }) {
 	const [letters, setLetters] = React.useState([]);
 	const [wordStarted, setWordStarted] = React.useState(false);
 	const [selectedBoxes, setSelectedBoxes] = React.useState(new Set());
@@ -11,6 +12,10 @@ function Board({ serverLetters }) {
 	const [score, setScore] = React.useState(0);
 	const [playedWords, setPlayedWords] = React.useState(new Set());
 	const [boxCoords, setBoxCoords] = React.useState({});
+	const [multiplayer, setMultiplayer] = React.useState(false);
+	const [playerScores, setPlayerScores] = React.useState([]);
+
+	const socket = io('http://localhost:4000/');
 
 	function populateBoard() {
 		const coordinates = {};
@@ -144,17 +149,25 @@ function Board({ serverLetters }) {
 						points = 11;
 					}
 					setScore((prev) => prev + points);
+					if (multiplayer) {
+						socket.emit('update-score', user, room, score + points, socketId);
+					}
 				} else {
 					window.alert(`${currentWord} is not a word!`);
 				}
 				clearBoard();
 			});
 	}
-
+	socket.on('new-scores', (newScores) => {
+		console.log(JSON.parse(newScores));
+		setPlayerScores(JSON.parse(newScores));
+	});
 	React.useEffect(() => {
 		populateBoard();
 		if (serverLetters?.length) {
 			setLetters(serverLetters);
+			setMultiplayer(true);
+			socket.emit('new-board', room);
 		}
 	}, []);
 
@@ -193,6 +206,17 @@ function Board({ serverLetters }) {
 				{playedWords.size > 0 &&
 					[...playedWords].map((word, i) => <p key={i}>{word}</p>)}
 			</section>
+			{multiplayer && (
+				<section id='players-scores' className='flex border column'>
+					<h3>Players Scores</h3>
+					{playerScores.length > 0 &&
+						playerScores.map((obj, i) => (
+							<p key={i}>
+								{obj.user.username}: {obj.user?.score}
+							</p>
+						))}
+				</section>
+			)}
 		</main>
 	);
 }

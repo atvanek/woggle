@@ -26,7 +26,7 @@ function App() {
 				setUser={setUser}
 			/>
 			<h1>Woggle</h1>
-			<Board />
+			<Board user={user} />
 			<Rooms user={user === '' ? 'guest' : user} />
 		</>
 	);
