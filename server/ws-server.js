@@ -22,8 +22,7 @@ io.on('connect', (socket) => {
 	socket.on('join-room', (user, room, socketId) => {
 		socket.join(room);
 		//generate username if not logged-in
-		const username =
-			user === 'guest' ? `guest${rooms[room].length + 1}` : 'guest';
+		const username = user === 'guest' ? `guest${rooms[room].length + 1}` : user;
 		//add user to room obj
 		rooms[room].push({ user: { username: username, socketId: socketId } });
 		//emit user-added event to all users in current room
