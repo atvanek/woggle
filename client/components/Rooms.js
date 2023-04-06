@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom';
 
 function Rooms({ user }) {
 	return (
-		<section id='rooms' className='flex border column'>
+		<section id='rooms' className='flex border bg-light column width-100 center-all'>
 			<h3>Join a room</h3>
+			<div className='p-10'>
 			<Link to='/room/1' state={{ user }}>
 				<button
 					onClick={(e) => {
@@ -60,7 +61,8 @@ function Rooms({ user }) {
 					}}>
 					Room 4
 				</button>
-			</Link>
+				</Link>
+				</div>
 		</section>
 	);
 }

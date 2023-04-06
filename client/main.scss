@@ -1,9 +1,49 @@
+$main-background: #3185fc;
+$main-light: #f4f5f5;
+$select: #ff6445;
+$highlight: rgb(255, 230, 89);
+$block: #fff1d0;
+$rooms: #a7cecb;
+
+html {
+	background: hsla(219, 87%, 65%, 1);
+
+	background: hsla(219, 100%, 73%, 1);
+
+	background: radial-gradient(
+		circle,
+		hsla(219, 100%, 73%, 1) 0%,
+		hsla(210, 100%, 26%, 1) 100%
+	);
+
+	background: -moz-radial-gradient(
+		circle,
+		hsla(219, 100%, 73%, 1) 0%,
+		hsla(210, 100%, 26%, 1) 100%
+	);
+
+	font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
 h1 {
 	text-align: center;
 	font-size: 40px;
+	color: $block;
 }
 main {
 	margin: 10px;
+}
+
+button {
+	border-radius: 5px;
+	margin: 10px;
+	padding: 10px;
+	font-size: 16px;
+	font-family: Georgia, 'Times New Roman', Times, serif;
+	&:hover {
+		cursor: pointer;
+		background-color: $block;
+	}
 }
 
 .border {
@@ -22,6 +62,10 @@ main {
 
 .width-100 {
 	width: 100%;
+}
+
+.bg-light {
+	background-color: $main-light;
 }
 
 .m-10 {
@@ -51,7 +95,7 @@ main {
 		font-size: 20px;
 
 		&:hover {
-			color: purple;
+			color: $select;
 		}
 	}
 	a {
@@ -85,28 +129,39 @@ main {
 .box {
 	width: 25%;
 	font-size: 36px;
-	margin: 1px;
+	margin: 5px;
+	background-color: $block;
+	border-radius: 20px;
+	box-shadow: 3px 3px 5px;
 }
 
 .box:hover {
-	background-color: aquamarine;
+	background-color: $highlight;
 }
 
 #score {
 	font-size: 24px;
-	margin-left: 300px;
+	margin: 20px;
+	color: $main-light;
+	align-self: center;
 }
 
 .selected {
-	background-color: plum;
+	background-color: $select;
+	box-shadow: inset 0 0 10px black;
+	color: $main-light;
 
 	&:hover {
-		background-color: plum;
+		background-color: $select;
+		box-shadow: inset 0 0 10px black;
 	}
 }
 
-#played-list,
-#rooms {
+#played-list {
 	width: 300px;
 	padding: 15px;
+}
+
+#rooms {
+	background-color: $rooms;
 }
