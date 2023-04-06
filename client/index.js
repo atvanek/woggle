@@ -7,6 +7,7 @@ import Room from './pages/Room';
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
+//defines routes
 const router = createBrowserRouter([
 	{ path: '/', element: <App /> },
 	{ path: '/home', element: <App /> },

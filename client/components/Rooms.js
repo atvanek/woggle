@@ -7,60 +7,16 @@ function Rooms({ user }) {
 			<h3>Join a room</h3>
 			<div id='room-button-container' className='p-10 flex column center-all'>
 				<Link to='/room/1' state={{ user }}>
-					<button
-						onClick={(e) => {
-							fetch('api/room/1')
-								.then((res) => {
-									return res.json();
-								})
-								.then((data) => {
-									console.log(data);
-								});
-						}}>
-						Room 1
-					</button>
+					<button>Room 1</button>
 				</Link>
 				<Link to='/room/2' state={{ user }}>
-					<button
-						onClick={(e) => {
-							fetch('api/room/2')
-								.then((res) => {
-									return res.json();
-								})
-								.then((data) => {
-									console.log(data);
-								});
-						}}>
-						Room 2
-					</button>
+					<button>Room 2</button>
 				</Link>
 				<Link to='/room/3' state={{ user }}>
-					<button
-						onClick={(e) => {
-							fetch('api/room/3')
-								.then((res) => {
-									return res.json();
-								})
-								.then((data) => {
-									console.log(data);
-								});
-						}}>
-						Room 3
-					</button>
+					<button>Room 3</button>
 				</Link>
 				<Link to='/room/4' state={{ user }}>
-					<button
-						onClick={(e) => {
-							fetch('api/room/4')
-								.then((res) => {
-									return res.json();
-								})
-								.then((data) => {
-									console.log(data);
-								});
-						}}>
-						Room 4
-					</button>
+					<button>Room 4</button>
 				</Link>
 			</div>
 		</section>

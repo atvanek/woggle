@@ -9,6 +9,9 @@ function App() {
 	const [loggedIn, setLoggedIn] = React.useState(false);
 	const [user, setUser] = React.useState('');
 	const location = useLocation();
+
+	//if coming from login/sign-up, pass username to app
+		//passes to nav, board, and rooms
 	React.useEffect(() => {
 		if (location.state?.user && location.state?.loggedIn) {
 			const { user } = location.state;

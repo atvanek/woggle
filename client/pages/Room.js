@@ -5,8 +5,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Board from '../components/Board';
 
 function Room() {
-	const { state } = useLocation();
 	const navigate = useNavigate();
+	const { state } = useLocation();
 	const { id } = useParams();
 	const [users, setUsers] = React.useState([]);
 	const [serverLetters, setServerLetters] = React.useState([]);
@@ -14,22 +14,24 @@ function Room() {
 	const [username, setUsername] = React.useState(null);
 	const [started, setStarted] = React.useState(false);
 
+	//creates connection to websocket server
 	const socket = io('http://localhost:4000/');
+
+	//emits join room event upon mount
+	//grabs socketId
 	React.useEffect(() => {
 		socket.on('connect', () => {
-			console.log('useEffect');
 			setSocketId(socket.id);
 			socket.emit('join-room', state.user, id, socket.id);
-			console.log(socket.id);
 		});
 	}, []);
 
+	//ALL RECEIVED EVENTS
 	socket.on('disconnect', () => {
 		console.log('disconnected');
 	});
 	socket.on('user-added', (newUsers) => {
 		setUsers(JSON.parse(newUsers));
-		console.log(JSON.parse(newUsers));
 	});
 	socket.on('letters-ready', (letters) => {
 		setStarted(true);
@@ -52,6 +54,7 @@ function Room() {
 					<button
 						className='button-size room-content'
 						onClick={() => {
+							//emits room-leave event
 							socket.emit('room-leave', state.user, id, socketId);
 							socket.disconnect();
 							navigate('/');
