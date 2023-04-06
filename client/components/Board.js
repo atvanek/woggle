@@ -157,6 +157,17 @@ function Board({ serverLetters, room, socketId, user }) {
 
 	return (
 		<main className='flex around m-10'>
+			{multiplayer && (
+				<section id='players-scores' className='flex column m-10'>
+					<h3>Players Scores</h3>
+					{playerScores.length > 0 &&
+						playerScores.map((obj, i) => (
+							<p key={i}>
+								{obj.user.username}: {obj.user?.score}
+							</p>
+						))}
+				</section>
+			)}
 			<section id='board' className='flex column center'>
 				{rows}
 				<div id='score'>Score: {score}</div>
@@ -180,19 +191,6 @@ function Board({ serverLetters, room, socketId, user }) {
 				{playedWords.size > 0 &&
 					[...playedWords].map((word, i) => <p key={i}>{word}</p>)}
 			</section>
-			{multiplayer && (
-				<section
-					id='players-scores'
-					className='flex border column bg-light m-10'>
-					<h3>Players Scores</h3>
-					{playerScores.length > 0 &&
-						playerScores.map((obj, i) => (
-							<p key={i}>
-								{obj.user.username}: {obj.user?.score}
-							</p>
-						))}
-				</section>
-			)}
 		</main>
 	);
 }

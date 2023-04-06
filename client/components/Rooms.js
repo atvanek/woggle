@@ -5,7 +5,7 @@ function Rooms({ user }) {
 	return (
 		<section id='rooms' className='flex column p-10'>
 			<h3>Join a room</h3>
-			<div className='p-10 flex column center-all'>
+			<div id='room-button-container' className='p-10 flex column center-all'>
 				<Link to='/room/1' state={{ user }}>
 					<button
 						onClick={(e) => {

@@ -18,7 +18,7 @@ function App() {
 	}, [location]);
 
 	return (
-		<>
+		<div className='flex column width-100'>
 			<Nav
 				loggedIn={loggedIn}
 				setLoggedIn={setLoggedIn}
@@ -26,11 +26,11 @@ function App() {
 				setUser={setUser}
 			/>
 			<h1>Woggle</h1>
-			<div className='flex center'>
+			<div id='play-area' className='flex center'>
 				<Rooms user={user === '' ? 'guest' : user} />
 				<Board user={user} />
 			</div>
-		</>
+		</div>
 	);
 }
 

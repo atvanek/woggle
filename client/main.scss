@@ -136,8 +136,8 @@ button {
 }
 
 .box {
-	width: 100px;
-	height: 100px;
+	width: 90px;
+	height: 90px;
 	font-size: 36px;
 	margin: 5px;
 	background-color: $block;
@@ -174,4 +174,17 @@ button {
 
 #rooms {
 	align-items: center;
+}
+
+@media screen and (max-width: 1024px) {
+	main{
+		flex-flow:column;
+	}
+	#play-area {
+		flex-flow: column-reverse;
+		align-items: center;
+	}
+	#room-button-container{
+		flex-flow: row nowrap;
+	}
 }
