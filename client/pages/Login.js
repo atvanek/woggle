@@ -6,7 +6,7 @@ function Login() {
 	const navigate = useNavigate();
 	return (
 		<>
-			<h2>This is the login-page</h2>
+			<h1>Login-page</h1>
 			<form
 				onSubmit={(e) => {
 					e.preventDefault();
@@ -38,9 +38,9 @@ function Login() {
 							});
 						});
 				}}>
-				<label>Username</label>
+				<label>Username: </label>
 				<input type='text' />
-				<label>Password</label>
+				<label>Password: </label>
 				<input type='password' />
 				<button type='submit'>Login</button>
 			</form>

@@ -1,6 +1,7 @@
 import React from 'react';
 import Row from './Row';
 import { io } from 'socket.io-client';
+import { useNavigate } from 'react-router-dom';
 const blocks = require('../data/blocks');
 const boxCoords = require('../data/coordinates.js');
 
@@ -14,20 +15,22 @@ function Board({ serverLetters, room, socketId, user }) {
 	const [playedWords, setPlayedWords] = React.useState(new Set());
 	const [multiplayer, setMultiplayer] = React.useState(false);
 	const [playerScores, setPlayerScores] = React.useState([]);
+	const navigate = useNavigate();
 
 	const socket = io('http://localhost:4000/');
 
 	function populateBoard() {
+		const blocksCopy = [...blocks];
 		const lettersGrid = [];
 		let column = 0;
 		let row = 0;
 		let currentRow = [];
-		while (blocks.length) {
-			const randomIndex = Math.floor(Math.random() * blocks.length);
-			const randomBlock = blocks[randomIndex];
+		while (blocksCopy.length) {
+			const randomIndex = Math.floor(Math.random() * blocksCopy.length);
+			const randomBlock = blocksCopy[randomIndex];
 			const randomLetterIndex = Math.floor(Math.random() * 6);
 			currentRow.push(randomBlock[randomLetterIndex]);
-			blocks.splice(randomIndex, 1);
+			blocksCopy.splice(randomIndex, 1);
 			column++;
 			if (column === 4) {
 				lettersGrid.push(currentRow);
@@ -138,12 +141,35 @@ function Board({ serverLetters, room, socketId, user }) {
 	});
 	React.useEffect(() => {
 		populateBoard();
+		console.log('populated board');
 		if (serverLetters?.length) {
+			console.log('server letters');
 			setLetters(serverLetters);
 			setMultiplayer(true);
 			socket.emit('new-board', room);
 		}
 	}, []);
+	socket.on('end-game', (scores) => {
+		let highScore = 0;
+		let winner = '';
+		const parsedScores = JSON.parse(scores);
+		console.log(parsedScores);
+		const finalScores = parsedScores.map((obj) => {
+			console.log(obj.user.username);
+			if (obj.user.score > highScore) {
+				highScore = obj.user.score;
+				winner = obj.user.username;
+			}
+			console.log(obj.user.score);
+			return `${obj.user.username}: ${obj.user.score}\n`;
+		});
+		window.alert(
+			`Game ended!\nFinal Scores:\n${finalScores.join(
+				''
+			)}\n${winner} is the winner!`
+		);
+		navigate('/');
+	});
 
 	const rows = letters.map((arr, i) => (
 		<Row
@@ -169,7 +195,7 @@ function Board({ serverLetters, room, socketId, user }) {
 				</section>
 			)}
 			<section id='board' className='flex column center'>
-				{rows}
+				<div id='block-container'>{rows}</div>
 				<div id='score'>Score: {score}</div>
 				<div className='flex around m-10'>
 					<button className='button-size' onClick={validateWord}>

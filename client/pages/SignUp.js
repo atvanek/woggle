@@ -5,7 +5,7 @@ function SignUp({ user }) {
 	const navigate = useNavigate();
 	return (
 		<>
-			<h2>This is the Sign-Up Page</h2>
+			<h1>Sign-Up</h1>
 			<form
 				onSubmit={(e) => {
 					e.preventDefault();
@@ -33,9 +33,9 @@ function SignUp({ user }) {
 						});
 					});
 				}}>
-				<label>Username</label>
+				<label>Username: </label>
 				<input type='text' />
-				<label>Password</label>
+				<label>Password: </label>
 				<input type='password' />
 				<button type='submit'>Create Account</button>
 			</form>

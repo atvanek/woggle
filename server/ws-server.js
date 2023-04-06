@@ -69,7 +69,13 @@ io.on('connect', (socket) => {
 				console.log('it worked');
 			}
 		}
+		console.log(rooms[room])
 		io.in(room).emit('new-scores', JSON.stringify(rooms[room]));
+	});
+	//GAME ENDED
+	socket.on('game-end', (room) => {
+		console.log(rooms, rooms[room])
+		io.in(room).emit('end-game', JSON.stringify(rooms[room]));
 	});
 	//USER LEAVES ROOM
 	socket.on('room-leave', (user, room, socketId) => {

@@ -25,7 +25,10 @@ function App() {
 				user={user}
 				setUser={setUser}
 			/>
-			<h1>Woggle</h1>
+			<div className='flex center-all'>
+				<img src='../data/img/blocks.png' id='logo' className='m-10' />
+				<h1>Woggle</h1>
+			</div>
 			<div id='play-area' className='flex center'>
 				<Rooms user={user === '' ? 'guest' : user} />
 				<Board user={user} />
