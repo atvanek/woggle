@@ -30,6 +30,11 @@ h1 {
 	font-size: 40px;
 	color: $block;
 }
+
+h3 {
+	margin: 0;
+	color: $block;
+}
 main {
 	margin: 10px;
 }
@@ -80,6 +85,10 @@ button {
 	justify-content: space-around;
 }
 
+.center {
+	justify-content: center;
+}
+
 .username {
 	color: rgb(0, 102, 255);
 }
@@ -117,8 +126,8 @@ button {
 }
 
 #board {
-	height: 600px;
-	width: 600px;
+	height: 550px;
+	width: 550px;
 }
 
 .row {
@@ -127,7 +136,8 @@ button {
 }
 
 .box {
-	width: 25%;
+	width: 100px;
+	height: 100px;
 	font-size: 36px;
 	margin: 5px;
 	background-color: $block;
@@ -158,10 +168,10 @@ button {
 }
 
 #played-list {
-	width: 300px;
-	padding: 15px;
+	width: 150px;
+	color: $block;
 }
 
 #rooms {
-	background-color: $rooms;
+	align-items: center;
 }

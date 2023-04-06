@@ -26,8 +26,10 @@ function App() {
 				setUser={setUser}
 			/>
 			<h1>Woggle</h1>
-			<Board user={user} />
-			<Rooms user={user === '' ? 'guest' : user} />
+			<div className='flex center'>
+				<Rooms user={user === '' ? 'guest' : user} />
+				<Board user={user} />
+			</div>
 		</>
 	);
 }

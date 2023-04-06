@@ -1,7 +1,8 @@
 import React from 'react';
 import Row from './Row';
-import { Link } from 'react-router-dom';
 import { io } from 'socket.io-client';
+const blocks = require('../data/blocks');
+const boxCoords = require('../data/coordinates.js');
 
 function Board({ serverLetters, room, socketId, user }) {
 	const [letters, setLetters] = React.useState([]);
@@ -11,37 +12,15 @@ function Board({ serverLetters, room, socketId, user }) {
 	const [currentWord, setCurrentWord] = React.useState('');
 	const [score, setScore] = React.useState(0);
 	const [playedWords, setPlayedWords] = React.useState(new Set());
-	const [boxCoords, setBoxCoords] = React.useState({});
 	const [multiplayer, setMultiplayer] = React.useState(false);
 	const [playerScores, setPlayerScores] = React.useState([]);
 
 	const socket = io('http://localhost:4000/');
 
 	function populateBoard() {
-		const coordinates = {};
 		const lettersGrid = [];
-		const blocks = [
-			'AAEEGN',
-			'ABBJOO',
-			'ACHOPS',
-			'AFFKPS',
-			'AOOTTW',
-			'CIMOTU',
-			'DEILRX',
-			'DELRVY',
-			'DISTTY',
-			'EEGHNW',
-			'EEINSU',
-			'EHRTVW',
-			'EIOSST',
-			'ELRTTY',
-			'HIMNQU',
-			'HLNNRZ',
-		];
-
 		let column = 0;
 		let row = 0;
-		let id = 1;
 		let currentRow = [];
 		while (blocks.length) {
 			const randomIndex = Math.floor(Math.random() * blocks.length);
@@ -49,9 +28,7 @@ function Board({ serverLetters, room, socketId, user }) {
 			const randomLetterIndex = Math.floor(Math.random() * 6);
 			currentRow.push(randomBlock[randomLetterIndex]);
 			blocks.splice(randomIndex, 1);
-			coordinates[id] = [row, column];
 			column++;
-			id++;
 			if (column === 4) {
 				lettersGrid.push(currentRow);
 				currentRow = [];
@@ -59,9 +36,7 @@ function Board({ serverLetters, room, socketId, user }) {
 				row++;
 			}
 		}
-
 		setLetters(lettersGrid);
-		setBoxCoords(coordinates);
 	}
 
 	function calculatePossibleMoves(coordinates) {
@@ -95,7 +70,6 @@ function Board({ serverLetters, room, socketId, user }) {
 		if (selectedBoxes.size === 0) {
 			setWordStarted(true);
 		}
-		console.log(e.target.innerText);
 		calculatePossibleMoves(coordinates);
 		setCurrentWord((prev) => {
 			const newWord = prev + e.target.innerText;
@@ -183,7 +157,7 @@ function Board({ serverLetters, room, socketId, user }) {
 
 	return (
 		<main className='flex around m-10'>
-			<section id='board' className='flex column center m-10'>
+			<section id='board' className='flex column center'>
 				{rows}
 				<div id='score'>Score: {score}</div>
 				<div className='flex around m-10'>
@@ -201,7 +175,7 @@ function Board({ serverLetters, room, socketId, user }) {
 					</button>
 				</div>
 			</section>
-			<section id='played-list' className='flex border column bg-light m-10'>
+			<section id='played-list' className='flex column p-10'>
 				<h3>Played words</h3>
 				{playedWords.size > 0 &&
 					[...playedWords].map((word, i) => <p key={i}>{word}</p>)}

@@ -1,3 +1,5 @@
+const blocks = require('../client/data/blocks');
+
 const io = require('socket.io')(4000, {
 	cors: {
 		origin: ['http://localhost:8080'],
@@ -29,25 +31,6 @@ io.on('connect', (socket) => {
 	//SERVER GENERATED LETTERS (WILL MOVE TO OWN MODULE)
 	function generateLetters() {
 		const lettersGrid = [];
-		const blocks = [
-			'AAEEGN',
-			'ABBJOO',
-			'ACHOPS',
-			'AFFKPS',
-			'AOOTTW',
-			'CIMOTU',
-			'DEILRX',
-			'DELRVY',
-			'DISTTY',
-			'EEGHNW',
-			'EEINSU',
-			'EHRTVW',
-			'EIOSST',
-			'ELRTTY',
-			'HIMNQU',
-			'HLNNRZ',
-		];
-
 		let column = 0;
 		let row = 0;
 		let id = 1;

@@ -13,7 +13,7 @@ function Row({ row, letters, handleClick }) {
 			/>
 		);
 	});
-	return <div className='row flex'>{boxes}</div>;
+	return <div className='row flex center-all'>{boxes}</div>;
 }
 
 export default Row;
