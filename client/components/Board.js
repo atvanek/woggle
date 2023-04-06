@@ -2,8 +2,8 @@ import React from 'react';
 import Row from './Row';
 import { io } from 'socket.io-client';
 import { useNavigate } from 'react-router-dom';
-const blocks = require('../data/blocks');
-const boxCoords = require('../data/coordinates.js');
+const boxCoords = require('../../board-logic/coordinates.js');
+const generateLetters = require('../../board-logic/generateLetters');
 
 function Board({ serverLetters, room, socketId, user }) {
 	const [letters, setLetters] = React.useState([]);
@@ -17,30 +17,8 @@ function Board({ serverLetters, room, socketId, user }) {
 	const [playerScores, setPlayerScores] = React.useState([]);
 	const navigate = useNavigate();
 
+	//connect to websocket
 	const socket = io('http://localhost:4000/');
-
-	function populateBoard() {
-		const blocksCopy = [...blocks];
-		const lettersGrid = [];
-		let column = 0;
-		let row = 0;
-		let currentRow = [];
-		while (blocksCopy.length) {
-			const randomIndex = Math.floor(Math.random() * blocksCopy.length);
-			const randomBlock = blocksCopy[randomIndex];
-			const randomLetterIndex = Math.floor(Math.random() * 6);
-			currentRow.push(randomBlock[randomLetterIndex]);
-			blocksCopy.splice(randomIndex, 1);
-			column++;
-			if (column === 4) {
-				lettersGrid.push(currentRow);
-				currentRow = [];
-				column = 0;
-				row++;
-			}
-		}
-		setLetters(lettersGrid);
-	}
 
 	function calculatePossibleMoves(coordinates) {
 		const x = coordinates[0];
@@ -55,12 +33,13 @@ function Board({ serverLetters, room, socketId, user }) {
 			}
 		}
 		setSelectedBoxes((prev) => new Set(prev).add(String(coordinates)));
-
 		setPossibleMoves(adjacent);
 	}
 
 	function handleBoxClick(e) {
 		const coordinates = boxCoords[e.target.id];
+
+		//validating selected box
 		if (selectedBoxes.has(String(coordinates))) {
 			window.alert('please select new box');
 			return;
@@ -69,18 +48,23 @@ function Board({ serverLetters, room, socketId, user }) {
 			window.alert('please select adjacent box');
 			return;
 		}
-
+		//initiates new word
 		if (selectedBoxes.size === 0) {
 			setWordStarted(true);
 		}
+
+		//calculates next possible moves
 		calculatePossibleMoves(coordinates);
+		//updates current word
 		setCurrentWord((prev) => {
 			const newWord = prev + e.target.innerText;
 			return newWord;
 		});
+		//adds CSS styling
 		e.target.classList.add('selected');
 	}
 
+	//logic for resetting board
 	function clearBoard() {
 		setWordStarted(false);
 		setPossibleMoves(new Set());
@@ -91,16 +75,20 @@ function Board({ serverLetters, room, socketId, user }) {
 			.forEach((node) => node.classList.remove('selected'));
 	}
 
+	//validates word
 	function validateWord(e) {
+		//checks word length
 		if (currentWord.length < 3) {
 			window.alert('word must be at least 3 letters');
 			return;
 		}
+		//checks if player has already been played
 		if (playedWords.has(currentWord)) {
 			window.alert('word has already been played. Please choose new word.');
 			return;
 		}
 		e.preventDefault();
+		//sends post request to server with selected word
 		fetch('/api/testWord', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
@@ -114,6 +102,7 @@ function Board({ serverLetters, room, socketId, user }) {
 					setPlayedWords((prev) => new Set(prev).add(currentWord));
 					//determines points of word
 					let points;
+					//calculates points based on word length
 					if (currentWord.length < 5) {
 						points = 1;
 					} else if (currentWord.length < 6) {
@@ -126,48 +115,61 @@ function Board({ serverLetters, room, socketId, user }) {
 						points = 11;
 					}
 					setScore((prev) => prev + points);
+					//sends updated score to websocket server if in multiplayer mode
 					if (multiplayer) {
 						socket.emit('update-score', user, room, score + points, socketId);
 					}
 				} else {
 					window.alert(`${currentWord} is not a word!`);
 				}
+				//reset board
 				clearBoard();
 			});
 	}
-	socket.on('new-scores', (newScores) => {
-		console.log(JSON.parse(newScores));
-		setPlayerScores(JSON.parse(newScores));
-	});
+
+	//logic for initial render of board and letters
 	React.useEffect(() => {
-		populateBoard();
-		console.log('populated board');
+		setLetters(generateLetters());
+		//if Board is rendered as passed letters from server
 		if (serverLetters?.length) {
-			console.log('server letters');
+			//use those letters
 			setLetters(serverLetters);
+			//multiplayer-mode
 			setMultiplayer(true);
+			//adds board to room via websocket server
 			socket.emit('new-board', room);
 		}
 	}, []);
+
+	//ALL EMITTED EVENTS
+
+	//any player adds to current score
+	socket.on('new-scores', (newScores) => {
+		//sets player scores
+		setPlayerScores(JSON.parse(newScores));
+	});
+
+	//end game logic
 	socket.on('end-game', (scores) => {
+		//generates string for end-game pop-up
+		//determines winner
 		let highScore = 0;
 		let winner = '';
 		const parsedScores = JSON.parse(scores);
-		console.log(parsedScores);
 		const finalScores = parsedScores.map((obj) => {
-			console.log(obj.user.username);
 			if (obj.user.score > highScore) {
 				highScore = obj.user.score;
 				winner = obj.user.username;
 			}
-			console.log(obj.user.score);
 			return `${obj.user.username}: ${obj.user.score}\n`;
 		});
+		//pop-up
 		window.alert(
 			`Game ended!\nFinal Scores:\n${finalScores.join(
 				''
 			)}\n${winner} is the winner!`
 		);
+		//re-route to homescreen
 		navigate('/');
 	});
 
@@ -198,11 +200,12 @@ function Board({ serverLetters, room, socketId, user }) {
 				<div id='block-container'>{rows}</div>
 				<div id='score'>Score: {score}</div>
 				<div className='flex around m-10'>
-					<button className='button-size' onClick={validateWord}>
+					<button id='validate' className='button-size' onClick={validateWord}>
 						Validate word
 					</button>
 
 					<button
+						id='reset'
 						className='button-size'
 						onClick={() => {
 							console.log(currentWord);
@@ -214,8 +217,20 @@ function Board({ serverLetters, room, socketId, user }) {
 			</section>
 			<section id='played-list' className='flex column p-10'>
 				<h3>Played words</h3>
-				{playedWords.size > 0 &&
-					[...playedWords].map((word, i) => <p key={i}>{word}</p>)}
+				<div id='played-words'>
+					{playedWords.size > 0 &&
+						[...playedWords].map((word, i) => {
+							return (
+								<div className='played-box-container'>
+									{word.split('').map((letter) => {
+										return (
+											<span className='played-box center-all'>{letter}</span>
+										);
+									})}
+								</div>
+							);
+						})}
+				</div>
 			</section>
 		</main>
 	);

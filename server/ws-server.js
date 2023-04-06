@@ -1,11 +1,13 @@
-const blocks = require('../client/data/blocks');
+const generateLetters = require('../board-logic/generateLetters');
 
+//import socket io
 const io = require('socket.io')(4000, {
 	cors: {
 		origin: ['http://localhost:8080'],
 	},
 });
 
+//username, room, websocket, score data
 const rooms = {
 	1: [],
 	2: [],
@@ -13,34 +15,40 @@ const rooms = {
 	4: [],
 };
 
+//websocket logic
 io.on('connect', (socket) => {
 	//USER JOINS A ROOM
 	socket.on('join-room', (user, room, socketId) => {
 		socket.join(room);
+		//generate username if not logged-in
 		const username =
 			user === 'guest' ? `guest${rooms[room].length + 1}` : 'guest';
+		//add user to room obj
 		rooms[room].push({ user: { username: username, socketId: socketId } });
-		console.log('joined room', rooms);
+		//emit user-added event to all users in current room
 		io.in(room).emit('user-added', JSON.stringify(rooms[room]), username);
+		//emits username-generated event to new socket
 		io.to(socketId).emit('username-generated', username);
 	});
 	socket.on('new-board', (room) => {
+		//adds board to room
 		socket.join(room);
 	});
 
 	//SERVER GENERATED LETTERS (WILL MOVE TO OWN MODULE)
 	function generateLetters() {
+		const blocksCopy = [...blocks];
 		const lettersGrid = [];
 		let column = 0;
 		let row = 0;
 		let id = 1;
 		let currentRow = [];
-		while (blocks.length) {
-			const randomIndex = Math.floor(Math.random() * blocks.length);
-			const randomBlock = blocks[randomIndex];
+		while (blocksCopy.length) {
+			const randomIndex = Math.floor(Math.random() * blocksCopy.length);
+			const randomBlock = blocksCopy[randomIndex];
 			const randomLetterIndex = Math.floor(Math.random() * 6);
 			currentRow.push(randomBlock[randomLetterIndex]);
-			blocks.splice(randomIndex, 1);
+			blocksCopy.splice(randomIndex, 1);
 			column++;
 			id++;
 			if (column === 4) {
@@ -55,8 +63,10 @@ io.on('connect', (socket) => {
 	//GAME STARTED
 	socket.on('game-start', (id) => {
 		const letters = generateLetters();
+		//lets all rooms know letters are ready to be rendered
 		io.in(id).emit('letters-ready', letters);
 	});
+
 	//UPDATE SCORE
 	socket.on('update-score', (user, room, score, socketId) => {
 		console.log(socketId);
@@ -69,18 +79,19 @@ io.on('connect', (socket) => {
 				console.log('it worked');
 			}
 		}
-		console.log(rooms[room])
+		console.log(rooms[room]);
 		io.in(room).emit('new-scores', JSON.stringify(rooms[room]));
 	});
 	//GAME ENDED
 	socket.on('game-end', (room) => {
-		console.log(rooms, rooms[room])
 		io.in(room).emit('end-game', JSON.stringify(rooms[room]));
+		rooms[room] = [];
 	});
 	//USER LEAVES ROOM
 	socket.on('room-leave', (user, room, socketId) => {
-		console.log('disconnecting', socket.id);
+		console.log('disconnecting', socket.id, rooms[room], room);
 		rooms[room] = rooms[room].filter((obj) => obj.user.socketId !== socketId);
+		io.in(room).emit('new-scores', JSON.stringify(rooms[room]));
 		console.log(rooms);
 	});
 });

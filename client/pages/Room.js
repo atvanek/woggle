@@ -32,11 +32,15 @@ function Room() {
 		console.log(JSON.parse(newUsers));
 	});
 	socket.on('letters-ready', (letters) => {
-		console.log(letters);
+		setStarted(true);
 		setServerLetters(letters);
 	});
 	socket.on('username-generated', (newUsername) => {
 		setUsername(newUsername);
+	});
+	socket.on('game-end', () => {
+		setStarted(false);
+		socket.disconnect();
 	});
 
 	return (
@@ -44,15 +48,17 @@ function Room() {
 			<h1>{`Room ${id}`}</h1>
 			<div className='flex column center-all'>
 				<h2>You are "{username}"</h2>
-				<button
-					className='button-size room-content'
-					onClick={() => {
-						socket.emit('room-leave', state.user, id, socketId);
-						socket.disconnect();
-						navigate('/');
-					}}>
-					Leave Room
-				</button>
+				{!started && (
+					<button
+						className='button-size room-content'
+						onClick={() => {
+							socket.emit('room-leave', state.user, id, socketId);
+							socket.disconnect();
+							navigate('/');
+						}}>
+						Leave Room
+					</button>
+				)}
 				<button
 					className='button-size'
 					onClick={() => {
@@ -61,8 +67,6 @@ function Room() {
 							setStarted(true);
 						} else {
 							socket.emit('game-end', id);
-							socket.emit('room-leave');
-							setStarted(false);
 						}
 					}}>
 					{!started ? `Start Game` : 'End Game'}
