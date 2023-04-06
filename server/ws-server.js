@@ -76,7 +76,6 @@ io.on('connect', (socket) => {
 			console.log(obj.user);
 			if (obj.user.socketId === socketId) {
 				obj.user.score = score;
-				console.log('it worked');
 			}
 		}
 		console.log(rooms[room]);
@@ -91,7 +90,7 @@ io.on('connect', (socket) => {
 	socket.on('room-leave', (user, room, socketId) => {
 		console.log('disconnecting', socket.id, rooms[room], room);
 		rooms[room] = rooms[room].filter((obj) => obj.user.socketId !== socketId);
-		io.in(room).emit('new-scores', JSON.stringify(rooms[room]));
+		io.in(room).emit('user-added', JSON.stringify(rooms[room]));
 		console.log(rooms);
 	});
 });
