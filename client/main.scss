@@ -180,8 +180,12 @@ form {
 	width: 50px;
 }
 
+#play-area {
+	align-items: flex-start;
+}
+
 #played-list {
-	width: max-content;
+	min-width: 250px;
 }
 
 #played-words {

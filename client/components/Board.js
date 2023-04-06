@@ -169,6 +169,7 @@ function Board({ serverLetters, room, socketId, user }) {
 				''
 			)}\n${winner} is the winner!`
 		);
+		socket.disconnect();
 		//re-route to homescreen
 		navigate('/');
 	});

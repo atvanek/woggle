@@ -1,4 +1,5 @@
 const generateLetters = require('../board-logic/generateLetters');
+const blocks = require('../board-logic/blocks');
 
 //import socket io
 const io = require('socket.io')(4000, {
