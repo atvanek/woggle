@@ -1,24 +1,25 @@
 const path = require('path');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin'); //pulls css out of bundle.js
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
 	entry: './client/index.js',
 	output: {
-		path: path.resolve(__dirname, 'build'), // go back to this, is the right path?
+		path: path.resolve(__dirname, 'build'),
 		filename: 'bundle.js',
 	},
 	plugins: [
 		new HTMLWebpackPlugin({
-			template: './index.html', //why do we need a template but in the webpack.js.org website, it doesn't use  a template?? IS IT BECAUSE THEY STILL HAVE THEIR BUNDLE JS FILE
+			template: './index.html',
+			favicon: './client/data/img/blocks.png',
 		}),
-		new MiniCssExtractPlugin(), //adds miniCSS to plugins
+		new MiniCssExtractPlugin(),
 	],
 	mode: process.env.NODE_ENV,
 	module: {
 		rules: [
 			{
-				test: /\.jsx?/, //? means last char is optional
+				test: /\.jsx?/,
 				exclude: /node_modules/,
 				use: {
 					loader: 'babel-loader',
