@@ -18,7 +18,7 @@ function Board({ serverLetters, room, socketId, user }) {
 	const navigate = useNavigate();
 
 	//connect to websocket
-	const socket = io('http://localhost:4000/');
+	const socket = io('http://localhost:3000/');
 
 	function calculatePossibleMoves(coordinates) {
 		const x = coordinates[0];

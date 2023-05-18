@@ -6,7 +6,7 @@
 	"scripts": {
 		"start": "node server/server.js",
 		"build": "NODE_ENV=production webpack",
-		"dev": "nodemon server/server.js & nodemon server/ws-server.js &NODE_ENV=development webpack serve --open"
+		"dev": "nodemon server/server.js & NODE_ENV=development webpack serve --open"
 	},
 	"repository": {
 		"type": "git",

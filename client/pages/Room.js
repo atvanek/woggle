@@ -15,7 +15,7 @@ function Room() {
 	const [started, setStarted] = React.useState(false);
 
 	//creates connection to websocket server
-	const socket = io('http://localhost:4000/');
+	const socket = io('http://localhost:3000/');
 
 	//emits join room event upon mount
 	//grabs socketId
