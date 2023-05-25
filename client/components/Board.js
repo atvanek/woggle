@@ -88,7 +88,7 @@ function Board({ serverLetters, room, socketId, user }) {
 			return;
 		}
 		e.preventDefault();
-		//sends post request to server with selected word
+		// sends post request to server with selected word
 		fetch('/api/testWord', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
