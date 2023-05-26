@@ -1,9 +1,9 @@
 import React from 'react';
-import Row from './Row';
+import Row from './Row.jsx';
 import { io } from 'socket.io-client';
 import { useNavigate } from 'react-router-dom';
-const boxCoords = require('../../board-logic/coordinates.js');
-const generateLetters = require('../../board-logic/generateLetters');
+import boxCoords from '../../board-logic/coordinates.js';
+import generateLetters from '../../board-logic/generateLetters';
 
 function Board({ serverLetters, room, socketId, user }) {
 	const [letters, setLetters] = React.useState([]);

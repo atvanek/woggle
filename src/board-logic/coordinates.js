@@ -17,4 +17,4 @@ const coordinates = {
 	16: [3, 3],
 };
 
-module.exports = coordinates;
+export default coordinates;
