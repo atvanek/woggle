@@ -1,17 +1,4 @@
-// const express = require('express');
-// const app = express();
-// const PORT = 3000;
 // const userController = require('./controllers/userController');
-
-// const httpServer = require('http').createServer(app);
-// //import socket io
-// const io = require('socket.io')(httpServer, {
-// 	cors: {
-// 		origin: ['http://localhost:8080'],
-// 	},
-// });
-
-// app.use(express.json());
 
 // app.get('/api/room/:id', (req, res) => {
 // 	const { id } = req.params;
