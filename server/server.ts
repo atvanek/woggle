@@ -41,9 +41,6 @@ const rooms = {
 	4: [],
 };
 
-// httpServer.listen(PORT, () => {
-// 	console.log(`Listening on port ${PORT}...`);
-// });
 import { Application, Router } from 'https://deno.land/x/oak/mod.ts';
 import { oakCors } from 'https://deno.land/x/cors@v1.2.1/oakCors.ts';
 import { serve } from 'https://deno.land/std@0.166.0/http/server.ts';
