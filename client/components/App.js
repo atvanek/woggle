@@ -1,9 +1,9 @@
 import React from 'react';
-import Board from './Board.jsx';
-import Nav from './Nav.jsx';
+import Board from './Board';
+import Nav from './Nav';
 import '../main.scss';
 import { useLocation } from 'react-router-dom';
-import Rooms from './Rooms.jsx';
+import Rooms from './Rooms';
 
 function App() {
 	const [loggedIn, setLoggedIn] = React.useState(false);

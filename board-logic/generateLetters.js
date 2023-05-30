@@ -1,6 +1,6 @@
-import blocks from './blocks';
+const blocks = require('./blocks');
 
-export default function generateLetters() {
+function generateLetters() {
 	const blocksCopy = [...blocks];
 	const lettersGrid = [];
 	let column = 0;
@@ -24,3 +24,5 @@ export default function generateLetters() {
 	}
 	return lettersGrid;
 }
+
+module.exports = generateLetters;

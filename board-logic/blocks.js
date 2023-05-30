@@ -17,4 +17,4 @@ const blocks = [
 	'HLNNRZ',
 ];
 
-export default blocks;
+module.exports = blocks;

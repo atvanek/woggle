@@ -1,9 +1,9 @@
 import React from 'react';
-import Row from './Row.jsx';
+import Row from './Row';
 import { io } from 'socket.io-client';
 import { useNavigate } from 'react-router-dom';
-import boxCoords from '../../board-logic/coordinates.js';
-import generateLetters from '../../board-logic/generateLetters';
+const boxCoords = require('../../board-logic/coordinates.js');
+const generateLetters = require('../../board-logic/generateLetters');
 
 function Board({ serverLetters, room, socketId, user }) {
 	const [letters, setLetters] = React.useState([]);
@@ -88,7 +88,7 @@ function Board({ serverLetters, room, socketId, user }) {
 			return;
 		}
 		e.preventDefault();
-		// sends post request to server with selected word
+		//sends post request to server with selected word
 		fetch('/api/testWord', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
