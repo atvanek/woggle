@@ -11,7 +11,7 @@ function App() {
 	const location = useLocation();
 
 	//if coming from login/sign-up, pass username to app
-		//passes to nav, board, and rooms
+	//passes to nav, board, and rooms
 	React.useEffect(() => {
 		if (location.state?.user && location.state?.loggedIn) {
 			const { user } = location.state;
@@ -29,7 +29,7 @@ function App() {
 				setUser={setUser}
 			/>
 			<div className='flex center-all'>
-				<img src='../data/img/blocks.png' id='logo' className='m-10' />
+				<img src='/client/data/img/blocks.png' id='logo' className='m-10' />
 				<h1 id='main-header'>Woggle</h1>
 			</div>
 			<div id='play-area' className='flex center'>
