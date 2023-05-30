@@ -1,4 +1,4 @@
-import blocks from './blocks';
+import blocks from './blocks.js';
 
 export default function generateLetters() {
 	const blocksCopy = [...blocks];

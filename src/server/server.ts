@@ -20,6 +20,8 @@
 // const generateLetters = require('../board-logic/generateLetters');
 // const blocks = require('../board-logic/blocks');
 
+import generateLetters from '../board-logic/generateLetters.js';
+
 //username, room, websocket, score data
 const rooms = {
 	1: [],
@@ -102,11 +104,11 @@ io.on('connection', (socket) => {
 	// 	return lettersGrid;
 	// }
 	//GAME STARTED
-	// socket.on('game-start', (id) => {
-	// 	// const letters = generateLetters();
-	// 	//lets all rooms know letters are ready to be rendered
-	// 	// io.in(id).emit('letters-ready', letters);
-	// });
+	socket.on('game-start', (id) => {
+		const letters = generateLetters();
+		// lets all rooms know letters are ready to be rendered
+		io.in(id).emit('letters-ready', letters);
+	});
 
 	//UPDATE SCORE
 	socket.on('update-score', (user, room, score, socketId) => {
