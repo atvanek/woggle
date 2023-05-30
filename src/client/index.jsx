@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './components/App';
-import Login from './pages/login';
-import SignUp from './pages/SignUp';
-import Room from './pages/Room';
+import App from './components/App.jsx';
+import Login from './pages/login.jsx';
+import SignUp from './pages/SignUp.jsx';
+import Room from './pages/Room.jsx';
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
