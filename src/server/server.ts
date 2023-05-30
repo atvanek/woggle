@@ -49,9 +49,10 @@ router.post('/api/testWord', async ({ request, response }) => {
 	console.log(request);
 	const { word } = await request.body().value;
 	console.log(word);
-	const data = await fetch(
+	const res = await fetch(
 		`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
 	);
+	const data = await res.json();
 	response.body = { word: `${Array.isArray(data) ? 'valid' : 'invalid'}` };
 });
 
@@ -133,14 +134,6 @@ io.on('connection', (socket) => {
 		io.in(room).emit('user-added', JSON.stringify(rooms[room]));
 		console.log(rooms);
 	});
-});
-
-app.addEventListener('listen', ({ hostname, port, secure }) => {
-	console.log(
-		`listening on ${secure ? 'https://' : 'http://'}${
-			hostname ?? 'localhost'
-		}:${port}...`
-	);
 });
 
 const handler = io.handler(async (req) => {
