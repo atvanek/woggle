@@ -36,8 +36,8 @@ function Board({ serverLetters, room, socketId, user }) {
 		setPossibleMoves(adjacent);
 	}
 
-	function handleBoxClick(e) {
-		const coordinates = boxCoords[e.target.id];
+	function handleBoxClick(id, letter) {
+		const coordinates = boxCoords[id];
 
 		//validating selected box
 		if (selectedBoxes.has(String(coordinates))) {
@@ -57,11 +57,12 @@ function Board({ serverLetters, room, socketId, user }) {
 		calculatePossibleMoves(coordinates);
 		//updates current word
 		setCurrentWord((prev) => {
-			const newWord = prev + e.target.innerText;
+			const newWord = prev + letter;
 			return newWord;
 		});
 		//adds CSS styling
-		e.target.classList.add('selected');
+		const currentBox = document.getElementById(id);
+		currentBox.classList.add('selected');
 	}
 
 	//logic for resetting board
@@ -71,7 +72,7 @@ function Board({ serverLetters, room, socketId, user }) {
 		setSelectedBoxes(new Set());
 		setCurrentWord('');
 		document
-			.querySelectorAll('.box')
+			.querySelectorAll('.cube')
 			.forEach((node) => node.classList.remove('selected'));
 	}
 
