@@ -378,10 +378,6 @@ body {
 	transform: translateZ(-$box-size / 2);
 	transition: transform 1s;
 
-	&:hover {
-		transform: translateZ(-$box-size / 2) rotateY(180deg);
-	}
-
 	p {
 		font: bold 36px arial, sans-serif;
 		background-color: rgb(130 78 16 / 99%);
@@ -390,6 +386,12 @@ body {
 		-webkit-background-clip: text;
 		-moz-background-clip: text;
 		background-clip: text;
+		transition: 0.2s;
+	}
+	&:hover {
+		p {
+			background-color: rgba(251, 251, 251, 0.712);
+		}
 	}
 }
 
@@ -406,7 +408,8 @@ body {
 	font-weight: bold;
 	text-align: center;
 	border: 4px solid #c5b5910f;
-	transition: 0.3s;
+	transition: 0.5s;
+	transition-timing-function: ease-in;
 }
 
 .selected > * {
