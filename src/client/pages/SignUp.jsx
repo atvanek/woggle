@@ -6,6 +6,10 @@ function SignUp() {
 
 	function handleSubmit(e) {
 		e.preventDefault();
+		if (e.target[1].value !== e.target[2].value) {
+			window.alert('Passwords must match.');
+			return;
+		}
 		const username = e.target[0].value;
 		const password = e.target[1].value;
 		if (username.length < 5) {
@@ -29,19 +33,21 @@ function SignUp() {
 		});
 	}
 	return (
-		<>
+		<div className='flex column center-all'>
 			<h1>Sign-Up</h1>
 			<form onSubmit={handleSubmit}>
 				<label>Username: </label>
-				<input type='text' />
-				<label>Password: </label>
-				<input type='password' />
+				<input type='text' required />
+				<label>Create Password: </label>
+				<input type='password' required />
+				<label>Confirm Password: </label>
+				<input type='password' required />
 				<button type='submit'>Create Account</button>
 			</form>
 			<Link to='/'>
 				<p>Return to Home Page</p>
 			</Link>
-		</>
+		</div>
 	);
 }
 
