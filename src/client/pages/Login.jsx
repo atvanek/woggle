@@ -39,19 +39,19 @@ function Login() {
 	}
 
 	return (
-		<>
-			<h1>Login-page</h1>
+		<div className='flex column center-all'>
+			<h1>Login</h1>
 			<form onSubmit={handleSubmit}>
 				<label>Username: </label>
-				<input type='text' />
+				<input type='text' required />
 				<label>Password: </label>
-				<input type='password' />
+				<input type='password' required />
 				<button type='submit'>Login</button>
 			</form>
 			<Link to='/'>
 				<p>Return to Home Page</p>
 			</Link>
-		</>
+		</div>
 	);
 }
 

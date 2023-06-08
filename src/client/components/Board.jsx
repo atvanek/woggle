@@ -220,7 +220,7 @@ function Board({ serverLetters, room, socketId, user }) {
 				<h3>Played words</h3>
 				<div id='played-words'>
 					{playedWords.size > 0 &&
-						[...playedWords].map((word, i) => {
+						[...playedWords].map((word) => {
 							return (
 								<div className='played-box-container'>
 									{word.split('').map((letter) => {
