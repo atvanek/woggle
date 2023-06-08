@@ -5,6 +5,7 @@ $highlight: rgb(255, 230, 89);
 $block: #fff1d0;
 $rooms: #a7cecb;
 $shadow: 3px 3px 5px black;
+$box-size: 75px;
 
 html {
 	background-image: radial-gradient(
@@ -24,9 +25,9 @@ html {
 	);
 	background-size: cover;
 	background-repeat: no-repeat;
+	height: 100%;
 	font-family: Georgia, 'Times New Roman', Times, serif;
 	color: $main-light;
-	height: 100vh;
 	font-size: 20px;
 }
 
@@ -341,10 +342,68 @@ form {
 			padding-left: 0px;
 		}
 	}
+}
 
-	.box {
-		height: 75px;
-		width: 75px;
-		font-size: 24px;
+* {
+	box-sizing: border-box;
+}
+
+body {
+	font-family: sans-serif;
+}
+
+.scene,
+.cube,
+.cube__face {
+	width: $box-size;
+	height: $box-size;
+}
+
+.scene {
+	perspective: 150px;
+	margin: 5px;
+}
+
+.cube {
+	position: relative;
+	transform-style: preserve-3d;
+	transform: translateZ(-$box-size / 2);
+	transition: transform 1s;
+
+	&:hover {
+		transform: translateZ(-$box-size / 2) rotateY(180deg);
 	}
+
+}
+
+.cube__face {
+	position: absolute;
+	color: black;
+	font-size: 36px;
+	background-color: $block;
+	border-radius: 20px;
+	font-size: 24px;
+	font-weight: bold;
+	text-align: center;
+	border: 4px solid #c5b5910f;
+	transition: 0.3s;
+}
+
+.cube__face--front {
+	transform: rotateY(0deg) translateZ(-$box-size / 2) scale(-1, 1);
+}
+.cube__face--right {
+	transform: rotateY(90deg) translateZ(-$box-size / 2) scale(-1, 1);
+}
+.cube__face--back {
+	transform: rotateY(180deg) translateZ(-$box-size / 2) scale(-1, 1);
+}
+.cube__face--left {
+	transform: rotateY(-90deg) translateZ(-$box-size / 2) scale(-1, 1);
+}
+.cube__face--top {
+	transform: rotateX(90deg) translateZ(-$box-size / 2) scale(-1, 1);
+}
+.cube__face--bottom {
+	transform: rotateX(-90deg) translateZ(-$box-size / 2) scale(-1, 1);
 }
