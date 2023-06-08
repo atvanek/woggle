@@ -205,7 +205,26 @@ form {
 }
 
 #block-container {
-	background-color: $main-light;
+	background: hsla(22, 100%, 71%, 1);
+
+	background: radial-gradient(
+		circle,
+		hsla(22, 100%, 71%, 1) 0%,
+		hsla(2, 78%, 62%, 1) 100%
+	);
+
+	background: -moz-radial-gradient(
+		circle,
+		hsla(22, 100%, 71%, 1) 0%,
+		hsla(2, 78%, 62%, 1) 100%
+	);
+
+	background: -webkit-radial-gradient(
+		circle,
+		hsla(22, 100%, 71%, 1) 0%,
+		hsla(2, 78%, 62%, 1) 100%
+	);
+
 	padding: 30px;
 	border-radius: 10px;
 	box-shadow: inset 0 0 10px black;
