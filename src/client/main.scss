@@ -192,6 +192,10 @@ form {
 	display: flex;
 }
 
+.green{
+	background-color: $green;
+}
+
 .m-10 {
 	margin: 10px;
 }
@@ -277,6 +281,39 @@ form {
 	margin: 20px;
 	color: $main-light;
 	align-self: center;
+}
+
+#timed-wrapper {
+	padding: 20px;
+	border-radius: 20px;
+	width: min-content;
+	margin: auto;
+	box-shadow: inset 0 0 10px black;
+	margin-bottom: 30px;
+	background-color: #3074e1;
+	transition: 0.5s;
+	&.timed {
+		opacity: 1;
+		background: hsla(22, 100%, 71%, 1);
+		background: radial-gradient(
+			circle,
+			hsla(22, 100%, 71%, 1) 0%,
+			hsla(2, 78%, 62%, 1) 100%
+		);
+
+		background: -moz-radial-gradient(
+			circle,
+			hsla(22, 100%, 71%, 1) 0%,
+			hsla(2, 78%, 62%, 1) 100%
+		);
+
+		background: -webkit-radial-gradient(
+			circle,
+			hsla(22, 100%, 71%, 1) 0%,
+			hsla(2, 78%, 62%, 1) 100%
+		);
+		transition: 0.5s;
+	}
 }
 
 #validate {
@@ -444,6 +481,14 @@ form {
 	p {
 		text-shadow: none;
 	}
+}
+
+.timed {
+}
+
+.untimed {
+	background-color: #3074e1;
+	transition: 0.3s;
 }
 
 .cube__face--front {

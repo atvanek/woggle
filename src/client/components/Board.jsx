@@ -237,7 +237,9 @@ function Board({ serverLetters, room, socketId, user }) {
 				</section>
 			)}
 			<section id='board' className='flex column center'>
-				<div className='flex center-all'>
+				<div
+					id='timed-wrapper'
+					className={`flex center-all m-10 ${timed ? 'timed' : ''}`}>
 					untimed
 					<Switch
 						color='warning'
@@ -257,8 +259,8 @@ function Board({ serverLetters, room, socketId, user }) {
 				</div>
 
 				<div id='score'>Score: {score}</div>
-				<div className='flex center-all'>
-					{timed && !timerStarted && (
+				<Collapse in={timed && !timerStarted}>
+					<div className='flex center-all'>
 						<div className='flex column center-all'>
 							<h3>Choose Time Limit</h3>
 							<div className='flex'>
@@ -275,6 +277,7 @@ function Board({ serverLetters, room, socketId, user }) {
 							<div className='flex column'>
 								<p>Time Limit: {timeLimit} min</p>
 								<button
+									className='green'
 									onClick={(e) => {
 										setTimerStarted(true);
 										setLetters(generateLetters);
@@ -283,8 +286,8 @@ function Board({ serverLetters, room, socketId, user }) {
 								</button>
 							</div>
 						</div>
-					)}
-				</div>
+					</div>
+				</Collapse>
 				<div className='flex center-all'>
 					{timed && timerStarted && <Timer time={timeLimit * 60} />}
 				</div>
