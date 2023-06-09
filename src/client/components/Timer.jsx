@@ -31,7 +31,7 @@ function Timer({ time }) {
 					sx={{
 						height: '60px !important',
 						width: '60px !important',
-						color: `${seconds < 11 ? 'red' : ''}`,
+						color: `${seconds < 11 ? 'red' : seconds < 31 ? '#32ec70' : ''}`,
 					}}
 					variant='determinate'
 					value={(100 / 60) * seconds}
