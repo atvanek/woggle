@@ -250,10 +250,11 @@ function Board({ serverLetters, room, socketId, user }) {
 				</div>
 
 				<div id='block-container'>{rows}</div>
-
-				<Collapse in={open}>
-					<Alert severity={alert.type}>{alert.message}</Alert>
-				</Collapse>
+				<div id='alert-wrapper'>
+					<Collapse in={open}>
+						<Alert severity={alert.type}>{alert.message}</Alert>
+					</Collapse>
+				</div>
 
 				<div id='score'>Score: {score}</div>
 				<div className='flex center-all'>
