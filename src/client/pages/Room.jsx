@@ -2,7 +2,7 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import { useLocation, useNavigate } from 'react-router-dom';
-import Board from '../components/Board.jsx';
+import Home from './Home';
 
 function Room() {
 	const navigate = useNavigate();

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import Board from './Board.jsx';
+import Home from '../pages/Home.jsx';
 import Nav from './Nav.jsx';
 import '../main.scss';
 import Rooms from './Rooms.jsx';
@@ -17,7 +17,7 @@ function App() {
 			</div>
 			<div id='play-area' className='flex center'>
 				<Rooms user={user === '' ? 'guest' : user} />
-				<Board user={user} />
+				<Home user={user} />
 			</div>
 		</div>
 	);
