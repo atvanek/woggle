@@ -4,8 +4,8 @@ import { io } from 'socket.io-client';
 import { useNavigate } from 'react-router-dom';
 import boxCoords from '../../utils/coordinates.js';
 import generateLetters from '../../utils/generateLetters';
-import Switch from '@mui/material/Switch';
 import Timer from './Timer.jsx';
+import { Alert, Switch, Collapse } from '@mui/material';
 
 function Board({ serverLetters, room, socketId, user }) {
 	const [letters, setLetters] = React.useState([]);
@@ -21,6 +21,8 @@ function Board({ serverLetters, room, socketId, user }) {
 	const [timed, setTimed] = React.useState(false);
 	const [timeLimit, setTimeLimit] = React.useState(1);
 	const [timerStarted, setTimerStarted] = React.useState(false);
+	const [alert, setAlert] = React.useState({ type: '', message: '' });
+	const [alertTimer, setAlertTimer] = React.useState(null);
 
 	//connect to websocket
 	const socket = io('http://localhost:3000/');
@@ -46,11 +48,11 @@ function Board({ serverLetters, room, socketId, user }) {
 
 		//validating selected box
 		if (selectedBoxes.has(String(coordinates))) {
-			window.alert('please select new box');
+			handleAlert('selected');
 			return;
 		}
 		if (wordStarted && !possibleMoves.has(String(coordinates))) {
-			window.alert('please select adjacent box');
+			handleAlert('adjacent');
 			return;
 		}
 		//initiates new word
@@ -81,16 +83,49 @@ function Board({ serverLetters, room, socketId, user }) {
 			.forEach((node) => node.classList.remove('selected'));
 	}
 
+	function handleAlert(type) {
+		clearTimeout(alertTimer);
+		switch (type) {
+			case 'length':
+				setAlert({ type: 'error', message: 'Word must be at least 3 letters' });
+				break;
+			case 'played':
+				setAlert({
+					type: 'error',
+					message: 'Word has already been played. Please choose new word',
+				});
+				break;
+			case 'invalid':
+				setAlert({ type: 'error', message: `${currentWord} is not a word` });
+				break;
+			case 'selected':
+				setAlert({ type: 'error', message: 'Box already selected' });
+				break;
+			case 'adjacent':
+				setAlert({ type: 'error', message: 'Please select adjacent box' });
+				break;
+		}
+
+		setAlertTimer(
+			setTimeout(() => {
+				setAlert({
+					type: '',
+					message: '',
+				});
+			}, 4000)
+		);
+		console.log(alertTimer);
+	}
 	//validates word
 	function validateWord(e) {
 		//checks word length
 		if (currentWord.length < 3) {
-			window.alert('word must be at least 3 letters');
+			handleAlert('length');
 			return;
 		}
 		//checks if player has already been played
 		if (playedWords.has(currentWord)) {
-			window.alert('word has already been played. Please choose new word.');
+			handleAlert('played');
 			return;
 		}
 		e.preventDefault();
@@ -126,7 +161,7 @@ function Board({ serverLetters, room, socketId, user }) {
 						socket.emit('update-score', user, room, score + points, socketId);
 					}
 				} else {
-					window.alert(`${currentWord} is not a word!`);
+					handleAlert('invalid');
 				}
 				//reset board
 				clearBoard();
@@ -217,6 +252,11 @@ function Board({ serverLetters, room, socketId, user }) {
 				</div>
 
 				<div id='block-container'>{rows}</div>
+				{alert && (
+					<Collapse in={alert.type !== ''}>
+						<Alert severity={alert.type}>{alert.message}</Alert>
+					</Collapse>
+				)}
 				<div id='score'>Score: {score}</div>
 				<div className='flex center-all'>
 					{timed && !timerStarted && (
