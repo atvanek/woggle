@@ -1,8 +1,10 @@
 import React from 'react';
+import Context from '../context';
 
-function Box({ letter, id, handleClick }) {
+function Box({ letter, id }) {
+	const { handleBoxClick } = React.useContext(Context);
 	return (
-		<div class='scene' onClick={() => handleClick(id, letter)}>
+		<div class='scene' onClick={() => handleBoxClick(id, letter)}>
 			<div class='cube pointer' id={id}>
 				<div class='cube__face cube__face--front flex center-all'>
 					<p>{letter}</p>

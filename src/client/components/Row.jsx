@@ -1,7 +1,7 @@
 import React from 'react';
 import Box from './Box.jsx';
 
-function Row({ row, letters, handleClick }) {
+function Row({ row, letters}) {
 	const boxes = letters.map((letter, i) => {
 		return (
 			<Box
@@ -9,7 +9,6 @@ function Row({ row, letters, handleClick }) {
 				letter={letter}
 				id={i + (row - 1) * 4 + 1}
 				key={i + (row - 1) * 4 + 1}
-				handleClick={handleClick}
 			/>
 		);
 	});

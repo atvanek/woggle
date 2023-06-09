@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import { useLocation, useNavigate } from 'react-router-dom';
-import Home from './Home';
+import Board from '../components/Board';
+import Controls from '../components/Controls';
+import Context from '../context';
 
 function Room() {
 	const navigate = useNavigate();
@@ -13,6 +15,7 @@ function Room() {
 	const [socketId, setSocketId] = React.useState(null);
 	const [username, setUsername] = React.useState(null);
 	const [started, setStarted] = React.useState(false);
+	const { setPossibleMoves } = useContext(Context);
 
 	//creates connection to websocket server
 	const socket = io('http://localhost:3000/');
@@ -36,6 +39,7 @@ function Room() {
 	socket.on('letters-ready', (letters) => {
 		setStarted(true);
 		setServerLetters(letters);
+		setPossibleMoves(new Set());
 	});
 	socket.on('username-generated', (newUsername) => {
 		setUsername(newUsername);
@@ -83,12 +87,10 @@ function Room() {
 					</ul>
 				</div>
 				{serverLetters.length > 0 && (
-					<Board
-						serverLetters={serverLetters}
-						room={id}
-						socketId={socketId}
-						user={state.user}
-					/>
+					<>
+						<Board letters={serverLetters} />
+						<Controls />
+					</>
 				)}
 			</div>
 		</>
