@@ -1,27 +1,3 @@
-// const userController = require('./controllers/userController');
-
-// app.get('/api/room/:id', (req, res) => {
-// 	const { id } = req.params;
-// 	res.status(200).json(`You are in room ${id}`);
-// });
-
-// app.post('/api/login', userController.verifyUser, (req, res) => {
-// 	res.status(200).json({ verified: true });
-// });
-// app.post('/api/user', userController.createUser, (req, res) => {
-// 	res.status(200).json(res.locals.newUser);
-// });
-
-// app.use((err, req, res, next) => {
-// 	console.log(err);
-// 	res.status(500).send({ error: err });
-// });
-
-// const generateLetters = require('../board-logic/generateLetters');
-// const blocks = require('../board-logic/blocks');
-
-import generateLetters from '../board-logic/generateLetters.js';
-
 //username, room, websocket, score data
 const rooms = {
 	1: [],
@@ -34,6 +10,7 @@ import { Application, Router } from 'https://deno.land/x/oak/mod.ts';
 import { oakCors } from 'https://deno.land/x/cors@v1.2.1/oakCors.ts';
 import { serve } from 'https://deno.land/std@0.166.0/http/server.ts';
 import { Server } from 'https://deno.land/x/socket_io@0.2.0/mod.ts';
+import generateLetters from '../utils/generateLetters.js';
 const app = new Application();
 const router = new Router();
 const io = new Server({
@@ -78,31 +55,6 @@ io.on('connection', (socket) => {
 		socket.join(room);
 	});
 
-	//SERVER GENERATED LETTERS (WILL MOVE TO OWN MODULE)
-	// function generateLetters() {
-	// 	const blocksCopy = [...blocks];
-	// 	const lettersGrid = [];
-	// 	let column = 0;
-	// 	let row = 0;
-	// 	let id = 1;
-	// 	let currentRow = [];
-	// 	while (blocksCopy.length) {
-	// 		const randomIndex = Math.floor(Math.random() * blocksCopy.length);
-	// 		const randomBlock = blocksCopy[randomIndex];
-	// 		const randomLetterIndex = Math.floor(Math.random() * 6);
-	// 		currentRow.push(randomBlock[randomLetterIndex]);
-	// 		blocksCopy.splice(randomIndex, 1);
-	// 		column++;
-	// 		id++;
-	// 		if (column === 4) {
-	// 			lettersGrid.push(currentRow);
-	// 			currentRow = [];
-	// 			column = 0;
-	// 			row++;
-	// 		}
-	// 	}
-	// 	return lettersGrid;
-	// }
 	//GAME STARTED
 	socket.on('game-start', (id) => {
 		const letters = generateLetters();
