@@ -23,6 +23,7 @@ function Board({ serverLetters, room, socketId, user }) {
 	const [timerStarted, setTimerStarted] = React.useState(false);
 	const [alert, setAlert] = React.useState({ type: '', message: '' });
 	const [alertTimer, setAlertTimer] = React.useState(null);
+	const [open, setOpen] = React.useState(false);
 
 	//connect to websocket
 	const socket = io('http://localhost:3000/');
@@ -85,6 +86,7 @@ function Board({ serverLetters, room, socketId, user }) {
 
 	function handleAlert(type) {
 		clearTimeout(alertTimer);
+		setOpen(true);
 		switch (type) {
 			case 'length':
 				setAlert({ type: 'error', message: 'Word must be at least 3 letters' });
@@ -108,13 +110,9 @@ function Board({ serverLetters, room, socketId, user }) {
 
 		setAlertTimer(
 			setTimeout(() => {
-				setAlert({
-					type: '',
-					message: '',
-				});
+				setOpen(false);
 			}, 4000)
 		);
-		console.log(alertTimer);
 	}
 	//validates word
 	function validateWord(e) {
@@ -252,11 +250,11 @@ function Board({ serverLetters, room, socketId, user }) {
 				</div>
 
 				<div id='block-container'>{rows}</div>
-				{alert && (
-					<Collapse in={alert.type !== ''}>
-						<Alert severity={alert.type}>{alert.message}</Alert>
-					</Collapse>
-				)}
+
+				<Collapse in={open}>
+					<Alert severity={alert.type}>{alert.message}</Alert>
+				</Collapse>
+
 				<div id='score'>Score: {score}</div>
 				<div className='flex center-all'>
 					{timed && !timerStarted && (
