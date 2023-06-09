@@ -5,7 +5,14 @@ import { useNavigate } from 'react-router-dom';
 import boxCoords from '../../utils/coordinates.js';
 import generateLetters from '../../utils/generateLetters';
 import Timer from './Timer.jsx';
-import { Alert, Switch, Collapse } from '@mui/material';
+import {
+	Alert,
+	Switch,
+	Collapse,
+	ToggleButtonGroup,
+	ToggleButton,
+	CircularProgress,
+} from '@mui/material';
 
 function Board({ serverLetters, room, socketId, user }) {
 	const [letters, setLetters] = React.useState([]);
@@ -244,14 +251,25 @@ function Board({ serverLetters, room, socketId, user }) {
 					<Switch
 						color='warning'
 						onChange={(e) => {
-							timed && setTimerStarted(false);
+							if (timed) {
+								setScore(0);
+								setTimerStarted(false);
+							}
 							setTimed(e.target.checked);
 						}}
 					/>
 					timed
 				</div>
 
-				<div id='block-container'>{rows}</div>
+				<div id='block-container'>
+					{letters.length > 1 ? (
+						rows
+					) : (
+						<div className='flex' style={{ height: '100%' }}>
+							<CircularProgress sx={{ margin: 'auto' }} />
+						</div>
+					)}
+				</div>
 				<div id='alert-wrapper'>
 					<Collapse in={open}>
 						<Alert severity={alert.type}>{alert.message}</Alert>
@@ -263,23 +281,36 @@ function Board({ serverLetters, room, socketId, user }) {
 					<div className='flex center-all'>
 						<div className='flex column center-all'>
 							<h3>Choose Time Limit</h3>
-							<div className='flex'>
-								<button value={1} onClick={(e) => setTimeLimit(e.target.value)}>
-									1 min
-								</button>
-								<button value={2} onClick={(e) => setTimeLimit(e.target.value)}>
-									2 min
-								</button>
-								<button value={3} onClick={(e) => setTimeLimit(e.target.value)}>
-									3 min
-								</button>
-							</div>
+							<ToggleButtonGroup
+								value={timeLimit}
+								onChange={(e, limit) => setTimeLimit(limit)}
+								sx={{
+									backgroundColor: '#32ec70',
+									margin: '10px',
+									boxShadow: '3px 3px 5px black',
+									button: {
+										boxShadow: 'none',
+										fontFamily: 'Georgia',
+										backgroundColor: 'white',
+										textTransform: 'none',
+										'&:hover': {
+											backgroundColor: 'rgb(255, 230, 89)',
+											transform: 'none',
+										},
+									},
+								}}
+								exclusive>
+								<ToggleButton value={1}>1 min</ToggleButton>
+								<ToggleButton value={2}>2 min</ToggleButton>
+								<ToggleButton value={3}>3 min</ToggleButton>
+							</ToggleButtonGroup>
 							<div className='flex column'>
 								<p>Time Limit: {timeLimit} min</p>
 								<button
 									className='green'
 									onClick={(e) => {
 										setTimerStarted(true);
+										setScore(0);
 										setLetters(generateLetters);
 									}}>
 									Start Game
@@ -292,7 +323,11 @@ function Board({ serverLetters, room, socketId, user }) {
 					{timed && timerStarted && <Timer time={timeLimit * 60} />}
 				</div>
 				<div className='flex around m-10'>
-					<button id='validate' className='button-size' onClick={validateWord}>
+					<button
+						id='validate'
+						className='button-size'
+						onClick={validateWord}
+						disabled={timed && !timerStarted}>
 						Validate word
 					</button>
 
@@ -302,7 +337,8 @@ function Board({ serverLetters, room, socketId, user }) {
 						onClick={() => {
 							console.log(currentWord);
 							clearBoard();
-						}}>
+						}}
+						disabled={timed && !timerStarted}>
 						Reset Word
 					</button>
 				</div>
