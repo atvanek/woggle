@@ -3,21 +3,32 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import Context from '../context.jsx';
 import { TextField } from '@mui/material';
+import UsernameInput from '../components/UsernameInput';
 
 function Login() {
 	const navigate = useNavigate();
-	const { setUser } = useContext(Context);
+	const { setUser, setLoggedIn } = useContext(Context);
+	const [error, setError] = React.useState({
+		type: '',
+		message: '',
+	});
 	function handleSubmit(e) {
 		e.preventDefault();
 		const username = e.target[0].value;
 		const password = e.target[1].value;
 		//validates username/password based on length
 		if (username.length < 5) {
-			window.alert('Username must be at least 5 characters long.');
+			setError({
+				type: 'username',
+				message: 'Username must be at least 5 characters long.',
+			});
 			return;
 		}
 		if (password.length < 8) {
-			window.alert('Password must be at least 8 characters long.');
+			setError({
+				type: 'username',
+				message: 'Password must be at least 8 characters long.',
+			});
 			return;
 		}
 		//fetch request
@@ -34,6 +45,7 @@ function Login() {
 				}
 				window.alert(`Successfully logged in`);
 				setUser(username);
+				setLoggedIn(true);
 				navigate('/');
 			});
 	}
@@ -42,14 +54,7 @@ function Login() {
 		<div className='flex column center-all auth-wrapper'>
 			<h1>Login</h1>
 			<form onSubmit={handleSubmit}>
-				<TextField
-					type='string'
-					size='small'
-					label='Username'
-					required
-					variant='outlined'
-					margin='normal'
-				/>
+				<UsernameInput error={error} setError={setError} />
 
 				<TextField
 					type='password'
@@ -57,8 +62,11 @@ function Login() {
 					color='primary'
 					label='Password'
 					required
-					variant='outlined'
+					variant='filled'
 					margin='normal'
+					sx={{
+						backgroundColor: 'white',
+					}}
 				/>
 				<button type='submit'>Login</button>
 			</form>

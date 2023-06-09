@@ -1,8 +1,7 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import Board from './Board.jsx';
 import Nav from './Nav.jsx';
 import '../main.scss';
-import { useLocation } from 'react-router-dom';
 import Rooms from './Rooms.jsx';
 import Context from '../context.jsx';
 

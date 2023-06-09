@@ -1,18 +1,7 @@
 import React from 'react';
 
-function Box({ letter, id, handleClick, className }) {
-	const test = (e) => {
-		console.log(e.target.classList);
-	};
+function Box({ letter, id, handleClick }) {
 	return (
-		// <></>
-		// <div
-		// 	id={id}
-		// 	onClick={handleClick}
-		// 	className={`${className} box flex center-all pointer`}>
-		// 	{letter}
-		// </div>
-
 		<div class='scene' onClick={() => handleClick(id, letter)}>
 			<div class='cube pointer' id={id}>
 				<div class='cube__face cube__face--front flex center-all'>

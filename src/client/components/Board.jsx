@@ -21,7 +21,6 @@ function Board({ serverLetters, room, socketId, user }) {
 	const [timed, setTimed] = React.useState(false);
 	const [timeLimit, setTimeLimit] = React.useState(1);
 	const [timerStarted, setTimerStarted] = React.useState(false);
-	const [secsLeft, setSecsLeft] = React.useState(0);
 
 	//connect to websocket
 	const socket = io('http://localhost:3000/');
@@ -209,7 +208,10 @@ function Board({ serverLetters, room, socketId, user }) {
 					untimed
 					<Switch
 						color='warning'
-						onChange={(e) => setTimed(e.target.checked)}
+						onChange={(e) => {
+							timed && setTimerStarted(false);
+							setTimed(e.target.checked);
+						}}
 					/>
 					timed
 				</div>
@@ -236,6 +238,7 @@ function Board({ serverLetters, room, socketId, user }) {
 								<button
 									onClick={(e) => {
 										setTimerStarted(true);
+										setLetters(generateLetters);
 									}}>
 									Start Game
 								</button>
@@ -243,7 +246,9 @@ function Board({ serverLetters, room, socketId, user }) {
 						</div>
 					)}
 				</div>
-				{timerStarted && <Timer time={timeLimit * 60} />}
+				<div className='flex center-all'>
+					{timed && timerStarted && <Timer time={timeLimit * 60} />}
+				</div>
 				<div className='flex around m-10'>
 					<button id='validate' className='button-size' onClick={validateWord}>
 						Validate word

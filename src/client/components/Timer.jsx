@@ -14,7 +14,18 @@ function Timer({ time }) {
 		};
 	}, []);
 
-	return seconds > 0 ? <p>{seconds} seconds left</p> : <p>Time's Up</p>;
+	function readableTime() {
+		if (seconds > 60) {
+			const mins = Math.floor(seconds / 60);
+			const secs = seconds % 60;
+			return `${mins.toFixed(0)} mins ${secs} seconds left`;
+		} else if (seconds > 1) {
+			return `${seconds} seconds left`;
+		} else {
+			return `1 second left`;
+		}
+	}
+	return seconds > 0 ? <p>{readableTime()}</p> : <p>Time's Up</p>;
 }
 
 export default Timer;

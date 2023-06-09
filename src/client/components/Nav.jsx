@@ -22,7 +22,7 @@ function Nav() {
 				) : (
 					<>
 						<li>
-							Welcome <span className='username'>{user}</span>
+							Welcome, <span className='username'>{user}</span>
 						</li>
 						<li
 							onClick={() => {
