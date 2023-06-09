@@ -1,13 +1,12 @@
 const userController = {};
-const path = require('path');
-const userModel = require(path.resolve('UserModel.js'));
-const bcrypt = require('bcrypt');
+import userModel from '../UserModel.js';
+import { genSalt, hash, compare } from 'bcrypt';
 
 userController.createUser = function (req, res, next) {
 	try {
 		const { username, password } = req.body;
-		bcrypt.genSalt(10, (err, salt) => {
-			bcrypt.hash(password, salt, async (err, hash) => {
+		genSalt(10, (err, salt) => {
+			hash(password, salt, async (err, hash) => {
 				const newUser = await userModel.create({ username, password: hash });
 				res.locals.newUser = username;
 				return next();
@@ -27,7 +26,7 @@ userController.verifyUser = async function (req, res, next) {
 		if (user === null) {
 			return res.json({ verified: false });
 		}
-		bcrypt.compare(password, user.password, (err, result) => {
+		compare(password, user.password, (err, result) => {
 			if (err) {
 				return next(err);
 			}
@@ -42,4 +41,4 @@ userController.verifyUser = async function (req, res, next) {
 	}
 };
 
-module.exports = userController;
+export default userController;

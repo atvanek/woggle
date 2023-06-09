@@ -1,4 +1,4 @@
-const { Schema, connect, model } = require('mongoose');
+import { Schema, connect, model } from 'mongoose';
 
 connect(
 	'mongodb+srv://atvanek:GkIu8WkNciV8tnRi@woggle.qpwf3fs.mongodb.net/?retryWrites=true&w=majority'
@@ -15,4 +15,4 @@ const userSchema = new Schema({
 
 const userModel = model('user', userSchema);
 
-module.exports = userModel;
+export default userModel;
