@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import Context from '../context.jsx';
+import { TextField } from '@mui/material';
 
 function Login() {
 	const navigate = useNavigate();
-
+	const { setUser } = useContext(Context);
 	function handleSubmit(e) {
 		e.preventDefault();
 		const username = e.target[0].value;
@@ -31,10 +33,8 @@ function Login() {
 					return;
 				}
 				window.alert(`Successfully logged in`);
-				navigate('/', {
-					replace: true,
-					state: { user: username, loggedIn: true },
-				});
+				setUser(username);
+				navigate('/');
 			});
 	}
 
@@ -42,10 +42,24 @@ function Login() {
 		<div className='flex column center-all auth-wrapper'>
 			<h1>Login</h1>
 			<form onSubmit={handleSubmit}>
-				<label>Username: </label>
-				<input type='text' required />
-				<label>Password: </label>
-				<input type='password' required />
+				<TextField
+					type='string'
+					size='small'
+					label='Username'
+					required
+					variant='outlined'
+					margin='normal'
+				/>
+
+				<TextField
+					type='password'
+					size='small'
+					color='primary'
+					label='Password'
+					required
+					variant='outlined'
+					margin='normal'
+				/>
 				<button type='submit'>Login</button>
 			</form>
 			<Link to='/'>

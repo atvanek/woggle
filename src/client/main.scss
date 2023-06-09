@@ -9,24 +9,26 @@ $green: #32ec70;
 $box-size: 75px;
 
 html {
-	background-image: radial-gradient(
-		circle,
-		#5217b2,
-		#4925b7,
-		#3e30bb,
-		#3338be,
-		#2540c1,
-		#214cc8,
-		#1e57cf,
-		#1f62d5,
-		#3074e1,
-		#4186eb,
-		#5498f5,
-		#67aaff
-	);
+	background: radial-gradient(
+			circle,
+			#5217b2,
+			#4925b7,
+			#3e30bb,
+			#3338be,
+			#2540c1,
+			#214cc8,
+			#1e57cf,
+			#1f62d5,
+			#3074e1,
+			#4186eb,
+			#5498f5,
+			#67aaff
+		)
+		no-repeat center center fixed;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
 	background-size: cover;
-	background-repeat: no-repeat;
-	height: 100%;
 	font-family: Georgia, 'Times New Roman', Times, serif;
 	color: $main-light;
 	font-size: 20px;
@@ -377,10 +379,6 @@ form {
 	box-sizing: border-box;
 }
 
-body {
-	font-family: sans-serif;
-}
-
 .scene,
 .cube,
 .cube__face {
@@ -436,7 +434,7 @@ body {
 }
 
 .selected > * {
-	transition: .5s;
+	transition: 0.5s;
 	background-color: $highlight;
 	background-image: none;
 	p {

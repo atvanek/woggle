@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import Context from '../context.jsx';
 
-function Nav({ loggedIn, setLoggedIn, user, setUser }) {
+function Nav() {
+	const { loggedIn, setLoggedIn, user, setUser } = useContext(Context);
 	return (
 		<nav id='nav' className='flex width-100'>
 			<ul className='flex'>
@@ -13,7 +15,7 @@ function Nav({ loggedIn, setLoggedIn, user, setUser }) {
 						<Link to='/login'>
 							<li className='pointer'>Login</li>
 						</Link>
-						<Link to='/signup' state={user}>
+						<Link to='/signup'>
 							<li className='pointer'>Sign-Up</li>
 						</Link>
 					</>
@@ -24,7 +26,6 @@ function Nav({ loggedIn, setLoggedIn, user, setUser }) {
 						</li>
 						<li
 							onClick={() => {
-								console.log(user);
 								setLoggedIn(false);
 								setUser('');
 							}}

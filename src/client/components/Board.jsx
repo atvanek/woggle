@@ -4,6 +4,8 @@ import { io } from 'socket.io-client';
 import { useNavigate } from 'react-router-dom';
 import boxCoords from '../../utils/coordinates.js';
 import generateLetters from '../../utils/generateLetters';
+import Switch from '@mui/material/Switch';
+import Timer from './Timer.jsx';
 
 function Board({ serverLetters, room, socketId, user }) {
 	const [letters, setLetters] = React.useState([]);
@@ -16,6 +18,10 @@ function Board({ serverLetters, room, socketId, user }) {
 	const [multiplayer, setMultiplayer] = React.useState(false);
 	const [playerScores, setPlayerScores] = React.useState([]);
 	const navigate = useNavigate();
+	const [timed, setTimed] = React.useState(false);
+	const [timeLimit, setTimeLimit] = React.useState(1);
+	const [timerStarted, setTimerStarted] = React.useState(false);
+	const [secsLeft, setSecsLeft] = React.useState(0);
 
 	//connect to websocket
 	const socket = io('http://localhost:3000/');
@@ -199,8 +205,45 @@ function Board({ serverLetters, room, socketId, user }) {
 				</section>
 			)}
 			<section id='board' className='flex column center'>
+				<div className='flex center-all'>
+					untimed
+					<Switch
+						color='warning'
+						onChange={(e) => setTimed(e.target.checked)}
+					/>
+					timed
+				</div>
+
 				<div id='block-container'>{rows}</div>
 				<div id='score'>Score: {score}</div>
+				<div className='flex center-all'>
+					{timed && !timerStarted && (
+						<div className='flex column center-all'>
+							<h3>Choose Time Limit</h3>
+							<div className='flex'>
+								<button value={1} onClick={(e) => setTimeLimit(e.target.value)}>
+									1 min
+								</button>
+								<button value={2} onClick={(e) => setTimeLimit(e.target.value)}>
+									2 min
+								</button>
+								<button value={3} onClick={(e) => setTimeLimit(e.target.value)}>
+									3 min
+								</button>
+							</div>
+							<div className='flex column'>
+								<p>Time Limit: {timeLimit} min</p>
+								<button
+									onClick={(e) => {
+										setTimerStarted(true);
+									}}>
+									Start Game
+								</button>
+							</div>
+						</div>
+					)}
+				</div>
+				{timerStarted && <Timer time={timeLimit * 60} />}
 				<div className='flex around m-10'>
 					<button id='validate' className='button-size' onClick={validateWord}>
 						Validate word

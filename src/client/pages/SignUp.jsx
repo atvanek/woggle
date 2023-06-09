@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import Context from '../context.jsx';
+import {TextField} from '@mui/material'
 
 function SignUp() {
 	const navigate = useNavigate();
-
+	const { setUser } = useContext(Context);
 	function handleSubmit(e) {
 		e.preventDefault();
 		if (e.target[1].value !== e.target[2].value) {
@@ -25,32 +27,50 @@ function SignUp() {
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ username, password }),
 		}).then((res) => {
-			window.alert(`Successfully created account for ${e.target[0].value}`);
-			navigate('/', {
-				replace: true,
-				state: { user: username, loggedIn: true },
-			});
+			window.alert(`Successfully created account for ${username}`);
+			setUser(username);
+			navigate('/');
 		});
 	}
 	return (
 		<>
-		<h1>Sign-Up</h1>
-		<div className='flex column center-all auth-wrapper'>
-		
-			<form onSubmit={handleSubmit}>
-				<label>Username: </label>
-				<input type='text' required />
-				<label>Create Password: </label>
-				<input type='password' required />
-				<label>Confirm Password: </label>
-				<input type='password' required />
-				<button type='submit'>Create Account</button>
-			</form>
-			<Link to='/'>
-				<p>Return to Home Page</p>
-			</Link>
+			<h1>Sign-Up</h1>
+			<div className='flex column center-all auth-wrapper'>
+				<form onSubmit={handleSubmit}>
+				<TextField
+					type='string'
+					size='small'
+					label='Username'
+					required
+					variant='outlined'
+					margin='normal'
+				/>
+
+				<TextField
+					type='password'
+					size='small'
+					color='primary'
+					label='Password'
+					required
+					variant='outlined'
+					margin='normal'
+					/>
+						<TextField
+					type='password'
+					size='small'
+					color='primary'
+					label='Confirm Password'
+					required
+					variant='outlined'
+					margin='normal'
+				/>
+					<button type='submit'>Create Account</button>
+				</form>
+				<Link to='/'>
+					<p>Return to Home Page</p>
+				</Link>
 			</div>
-			</>
+		</>
 	);
 }
 
