@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Board from '../components/Board';
 import Controls from '../components/Controls';
 import Context from '../context';
+import Played from '../components/Played';
 
 function Room() {
 	const navigate = useNavigate();
@@ -15,7 +16,8 @@ function Room() {
 	const [socketId, setSocketId] = React.useState(null);
 	const [username, setUsername] = React.useState(null);
 	const [started, setStarted] = React.useState(false);
-	const { setPossibleMoves } = useContext(Context);
+	const [playerScores, setPlayerScores] = React.useState([]);
+	const { setPossibleMoves, setMultiplayer } = useContext(Context);
 
 	//creates connection to websocket server
 	const socket = io('http://localhost:3000/');
@@ -38,6 +40,7 @@ function Room() {
 	});
 	socket.on('letters-ready', (letters) => {
 		setStarted(true);
+		setMultiplayer(true);
 		setServerLetters(letters);
 		setPossibleMoves(new Set());
 	});
@@ -90,6 +93,16 @@ function Room() {
 					<>
 						<Board letters={serverLetters} />
 						<Controls />
+						<Played />
+						<section id='players-scores' className='flex column m-10'>
+							<h3>Players Scores</h3>
+							{playerScores.length > 0 &&
+								playerScores.map((obj, i) => {
+									<p key={i}>
+										{obj.user.username}: {obj.user?.score}
+									</p>;
+								})}
+						</section>
 					</>
 				)}
 			</div>

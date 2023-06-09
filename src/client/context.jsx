@@ -19,6 +19,7 @@ export function ContextProvider({ children }) {
 	const [timerStarted, setTimerStarted] = useState(false);
 	const [score, setScore] = useState(0);
 	const [playedWords, setPlayedWords] = useState(new Set());
+	const [multiplayer, setMultiplayer] = useState(false);
 
 	function handleBoxClick(id, letter) {
 		const coordinates = boxCoords[id];
@@ -164,6 +165,8 @@ export function ContextProvider({ children }) {
 				playedWords,
 				setPlayedWords,
 				clearBoard,
+				multiplayer,
+				setMultiplayer,
 			}}>
 			{children}
 		</Context.Provider>

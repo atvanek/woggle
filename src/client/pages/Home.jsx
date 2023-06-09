@@ -8,10 +8,10 @@ import TimeLimit from '../components/TimeLimit';
 import { Switch } from '@mui/material';
 import Context from '../context';
 import Controls from '../components/Controls';
+import Played from '../components/Played';
 
 function Home({ serverLetters, room, socketId }) {
 	const [letters, setLetters] = React.useState([]);
-	const [multiplayer, setMultiplayer] = React.useState(false);
 	const [playerScores, setPlayerScores] = React.useState([]);
 	const [timeLimit, setTimeLimit] = React.useState(1);
 	const navigate = useNavigate();
@@ -31,15 +31,6 @@ function Home({ serverLetters, room, socketId }) {
 	//logic for initial render of board and letters
 	React.useEffect(() => {
 		setLetters(generateLetters());
-		//if Board is rendered as passed letters from server
-		if (serverLetters?.length) {
-			//use those letters
-			setLetters(serverLetters);
-			//multiplayer-mode
-			setMultiplayer(true);
-			//adds board to room via websocket server
-			socket.emit('new-board', room);
-		}
 	}, []);
 
 	//ALL EMITTED EVENTS
@@ -77,17 +68,6 @@ function Home({ serverLetters, room, socketId }) {
 
 	return (
 		<main className='flex around m-10'>
-			{multiplayer && (
-				<section id='players-scores' className='flex column m-10'>
-					<h3>Players Scores</h3>
-					{playerScores.length > 0 &&
-						playerScores.map((obj, i) => (
-							<p key={i}>
-								{obj.user.username}: {obj.user?.score}
-							</p>
-						))}
-				</section>
-			)}
 			<section id='board' className='flex column center'>
 				<div
 					id='timed-wrapper'
@@ -121,22 +101,7 @@ function Home({ serverLetters, room, socketId }) {
 					{timed && timerStarted && <Timer time={timeLimit * 60} />}
 				</div>
 			</section>
-			<section id='played-list' className='flex column p-10'>
-				<h3>Played words</h3>
-				<div id='played-words'>
-					{[...playedWords].map((word) => {
-						return (
-							<div className='played-box-container'>
-								{word.split('').map((letter) => {
-									return (
-										<span className='played-box center-all'>{letter}</span>
-									);
-								})}
-							</div>
-						);
-					})}
-				</div>
-			</section>
+			<Played />
 		</main>
 	);
 }

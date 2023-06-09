@@ -62,7 +62,6 @@ const rooms = {
 
 //websocket logic
 io.on('connect', (socket) => {
-	console.log('CONNECTION');
 	//USER JOINS A ROOM
 	socket.on('join-room', (user, room, socketId) => {
 		socket.join(room);
