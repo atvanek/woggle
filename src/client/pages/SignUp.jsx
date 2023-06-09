@@ -33,8 +33,10 @@ function SignUp() {
 		});
 	}
 	return (
-		<div className='flex column center-all'>
-			<h1>Sign-Up</h1>
+		<>
+		<h1>Sign-Up</h1>
+		<div className='flex column center-all auth-wrapper'>
+		
 			<form onSubmit={handleSubmit}>
 				<label>Username: </label>
 				<input type='text' required />
@@ -47,7 +49,8 @@ function SignUp() {
 			<Link to='/'>
 				<p>Return to Home Page</p>
 			</Link>
-		</div>
+			</div>
+			</>
 	);
 }
 

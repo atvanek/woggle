@@ -2,8 +2,8 @@ import React from 'react';
 import Row from './Row.jsx';
 import { io } from 'socket.io-client';
 import { useNavigate } from 'react-router-dom';
-import boxCoords from '../../board-logic/coordinates.js';
-import generateLetters from '../../board-logic/generateLetters';
+import boxCoords from '../../utils/coordinates.js';
+import generateLetters from '../../utils/generateLetters';
 
 function Board({ serverLetters, room, socketId, user }) {
 	const [letters, setLetters] = React.useState([]);
@@ -220,18 +220,17 @@ function Board({ serverLetters, room, socketId, user }) {
 			<section id='played-list' className='flex column p-10'>
 				<h3>Played words</h3>
 				<div id='played-words'>
-					{playedWords.size > 0 &&
-						[...playedWords].map((word) => {
-							return (
-								<div className='played-box-container'>
-									{word.split('').map((letter) => {
-										return (
-											<span className='played-box center-all'>{letter}</span>
-										);
-									})}
-								</div>
-							);
-						})}
+					{[...playedWords].map((word) => {
+						return (
+							<div className='played-box-container'>
+								{word.split('').map((letter) => {
+									return (
+										<span className='played-box center-all'>{letter}</span>
+									);
+								})}
+							</div>
+						);
+					})}
 				</div>
 			</section>
 		</main>
