@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { io } from 'socket.io-client';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Board from '../components/Board';
 import Controls from '../components/Controls';
 import Context from '../context';
@@ -9,47 +9,101 @@ import Played from '../components/Played';
 
 function Room() {
 	const navigate = useNavigate();
-	const { state } = useLocation();
 	const { id } = useParams();
 	const [users, setUsers] = React.useState([]);
 	const [serverLetters, setServerLetters] = React.useState([]);
-	const [socketId, setSocketId] = React.useState(null);
 	const [username, setUsername] = React.useState(null);
 	const [started, setStarted] = React.useState(false);
 	const [playerScores, setPlayerScores] = React.useState([]);
-	const { setPossibleMoves, setMultiplayer } = useContext(Context);
+	const {
+		setPossibleMoves,
+		setMultiplayer,
+		room,
+		setRoom,
+		socketId,
+		setSocketId,
+		user,
+		score,
+		setScore,
+		wordPoints,
+	} = useContext(Context);
 
 	//creates connection to websocket server
 	const socket = io('http://localhost:3000/');
-
+	console.log(playerScores);
 	//emits join room event upon mount
-	//grabs socketId
 	React.useEffect(() => {
 		socket.on('connect', () => {
 			setSocketId(socket.id);
-			socket.emit('join-room', state.user, id, socket.id);
+			socket.emit('join-room', user, id, socket.id);
 		});
+		setRoom(id);
+		setScore(0);
 	}, []);
 
+	React.useEffect(() => {
+		if (score > 0) {
+			socket.emit('update-score', room, score + wordPoints, socketId);
+		}
+	}, [score]);
+
 	//ALL RECEIVED EVENTS
-	socket.on('disconnect', () => {
-		console.log('disconnected');
+
+	//individual username generated
+	socket.on('username-generated', (newUsername) => {
+		setUsername(newUsername);
 	});
+
+	//new user joins room
 	socket.on('user-added', (newUsers) => {
 		setUsers(JSON.parse(newUsers));
 	});
+
+	//board generated on server
 	socket.on('letters-ready', (letters) => {
 		setStarted(true);
 		setMultiplayer(true);
 		setServerLetters(letters);
 		setPossibleMoves(new Set());
 	});
-	socket.on('username-generated', (newUsername) => {
-		setUsername(newUsername);
+
+	//new players scores
+	socket.on('new-scores', (newScores) => {
+		//sets player scores
+		const parsedScores = JSON.parse(newScores);
+		setPlayerScores(parsedScores);
+	});
+
+	//end game logic
+	socket.on('end-game', (scores) => {
+		//generates string for end-game pop-up
+		//determines winner
+		let highScore = 0;
+		let winner = '';
+		const parsedScores = JSON.parse(scores);
+		const finalScores = parsedScores.map((obj) => {
+			if (obj.user.score > highScore) {
+				highScore = obj.user.score;
+				winner = obj.user.username;
+			}
+			return `${obj.user.username}: ${obj.user.score}\n`;
+		});
+		//pop-up
+		window.alert(
+			`Game ended!\nFinal Scores:\n${finalScores.join(
+				''
+			)}\n${winner} is the winner!`
+		);
+		socket.disconnect();
+		//re-route to homescreen
+		navigate('/');
 	});
 	socket.on('game-end', () => {
 		setStarted(false);
 		socket.disconnect();
+	});
+	socket.on('disconnect', () => {
+		console.log('disconnected');
 	});
 
 	return (
@@ -62,7 +116,7 @@ function Room() {
 						className='button-size room-content'
 						onClick={() => {
 							//emits room-leave event
-							socket.emit('room-leave', state.user, id, socketId);
+							socket.emit('room-leave', user, id, socketId);
 							socket.disconnect();
 							navigate('/');
 						}}>
@@ -92,16 +146,18 @@ function Room() {
 				{serverLetters.length > 0 && (
 					<>
 						<Board letters={serverLetters} />
+						Score: {score}
 						<Controls />
 						<Played />
 						<section id='players-scores' className='flex column m-10'>
 							<h3>Players Scores</h3>
-							{playerScores.length > 0 &&
-								playerScores.map((obj, i) => {
+							{playerScores.map((obj, i) => {
+								return (
 									<p key={i}>
-										{obj.user.username}: {obj.user?.score}
-									</p>;
-								})}
+										{obj.user.username}: {obj.user?.score || 0}
+									</p>
+								);
+							})}
 						</section>
 					</>
 				)}

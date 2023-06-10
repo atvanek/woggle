@@ -10,23 +10,16 @@ import Context from '../context';
 import Controls from '../components/Controls';
 import Played from '../components/Played';
 
-function Home({ serverLetters, room, socketId }) {
+function Home() {
 	const [letters, setLetters] = React.useState([]);
 	const [playerScores, setPlayerScores] = React.useState([]);
 	const [timeLimit, setTimeLimit] = React.useState(1);
 	const navigate = useNavigate();
 
-	const {
-		timed,
-		setTimed,
-		timerStarted,
-		setTimerStarted,
-		score,
-		setScore,
-		playedWords,
-	} = React.useContext(Context);
-	//connect to websocket
-	const socket = io('http://localhost:3000/');
+	const { timed, setTimed, timerStarted, setTimerStarted, score, setScore } =
+		React.useContext(Context);
+	// //connect to websocket
+	// const socket = io('http://localhost:3000/');
 
 	//logic for initial render of board and letters
 	React.useEffect(() => {
@@ -36,35 +29,7 @@ function Home({ serverLetters, room, socketId }) {
 	//ALL EMITTED EVENTS
 
 	//any player adds to current score
-	socket.on('new-scores', (newScores) => {
-		//sets player scores
-		setPlayerScores(JSON.parse(newScores));
-	});
-
-	//end game logic
-	socket.on('end-game', (scores) => {
-		//generates string for end-game pop-up
-		//determines winner
-		let highScore = 0;
-		let winner = '';
-		const parsedScores = JSON.parse(scores);
-		const finalScores = parsedScores.map((obj) => {
-			if (obj.user.score > highScore) {
-				highScore = obj.user.score;
-				winner = obj.user.username;
-			}
-			return `${obj.user.username}: ${obj.user.score}\n`;
-		});
-		//pop-up
-		window.alert(
-			`Game ended!\nFinal Scores:\n${finalScores.join(
-				''
-			)}\n${winner} is the winner!`
-		);
-		socket.disconnect();
-		//re-route to homescreen
-		navigate('/');
-	});
+	
 
 	return (
 		<main className='flex around m-10'>

@@ -1,5 +1,5 @@
 const userController = {};
-import userModel from '../UserModel.js';
+import userModel from '../models/UserModel.js';
 import { genSalt, hash, compare } from 'bcrypt';
 
 userController.createUser = function (req, res, next) {

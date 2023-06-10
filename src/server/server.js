@@ -26,17 +26,13 @@ app.post('/api/user', userController.createUser, (req, res) => {
 });
 
 app.use('/api/testWord', (req, res) => {
-	console.log(req.body);
 	const { word } = req.body;
-	console.log(req.body);
 	fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`)
 		.then((res) => {
 			return res.json();
 		})
 		.then((data) => {
-			console.log(data);
 			if (!Array.isArray(data)) {
-				console.log('invalid');
 				res.json({ word: 'invalid' });
 			} else {
 				res.json({ word: 'valid' });
@@ -44,7 +40,7 @@ app.use('/api/testWord', (req, res) => {
 		});
 });
 
-app.use((err, req, res, next) => {
+app.use((err, _req, res, _next) => {
 	console.log(err);
 	res.status(500).send({ error: err });
 });
@@ -65,13 +61,15 @@ io.on('connect', (socket) => {
 	//USER JOINS A ROOM
 	socket.on('join-room', (user, room, socketId) => {
 		socket.join(room);
+		console.log('room joined');
 		//generate username if not logged-in
-		const username = user === 'guest' ? `guest${rooms[room].length + 1}` : user;
+		const username = !user ? `guest${rooms[room].length + 1}` : user;
 		//add user to room obj
 		rooms[room].push({ user: { username: username, socketId: socketId } });
 		//emit user-added event to all users in current room
 		io.in(room).emit('user-added', JSON.stringify(rooms[room]), username);
 		//emits username-generated event to new socket
+		console.log(username);
 		io.to(socketId).emit('username-generated', username);
 	});
 	socket.on('new-board', (room) => {
@@ -112,13 +110,14 @@ io.on('connect', (socket) => {
 	});
 
 	//UPDATE SCORE
-	socket.on('update-score', (user, room, score, socketId) => {
-		console.log(socketId);
+	socket.on('update-score', (room, score, socketId) => {
+		console.log(room, score, socketId, 'new score from this id');
 		const target = rooms[room];
 		console.log(target);
-		for (let obj of target) {
+		for (const obj of target) {
 			console.log(obj.user);
 			if (obj.user.socketId === socketId) {
+				console.log('MATCCHHH');
 				obj.user.score = score;
 			}
 		}

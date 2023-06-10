@@ -20,6 +20,10 @@ export function ContextProvider({ children }) {
 	const [score, setScore] = useState(0);
 	const [playedWords, setPlayedWords] = useState(new Set());
 	const [multiplayer, setMultiplayer] = useState(false);
+	const [room, setRoom] = useState();
+	const [socket, setSocket] = useState();
+	const [socketId, setSocketId] = useState();
+	const [wordPoints, setWordPoints] = useState(0);
 
 	function handleBoxClick(id, letter) {
 		const coordinates = boxCoords[id];
@@ -83,6 +87,7 @@ export function ContextProvider({ children }) {
 
 	function validateWord(e) {
 		//checks word length
+		let status;
 		if (currentWord.length < 3) {
 			handleAlert('length');
 			return;
@@ -118,11 +123,10 @@ export function ContextProvider({ children }) {
 					} else {
 						points = 11;
 					}
+					setWordPoints(points);
 					setScore((prev) => prev + points);
+
 					//sends updated score to websocket server if in multiplayer mode
-					if (multiplayer) {
-						socket.emit('update-score', user, room, score + points, socketId);
-					}
 				} else {
 					handleAlert('invalid');
 				}
@@ -167,6 +171,16 @@ export function ContextProvider({ children }) {
 				clearBoard,
 				multiplayer,
 				setMultiplayer,
+				room,
+				setRoom,
+				socket,
+				setSocket,
+				socketId,
+				setSocketId,
+				score,
+				setScore,
+				wordPoints,
+				setWordPoints,
 			}}>
 			{children}
 		</Context.Provider>
