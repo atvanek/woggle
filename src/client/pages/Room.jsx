@@ -144,20 +144,18 @@ function Room() {
 						}}>
 						{!started ? `Start Game` : 'End Game'}
 					</button>
-					<div>
-						<h4>Current Players</h4>
-						<ul>
-							{users.map((user, i) => (
-								<li key={i}>{user}</li>
-							))}
-						</ul>
-					</div>
+					{!started && (
+						<div>
+							<h4>Current Players</h4>
+							<ul>
+								{users.map((user, i) => (
+									<li key={i}>{user}</li>
+								))}
+							</ul>
+						</div>
+					)}
 					{serverLetters.length > 0 && (
-						<>
-							<Board letters={serverLetters} />
-							Score: {score}
-							<Controls />
-							<Played />
+						<div className='flex around width-100'>
 							<section id='players-scores' className='flex column m-10'>
 								<h3>Players Scores</h3>
 								{playerScores.map((player, i) => {
@@ -168,7 +166,13 @@ function Room() {
 									);
 								})}
 							</section>
-						</>
+							<div className='m-10'>
+								<Board letters={serverLetters} />
+								Score: {score}
+								<Controls />
+							</div>
+							<Played />
+						</div>
 					)}
 				</div>
 			)}

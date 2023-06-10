@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
 import Board from '../components/Board';
 import generateLetters from '../../utils/generateLetters';
 import Timer from '../components/Timer.jsx';
@@ -12,21 +11,13 @@ import Played from '../components/Played';
 function Home() {
 	const [letters, setLetters] = React.useState([]);
 	const [timeLimit, setTimeLimit] = React.useState(1);
-	const navigate = useNavigate();
-	// const location = useLocation();
-
-	const { timed, setTimed, timerStarted, setTimerStarted, score, setScore, connection } =
+	const { timed, setTimed, timerStarted, setTimerStarted, score, setScore } =
 		React.useContext(Context);
-	// //connect to websocket
 
 	//logic for initial render of board and letters
-	React.useEffect(() => {
+	useEffect(() => {
 		setLetters(generateLetters());
 	}, []);
-
-	//ALL EMITTED EVENTS
-
-	//any player adds to current score
 
 	return (
 		<main className='flex around m-10'>
