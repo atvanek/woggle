@@ -130,7 +130,7 @@ io.on('connect', (socket) => {
 		rooms[room] = [];
 	});
 	//USER LEAVES ROOM
-	socket.on('room-leave', (user, room, socketId) => {
+	socket.on('room-leave', (room, socketId) => {
 		console.log('disconnecting', socket.id, rooms[room], room);
 		rooms[room] = rooms[room].filter((obj) => obj.user.socketId !== socketId);
 		io.in(room).emit('user-added', JSON.stringify(rooms[room]));

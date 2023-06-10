@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { io } from 'socket.io-client';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Board from '../components/Board';
 import Controls from '../components/Controls';
 import Context from '../context';
@@ -9,6 +9,8 @@ import Played from '../components/Played';
 
 function Room() {
 	const navigate = useNavigate();
+	const location = useLocation();
+
 	const { id } = useParams();
 	const [users, setUsers] = React.useState([]);
 	const [serverLetters, setServerLetters] = React.useState([]);
@@ -26,22 +28,33 @@ function Room() {
 		score,
 		setScore,
 		wordPoints,
+		setPlayedWords,
+		setConnection
 	} = useContext(Context);
 
 	//creates connection to websocket server
-	const socket = io('http://localhost:3000/');
-	console.log(playerScores);
+	const socket = io('http://localhost:3000/', {
+		autoConnect: false
+	});
 	//emits join room event upon mount
-	React.useEffect(() => {
+	useEffect(() => {
+		socket.connect()
 		socket.on('connect', () => {
 			setSocketId(socket.id);
 			socket.emit('join-room', user, id, socket.id);
 		});
 		setRoom(id);
+		setPlayedWords(new Set());
 		setScore(0);
+		setConnection(socket)
+		console.log(socket)
+		return () => {
+			socket.emit('room-leave', room, socketId)
+			socket.disconnect()
+		}
 	}, []);
 
-	React.useEffect(() => {
+	useEffect(() => {
 		if (score > 0) {
 			socket.emit('update-score', room, score + wordPoints, socketId);
 		}

@@ -1,6 +1,5 @@
-import React from 'react';
-import { io } from 'socket.io-client';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Board from '../components/Board';
 import generateLetters from '../../utils/generateLetters';
 import Timer from '../components/Timer.jsx';
@@ -12,14 +11,13 @@ import Played from '../components/Played';
 
 function Home() {
 	const [letters, setLetters] = React.useState([]);
-	const [playerScores, setPlayerScores] = React.useState([]);
 	const [timeLimit, setTimeLimit] = React.useState(1);
 	const navigate = useNavigate();
+	// const location = useLocation();
 
-	const { timed, setTimed, timerStarted, setTimerStarted, score, setScore } =
+	const { timed, setTimed, timerStarted, setTimerStarted, score, setScore, connection } =
 		React.useContext(Context);
 	// //connect to websocket
-	// const socket = io('http://localhost:3000/');
 
 	//logic for initial render of board and letters
 	React.useEffect(() => {
@@ -29,7 +27,6 @@ function Home() {
 	//ALL EMITTED EVENTS
 
 	//any player adds to current score
-	
 
 	return (
 		<main className='flex around m-10'>
