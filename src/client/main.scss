@@ -191,7 +191,7 @@ form {
 	display: flex;
 }
 
-.green{
+.green {
 	background-color: $green;
 }
 
@@ -261,15 +261,6 @@ form {
 
 #play-area {
 	align-items: flex-start;
-}
-
-#played-list {
-	min-width: 250px;
-}
-
-#played-words {
-	width: max-content;
-	margin-top: 20px;
 }
 
 #rooms {

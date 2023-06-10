@@ -81,26 +81,33 @@ function Room() {
 		const parsedScores = JSON.parse(newScores);
 		setPlayerScores(parsedScores);
 	});
-
+	let message;
 	//end game logic
 	socket.on('end-game', (scores) => {
 		//generates string for end-game pop-up
 		//determines winner
 		let highScore = 0;
-		let winner = '';
+		let winners = [];
+
 		const parsedScores = JSON.parse(scores);
 		const finalScores = parsedScores.map((user) => {
 			if (user.score > highScore) {
 				highScore = user.score;
-				winner = user.username;
+				winners = [user.username];
+			} else if (highScore === user.score) {
+				winners.push(user.username);
 			}
+			message =
+				winners.length > 1
+					? `It's a tie! The winners are ${winners.map(
+							(winner) => winner + ' '
+					  )} with a score of ${highScore}!`
+					: `The winner is ${winners[0]}: ${highScore}\n`;
 			return `${user.username}: ${user.score}\n`;
 		});
 		//pop-up
 		window.alert(
-			`Game ended!\nFinal Scores:\n${finalScores.join(
-				''
-			)}\n${winner} is the winner!`
+			`Game ended!\nFinal Scores:\n${finalScores.join('')}\n${message}`
 		);
 		//re-route to homescreen
 		navigate('/');
