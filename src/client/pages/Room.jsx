@@ -1,16 +1,15 @@
 import React, { useContext, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { io } from 'socket.io-client';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Board from '../components/Board';
 import Controls from '../components/Controls';
 import Context from '../context';
 import Played from '../components/Played';
+import { CircularProgress } from '@mui/material';
 
 function Room() {
 	const navigate = useNavigate();
-	const location = useLocation();
-
 	const { id } = useParams();
 	const [users, setUsers] = React.useState([]);
 	const [serverLetters, setServerLetters] = React.useState([]);
@@ -29,29 +28,25 @@ function Room() {
 		setScore,
 		wordPoints,
 		setPlayedWords,
-		setConnection
+		setConnection,
 	} = useContext(Context);
 
 	//creates connection to websocket server
-	const socket = io('http://localhost:3000/', {
-		autoConnect: false
-	});
+	const socket = io('http://localhost:3000/');
 	//emits join room event upon mount
 	useEffect(() => {
-		socket.connect()
 		socket.on('connect', () => {
 			setSocketId(socket.id);
+			setRoom(id);
 			socket.emit('join-room', user, id, socket.id);
 		});
-		setRoom(id);
+
 		setPlayedWords(new Set());
 		setScore(0);
-		setConnection(socket)
-		console.log(socket)
+		setConnection(socket);
 		return () => {
-			socket.emit('room-leave', room, socketId)
-			socket.disconnect()
-		}
+			socket.disconnect(id);
+		};
 	}, []);
 
 	useEffect(() => {
@@ -94,12 +89,12 @@ function Room() {
 		let highScore = 0;
 		let winner = '';
 		const parsedScores = JSON.parse(scores);
-		const finalScores = parsedScores.map((obj) => {
-			if (obj.user.score > highScore) {
-				highScore = obj.user.score;
-				winner = obj.user.username;
+		const finalScores = parsedScores.map((user) => {
+			if (user.score > highScore) {
+				highScore = user.score;
+				winner = user.username;
 			}
-			return `${obj.user.username}: ${obj.user.score}\n`;
+			return `${user.username}: ${user.score}\n`;
 		});
 		//pop-up
 		window.alert(
@@ -107,13 +102,11 @@ function Room() {
 				''
 			)}\n${winner} is the winner!`
 		);
-		socket.disconnect();
 		//re-route to homescreen
 		navigate('/');
 	});
 	socket.on('game-end', () => {
 		setStarted(false);
-		socket.disconnect();
 	});
 	socket.on('disconnect', () => {
 		console.log('disconnected');
@@ -122,59 +115,63 @@ function Room() {
 	return (
 		<>
 			<h1>{`Room ${id}`}</h1>
-			<div className='flex column center-all'>
-				<h2>You are "{username}"</h2>
-				{!started && (
+			{!username ? (
+				<CircularProgress />
+			) : (
+				<div className='flex column center-all'>
+					<h2>You are "{username}"</h2>
+
+					{!started && (
+						<button
+							className='button-size room-content'
+							onClick={() => {
+								//emits room-leave event
+								socket.disconnect();
+								navigate('/');
+							}}>
+							Leave Room
+						</button>
+					)}
 					<button
-						className='button-size room-content'
+						className='button-size'
 						onClick={() => {
-							//emits room-leave event
-							socket.emit('room-leave', user, id, socketId);
-							socket.disconnect();
-							navigate('/');
+							if (!started) {
+								socket.emit('game-start', id);
+								setStarted(true);
+							} else {
+								socket.emit('game-end', id);
+							}
 						}}>
-						Leave Room
+						{!started ? `Start Game` : 'End Game'}
 					</button>
-				)}
-				<button
-					className='button-size'
-					onClick={() => {
-						if (!started) {
-							socket.emit('game-start', id);
-							setStarted(true);
-						} else {
-							socket.emit('game-end', id);
-						}
-					}}>
-					{!started ? `Start Game` : 'End Game'}
-				</button>
-				<div>
-					<h4>Current Players</h4>
-					<ul>
-						{users.map((obj, i) => (
-							<li key={i}>{obj.user.username}</li>
-						))}
-					</ul>
+					<div>
+						<h4>Current Players</h4>
+						<ul>
+							{users.map((user, i) => (
+								<li key={i}>{user}</li>
+							))}
+						</ul>
+					</div>
+					{serverLetters.length > 0 && (
+						<>
+							<Board letters={serverLetters} />
+							Score: {score}
+							<Controls />
+							<Played />
+							<section id='players-scores' className='flex column m-10'>
+								<h3>Players Scores</h3>
+								{playerScores.map((player, i) => {
+									return (
+										<p key={i}>
+											{player.username}: {player.score}
+										</p>
+									);
+								})}
+							</section>
+						</>
+					)}
 				</div>
-				{serverLetters.length > 0 && (
-					<>
-						<Board letters={serverLetters} />
-						Score: {score}
-						<Controls />
-						<Played />
-						<section id='players-scores' className='flex column m-10'>
-							<h3>Players Scores</h3>
-							{playerScores.map((obj, i) => {
-								return (
-									<p key={i}>
-										{obj.user.username}: {obj.user?.score || 0}
-									</p>
-								);
-							})}
-						</section>
-					</>
-				)}
-			</div>
+			)}
 		</>
 	);
 }
