@@ -28,8 +28,19 @@ function Room() {
 		setScore,
 		wordPoints,
 		setPlayedWords,
-		setConnection,
 	} = useContext(Context);
+
+	function resetGame() {
+		setPlayedWords(new Set());
+		setScore(0);
+	}
+
+	function startGame(letters) {
+		setStarted(true);
+		setMultiplayer(true);
+		setServerLetters(letters);
+		setPossibleMoves(new Set());
+	}
 
 	//creates connection to websocket server
 	const socket = io('http://localhost:3000/');
@@ -40,10 +51,7 @@ function Room() {
 			setRoom(id);
 			socket.emit('join-room', user, id, socket.id);
 		});
-
-		setPlayedWords(new Set());
-		setScore(0);
-		setConnection(socket);
+		resetGame();
 		return () => {
 			socket.disconnect(id);
 		};
@@ -69,10 +77,7 @@ function Room() {
 
 	//board generated on server
 	socket.on('letters-ready', (letters) => {
-		setStarted(true);
-		setMultiplayer(true);
-		setServerLetters(letters);
-		setPossibleMoves(new Set());
+		startGame(letters);
 	});
 
 	//new players scores
@@ -110,12 +115,14 @@ function Room() {
 			`Game ended!\nFinal Scores:\n${finalScores.join('')}\n${message}`
 		);
 		//re-route to homescreen
+		socket.disconnect();
 		navigate('/');
 	});
 	socket.on('game-end', () => {
 		setStarted(false);
 	});
 	socket.on('disconnect', () => {
+		resetGame();
 		console.log('disconnected');
 	});
 

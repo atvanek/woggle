@@ -56,18 +56,21 @@ io.on('connect', (socket) => {
 	socket.on('join-room', (user, room, socketId) => {
 		//add user to room
 		socket.join(room);
+		console.log('this is the roommm', room);
 		//retrieve list of socket ids in current room
-		const currentRoom = io.of('/').adapter.rooms.get(room);
+		const currentRoom = [...io.sockets.adapter.rooms.get(room)];
 		console.log(currentRoom);
 		//generate username if not logged-in
-		const username = !user ? `guest${currentRoom.size + 1}` : user;
+
+		const username = !user ? `guest${currentRoom.length + 1}` : user;
 		//add user to users obj
 		users[socketId] = { username, score: 0 };
 		//grab all usernames in current room
-		const roomUsers = [...currentRoom].map((socketId) => {
+		const roomUsers = currentRoom.map((socketId) => {
 			const { username } = users[socketId];
 			return username;
 		});
+
 		//emit user-added event to all users in current room
 		io.in(room).emit('user-added', JSON.stringify(roomUsers));
 		// emits username-generated event to new socket
@@ -86,7 +89,7 @@ io.on('connect', (socket) => {
 
 	//UPDATE SCORE
 	socket.on('update-score', (room, score, socketId) => {
-		const currentRoom = [...io.of('/').adapter.rooms.get(room)];
+		const currentRoom = [...io.sockets.adapter.rooms.get(room)];
 		//set new score for current user
 		users[socketId].score = score;
 		//grab username and scores of all players in room
@@ -110,6 +113,7 @@ io.on('connect', (socket) => {
 	//USER LEAVES ROOM
 	socket.on('disconnect', () => {
 		delete users[socket.id];
+		console.log('disconndexted');
 	});
 });
 

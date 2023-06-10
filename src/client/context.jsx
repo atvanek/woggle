@@ -8,7 +8,6 @@ export function ContextProvider({ children }) {
 	const [loggedIn, setLoggedIn] = useState(false);
 	const [user, setUser] = useState('');
 	const [selectedBoxes, setSelectedBoxes] = useState(new Set());
-	const [coordinates, setCoordinates] = useState();
 	const [wordStarted, setWordStarted] = useState(false);
 	const [possibleMoves, setPossibleMoves] = useState(new Set());
 	const [currentWord, setCurrentWord] = useState('');
@@ -24,7 +23,6 @@ export function ContextProvider({ children }) {
 	const [socket, setSocket] = useState();
 	const [socketId, setSocketId] = useState();
 	const [wordPoints, setWordPoints] = useState(0);
-	const [connection, setConnection] = useState();
 
 	function handleBoxClick(id, letter) {
 		const coordinates = boxCoords[id];
@@ -182,8 +180,6 @@ export function ContextProvider({ children }) {
 				setScore,
 				wordPoints,
 				setWordPoints,
-				connection,
-				setConnection,
 			}}>
 			{children}
 		</Context.Provider>
