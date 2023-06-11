@@ -1,6 +1,6 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { io } from 'socket.io-client';
+import socket from '../socket';
 import { useNavigate } from 'react-router-dom';
 import Board from '../components/Board';
 import Controls from '../components/Controls';
@@ -12,13 +12,13 @@ import Timer from '../components/Timer';
 function Room() {
 	const navigate = useNavigate();
 	const { id } = useParams();
-	const [users, setUsers] = React.useState([]);
-	const [serverLetters, setServerLetters] = React.useState([]);
-	const [username, setUsername] = React.useState(null);
-	const [started, setStarted] = React.useState(false);
-	const [playerScores, setPlayerScores] = React.useState([]);
-	const [host, setHost] = React.useState(false);
-	const [duration, setDuration] = React.useState(null);
+	const [users, setUsers] = useState([]);
+	const [serverLetters, setServerLetters] = useState([]);
+	const [username, setUsername] = useState(null);
+	const [started, setStarted] = useState(false);
+	const [playerScores, setPlayerScores] = useState([]);
+	const [host, setHost] = useState(false);
+	const [timeLimit, setTimeLimit] = useState(1);
 	const {
 		setPossibleMoves,
 		setMultiplayer,
@@ -38,17 +38,24 @@ function Room() {
 	function resetGame() {
 		setPlayedWords(new Set());
 		setScore(0);
+		setStarted(false);
 	}
+
+	let startingTimer;
+	let startTimer;
 
 	function startGame(letters) {
 		setStarting(true);
-		setTimeout(() => {
+		startingTimer = setTimeout(() => {
 			setStarted(true);
 			setMultiplayer(true);
 			setServerLetters(letters);
 			setPossibleMoves(new Set());
 			setStarting(false);
 		}, 3000);
+		startTimer = setTimeout(() => {
+			socket.emit('game-end', id);
+		}, 3000 + timeLimit * 60 * 1000);
 	}
 
 	function handleLeave() {
@@ -56,15 +63,9 @@ function Room() {
 		navigate('/');
 	}
 
-	//creates connection to websocket server
-	const socket = io('http://localhost:3000/');
 	//emits join room event upon mount
 	useEffect(() => {
-		socket.on('connect', () => {
-			setSocketId(socket.id);
-			setRoom(id);
-			socket.emit('join-room', user, id, socket.id);
-		});
+		socket.connect();
 		resetGame();
 		return () => {
 			socket.disconnect(id);
@@ -88,28 +89,33 @@ function Room() {
 		users,
 		id,
 		starting,
+		timeLimit,
+		setTimeLimit,
 	};
+
 	//ALL RECEIVED EVENTS
 
-	//individual username generated
+	// individual username generated
+	socket.on('connect', () => {
+		setSocketId(socket.id);
+		setRoom(id);
+		socket.emit('join-room', user, id, socket.id);
+	});
 	socket.on('username-generated', (newUsername, host) => {
 		setUsername(newUsername);
 		if (host) {
 			setHost(true);
 		}
 	});
-
 	//new user joins room
 	socket.on('user-added', (newUsers) => {
 		setUsers(JSON.parse(newUsers));
 	});
-
 	//board generated on server
-	socket.on('letters-ready', (letters, duration) => {
-		setDuration(duration);
+	socket.on('letters-ready', (letters, timeLimit) => {
+		setTimeLimit(timeLimit);
 		startGame(letters);
 	});
-
 	//new players scores
 	socket.on('new-scores', (newScores) => {
 		//sets player scores
@@ -151,8 +157,10 @@ function Room() {
 		setStarted(false);
 	});
 	socket.on('disconnect', () => {
+		setStarting(false);
+		clearTimeout(startingTimer);
+		clearTimeout(startTimer);
 		resetGame();
-		console.log('disconnected');
 	});
 
 	return (
@@ -165,7 +173,7 @@ function Room() {
 			) : (
 				<>
 					<h1>{`Room ${id}`}</h1>
-					{started && <Timer time={duration * 60} />}
+					{started && <Timer time={timeLimit * 60} />}
 					<div className='flex center-all'>
 						<h2>
 							You are {username}
