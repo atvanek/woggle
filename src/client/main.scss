@@ -89,7 +89,7 @@ button {
 	}
 }
 
-button {
+button:not(.EmojiPickerReact button, .MuiButtonBase-root) {
 	border-radius: 5px;
 	box-shadow: $shadow;
 	border: none;
@@ -101,6 +101,8 @@ button {
 		background-color: $highlight;
 	}
 }
+
+
 
 input {
 	margin-bottom: 10px;
@@ -263,7 +265,7 @@ form {
 	align-items: flex-start;
 }
 
-#played-words{
+#played-words {
 	padding: 10px;
 }
 

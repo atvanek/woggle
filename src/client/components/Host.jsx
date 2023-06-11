@@ -1,8 +1,11 @@
 import TimeLimit from './TimeLimit';
+import { useContext } from 'react'
+import Context from '../context';
 
-function Host({ socket, started, id, starting, timeLimit, setTimeLimit }) {
+function Host({ socket, started, starting, timeLimit, setTimeLimit }) {
+	const {room} = useContext(Context)
 	function handleMultiStart() {
-		socket.emit('game-start', id, timeLimit);
+		socket.emit('game-start', room.id, timeLimit);
 	}
 	return (
 		<>

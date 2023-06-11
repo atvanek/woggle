@@ -19,7 +19,7 @@ export function ContextProvider({ children }) {
 	const [score, setScore] = useState(0);
 	const [playedWords, setPlayedWords] = useState(new Set());
 	const [multiplayer, setMultiplayer] = useState(false);
-	const [room, setRoom] = useState();
+	const [room, setRoom] = useState({});
 	const [socket, setSocket] = useState();
 	const [socketId, setSocketId] = useState();
 	const [wordPoints, setWordPoints] = useState(0);

@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import Home from '../pages/Home.jsx';
 import Nav from './Nav.jsx';
 import '../main.scss';
-import Rooms from './Rooms.jsx';
+import RoomPicker from './RoomPicker.jsx';
 import Context from '../context.jsx';
 
 function App() {
@@ -16,7 +16,7 @@ function App() {
 				<h1 id='main-header'>Woggle</h1>
 			</div>
 			<div id='play-area' className='flex center'>
-				<Rooms user={user === '' ? 'guest' : user} />
+				<RoomPicker />
 				<Home user={user} />
 			</div>
 		</div>

@@ -11,6 +11,7 @@ import Played from '../components/Played';
 function Home() {
 	const [letters, setLetters] = useState([]);
 	const [timeLimit, setTimeLimit] = useState(1);
+
 	const {
 		timed,
 		timerStarted,
@@ -44,19 +45,21 @@ function Home() {
 	};
 
 	return (
-		<main className='flex around m-10'>
-			<section id='board' className='flex column center'>
-				<Timed timed={timed} handleToggle={handleToggle} />
-				<Board letters={letters} />
-				<div id='score'>Score: {score}</div>
-				<TimeLimit {...props} />
-				<Controls />
-				<div className='flex center-all'>
-					{timed && timerStarted && <Timer time={timeLimit * 60} />}
-				</div>
-			</section>
-			<Played />
-		</main>
+		<>
+			<main className='flex around m-10'>
+				<section id='board' className='flex column center'>
+					<Timed timed={timed} handleToggle={handleToggle} />
+					<Board letters={letters} />
+					<div id='score'>Score: {score}</div>
+					<TimeLimit {...props} />
+					<Controls />
+					<div className='flex center-all'>
+						{timed && timerStarted && <Timer time={timeLimit * 60} />}
+					</div>
+				</section>
+				<Played />
+			</main>
+		</>
 	);
 }
 export default Home;

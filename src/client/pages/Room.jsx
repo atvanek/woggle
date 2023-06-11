@@ -11,7 +11,6 @@ import Timer from '../components/Timer';
 
 function Room() {
 	const navigate = useNavigate();
-	const { id } = useParams();
 	const [users, setUsers] = useState([]);
 	const [serverLetters, setServerLetters] = useState([]);
 	const [username, setUsername] = useState(null);
@@ -23,7 +22,6 @@ function Room() {
 		setPossibleMoves,
 		setMultiplayer,
 		room,
-		setRoom,
 		socketId,
 		setSocketId,
 		user,
@@ -54,7 +52,7 @@ function Room() {
 			setStarting(false);
 		}, 3000);
 		startTimer = setTimeout(() => {
-			socket.emit('game-end', id);
+			socket.emit('game-end', room.id);
 		}, 3000 + timeLimit * 60 * 1000);
 	}
 
@@ -68,7 +66,7 @@ function Room() {
 		socket.connect();
 		resetGame();
 		return () => {
-			socket.disconnect(id);
+			socket.disconnect(room.id);
 		};
 	}, []);
 
@@ -87,7 +85,6 @@ function Room() {
 		playerScores,
 		score,
 		users,
-		id,
 		starting,
 		timeLimit,
 		setTimeLimit,
@@ -98,8 +95,7 @@ function Room() {
 	// individual username generated
 	socket.on('connect', () => {
 		setSocketId(socket.id);
-		setRoom(id);
-		socket.emit('join-room', user, id, socket.id);
+		socket.emit('join-room', user, room.id, socket.id);
 	});
 	socket.on('username-generated', (newUsername, host) => {
 		setUsername(newUsername);
@@ -172,7 +168,7 @@ function Room() {
 				</div>
 			) : (
 				<>
-					<h1>{`Room ${id}`}</h1>
+					<h1>{`Room ${room.emoji}`}</h1>
 					{started && <Timer time={timeLimit * 60} />}
 					<div className='flex center-all'>
 						<h2>
