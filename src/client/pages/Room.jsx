@@ -1,6 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import socket from '../socket';
 import { useNavigate } from 'react-router-dom';
 import Board from '../components/Board';
 import Controls from '../components/Controls';
@@ -8,6 +6,8 @@ import Context from '../context';
 import Played from '../components/Played';
 import Host from '../components/Host';
 import Timer from '../components/Timer';
+import FinalScores from '../components/FinalScores';
+import { io } from 'socket.io-client';
 
 function Room() {
 	const navigate = useNavigate();
@@ -18,6 +18,8 @@ function Room() {
 	const [playerScores, setPlayerScores] = useState([]);
 	const [host, setHost] = useState(false);
 	const [timeLimit, setTimeLimit] = useState(1);
+	const [ended, setEnded] = useState(false);
+	const [message, setMessage] = useState('');
 	const {
 		setPossibleMoves,
 		setMultiplayer,
@@ -32,6 +34,10 @@ function Room() {
 		starting,
 		setStarting,
 	} = useContext(Context);
+
+	const socket = io('http://localhost:3000/', {
+		autoConnect: false,
+	});
 
 	function resetGame() {
 		setPlayedWords(new Set());
@@ -64,6 +70,10 @@ function Room() {
 	//emits join room event upon mount
 	useEffect(() => {
 		socket.connect();
+		socket.on('connect', () => {
+			setSocketId(socket.id);
+			socket.emit('join-room', user, room.id, socket.id);
+		});
 		resetGame();
 		return () => {
 			socket.disconnect(room.id);
@@ -72,7 +82,7 @@ function Room() {
 
 	useEffect(() => {
 		if (score > 0) {
-			socket.emit('update-score', room, score + wordPoints, socketId);
+			socket.emit('update-score', room.id, score + wordPoints, socketId);
 		}
 	}, [score]);
 
@@ -93,10 +103,7 @@ function Room() {
 	//ALL RECEIVED EVENTS
 
 	// individual username generated
-	socket.on('connect', () => {
-		setSocketId(socket.id);
-		socket.emit('join-room', user, room.id, socket.id);
-	});
+
 	socket.on('username-generated', (newUsername, host) => {
 		setUsername(newUsername);
 		if (host) {
@@ -118,11 +125,13 @@ function Room() {
 		const parsedScores = JSON.parse(newScores);
 		setPlayerScores(parsedScores);
 	});
-	let message;
+	let winnerMessage;
 	//end game logic
 	socket.on('end-game', (scores) => {
 		//generates string for end-game pop-up
 		//determines winner
+		console.log('game ended');
+		setEnded(true);
 		let highScore = 0;
 		let winners = [];
 		const parsedScores = JSON.parse(scores);
@@ -133,7 +142,7 @@ function Room() {
 			} else if (highScore === user.score) {
 				winners.push(user.username);
 			}
-			message =
+			winnerMessage =
 				winners.length > 1
 					? `It's a tie! The winners are ${winners.map(
 							(winner) => winner + ' '
@@ -141,13 +150,11 @@ function Room() {
 					: `The winner is ${winners[0]}: ${highScore}\n`;
 			return `${user.username}: ${user.score}\n`;
 		});
-		//pop-up
-		window.alert(
-			`Game ended!\nFinal Scores:\n${finalScores.join('')}\n${message}`
+		setMessage(
+			`Game ended!\nFinal Scores:\n${finalScores.join('')}\n${winnerMessage}`
 		);
+
 		//re-route to homescreen
-		socket.disconnect();
-		navigate('/');
 	});
 	socket.on('game-end', () => {
 		setStarted(false);
@@ -212,6 +219,7 @@ function Room() {
 						)}
 						{!started && <button onClick={handleLeave}>Leave Room</button>}
 					</div>
+					<FinalScores open={ended} message={message} />
 				</>
 			)}
 		</>

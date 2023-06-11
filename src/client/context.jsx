@@ -87,7 +87,6 @@ export function ContextProvider({ children }) {
 
 	function validateWord(e) {
 		//checks word length
-		let status;
 		if (currentWord.length < 3) {
 			handleAlert('length');
 			return;

@@ -53,13 +53,13 @@ const users = {};
 //websocket logic
 io.on('connect', (socket) => {
 	//USER JOINS A ROOM
+	console.log('connection made')
 	socket.on('join-room', (user, room, socketId) => {
 		//add user to room
 		socket.join(room);
 		console.log('this is the roommm', room);
 		//retrieve list of socket ids in current room
 		const currentRoom = [...io.sockets.adapter.rooms.get(room)];
-		console.log(currentRoom);
 		//generate username if not logged-in
 		const username = !user ? `guest${currentRoom.length + 1}` : user;
 		const host = currentRoom.length === 1
