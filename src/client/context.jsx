@@ -144,6 +144,14 @@ export function ContextProvider({ children }) {
 			.forEach((node) => node.classList.remove('selected'));
 	}
 
+	function handleToggle(e) {
+		if (timed) {
+			setScore(0);
+			setTimerStarted(false);
+		}
+		setTimed(e.target.checked);
+	}
+
 	return (
 		<Context.Provider
 			value={{
@@ -180,6 +188,7 @@ export function ContextProvider({ children }) {
 				setScore,
 				wordPoints,
 				setWordPoints,
+				handleToggle
 			}}>
 			{children}
 		</Context.Provider>

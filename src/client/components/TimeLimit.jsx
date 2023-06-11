@@ -1,15 +1,12 @@
-import {Collapse, ToggleButton, ToggleButtonGroup} from '@mui/material'
+import { Collapse, ToggleButton, ToggleButtonGroup } from '@mui/material';
 function TimeLimit({
 	timeLimit,
 	setTimeLimit,
-	timed,
-	timerStarted,
-	setTimerStarted,
-	setScore,
-	setLetters,
+	handleGameStart,
+	show,
 }) {
 	return (
-		<Collapse in={timed && !timerStarted}>
+		<Collapse in={show}>
 			<div className='flex center-all'>
 				<div className='flex column center-all'>
 					<h3>Choose Time Limit</h3>
@@ -40,11 +37,7 @@ function TimeLimit({
 						<p>Time Limit: {timeLimit} min</p>
 						<button
 							className='green'
-							onClick={(e) => {
-								setTimerStarted(true);
-								setScore(0);
-								setLetters(generateLetters);
-							}}>
+							onClick={handleGameStart}>
 							Start Game
 						</button>
 					</div>
@@ -54,4 +47,4 @@ function TimeLimit({
 	);
 }
 
-export default TimeLimit
+export default TimeLimit;

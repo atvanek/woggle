@@ -1,54 +1,55 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import Board from '../components/Board';
 import generateLetters from '../../utils/generateLetters';
 import Timer from '../components/Timer.jsx';
+import Timed from '../components/Timed';
 import TimeLimit from '../components/TimeLimit';
-import { Switch } from '@mui/material';
 import Context from '../context';
 import Controls from '../components/Controls';
 import Played from '../components/Played';
 
 function Home() {
-	const [letters, setLetters] = React.useState([]);
-	const [timeLimit, setTimeLimit] = React.useState(1);
-	const { timed, setTimed, timerStarted, setTimerStarted, score, setScore } =
-		React.useContext(Context);
+	const [letters, setLetters] = useState([]);
+	const [timeLimit, setTimeLimit] = useState(1);
+	const {
+		timed,
+		timerStarted,
+		setTimerStarted,
+		score,
+		setScore,
+		handleToggle,
+	} = useContext(Context);
 
 	//logic for initial render of board and letters
 	useEffect(() => {
 		setLetters(generateLetters());
 	}, []);
 
+	function handleGameStart() {
+		setTimerStarted(true);
+		setScore(0);
+		setLetters(generateLetters);
+	}
+
+	const props = {
+		timeLimit,
+		setTimeLimit,
+		timed,
+		timerStarted,
+		setTimerStarted,
+		setScore,
+		setLetters,
+		show: timed && !timerStarted,
+		handleGameStart,
+	};
+
 	return (
 		<main className='flex around m-10'>
 			<section id='board' className='flex column center'>
-				<div
-					id='timed-wrapper'
-					className={`flex center-all m-10 ${timed ? 'timed' : ''}`}>
-					untimed
-					<Switch
-						color='warning'
-						onChange={(e) => {
-							if (timed) {
-								setScore(0);
-								setTimerStarted(false);
-							}
-							setTimed(e.target.checked);
-						}}
-					/>
-					timed
-				</div>
+				<Timed timed={timed} handleToggle={handleToggle} />
 				<Board letters={letters} />
 				<div id='score'>Score: {score}</div>
-				<TimeLimit
-					timeLimit={timeLimit}
-					setTimeLimit={setTimeLimit}
-					timed={timed}
-					timerStarted={timerStarted}
-					setTimerStarted={setTimerStarted}
-					setScore={setScore}
-					setLetters={setLetters}
-				/>
+				<TimeLimit {...props} />
 				<Controls />
 				<div className='flex center-all'>
 					{timed && timerStarted && <Timer time={timeLimit * 60} />}

@@ -7,6 +7,7 @@ import Controls from '../components/Controls';
 import Context from '../context';
 import Played from '../components/Played';
 import { CircularProgress } from '@mui/material';
+import Host from '../components/Host';
 
 function Room() {
 	const navigate = useNavigate();
@@ -16,6 +17,7 @@ function Room() {
 	const [username, setUsername] = React.useState(null);
 	const [started, setStarted] = React.useState(false);
 	const [playerScores, setPlayerScores] = React.useState([]);
+	const [host, setHost] = React.useState(false);
 	const {
 		setPossibleMoves,
 		setMultiplayer,
@@ -42,6 +44,20 @@ function Room() {
 		setPossibleMoves(new Set());
 	}
 
+	function handleLeave() {
+		socket.disconnect();
+		navigate('/');
+	}
+
+	function handleGameState() {
+		if (!started) {
+			socket.emit('game-start', id);
+			setStarted(true);
+		} else {
+			socket.emit('game-end', id);
+		}
+	}
+
 	//creates connection to websocket server
 	const socket = io('http://localhost:3000/');
 	//emits join room event upon mount
@@ -63,11 +79,25 @@ function Room() {
 		}
 	}, [score]);
 
+	const props = {
+		username,
+		socket,
+		started,
+		setStarted,
+		serverLetters,
+		playerScores,
+		score,
+		users,
+		id,
+	};
 	//ALL RECEIVED EVENTS
 
 	//individual username generated
-	socket.on('username-generated', (newUsername) => {
+	socket.on('username-generated', (newUsername, host) => {
 		setUsername(newUsername);
+		if (host) {
+			setHost(true);
+		}
 	});
 
 	//new user joins room
@@ -131,31 +161,21 @@ function Room() {
 			<h1>{`Room ${id}`}</h1>
 			{!username ? (
 				<CircularProgress />
+			) : host ? (
+				<Host {...props} />
 			) : (
 				<div className='flex column center-all'>
-					<h2>You are "{username}"</h2>
+					<h2>
+						You are {username}
+						{host && ' - HOST'}
+					</h2>
 
 					{!started && (
-						<button
-							className='button-size room-content'
-							onClick={() => {
-								//emits room-leave event
-								socket.disconnect();
-								navigate('/');
-							}}>
+						<button className='button-size room-content' onClick={handleLeave}>
 							Leave Room
 						</button>
 					)}
-					<button
-						className='button-size'
-						onClick={() => {
-							if (!started) {
-								socket.emit('game-start', id);
-								setStarted(true);
-							} else {
-								socket.emit('game-end', id);
-							}
-						}}>
+					<button className='button-size' onClick={handleGameState}>
 						{!started ? `Start Game` : 'End Game'}
 					</button>
 					{!started && (

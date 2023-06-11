@@ -61,20 +61,20 @@ io.on('connect', (socket) => {
 		const currentRoom = [...io.sockets.adapter.rooms.get(room)];
 		console.log(currentRoom);
 		//generate username if not logged-in
-
 		const username = !user ? `guest${currentRoom.length + 1}` : user;
+		const host = currentRoom.length === 1
 		//add user to users obj
-		users[socketId] = { username, score: 0 };
+		users[socketId] = { username, score: 0, host };
 		//grab all usernames in current room
 		const roomUsers = currentRoom.map((socketId) => {
 			const { username } = users[socketId];
 			return username;
 		});
-
+		
 		//emit user-added event to all users in current room
 		io.in(room).emit('user-added', JSON.stringify(roomUsers));
 		// emits username-generated event to new socket
-		io.to(socketId).emit('username-generated', username);
+		io.to(socketId).emit('username-generated', username, host);
 	});
 	socket.on('new-board', (room) => {
 		//adds board to room
