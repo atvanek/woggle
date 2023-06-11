@@ -7,7 +7,6 @@ import Played from '../components/Played';
 import Host from '../components/Host';
 import Timer from '../components/Timer';
 import FinalScores from '../components/FinalScores';
-import { io } from 'socket.io-client';
 
 function Room() {
 	const navigate = useNavigate();
@@ -26,6 +25,7 @@ function Room() {
 		room,
 		socketId,
 		setSocketId,
+		socket,
 		user,
 		score,
 		setScore,
@@ -34,10 +34,6 @@ function Room() {
 		starting,
 		setStarting,
 	} = useContext(Context);
-
-	const socket = io('http://localhost:3000/', {
-		autoConnect: false,
-	});
 
 	function resetGame() {
 		setPlayedWords(new Set());
@@ -88,14 +84,11 @@ function Room() {
 
 	const props = {
 		username,
-		socket,
 		started,
 		setStarted,
 		serverLetters,
 		playerScores,
-		score,
 		users,
-		starting,
 		timeLimit,
 		setTimeLimit,
 	};

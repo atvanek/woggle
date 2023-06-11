@@ -1,7 +1,7 @@
 import React, { createContext, useState } from 'react';
 import { generateMoves } from '../utils/generateMoves.js';
 import boxCoords from '../utils/coordinates.js';
-
+import { io } from 'socket.io-client';
 const Context = createContext(null);
 
 export function ContextProvider({ children }) {
@@ -20,7 +20,11 @@ export function ContextProvider({ children }) {
 	const [playedWords, setPlayedWords] = useState(new Set());
 	const [multiplayer, setMultiplayer] = useState(false);
 	const [room, setRoom] = useState({});
-	const [socket, setSocket] = useState();
+	const [socket, setSocket] = useState(
+		io('http://localhost:3000/', {
+			autoConnect: false,
+		})
+	);
 	const [socketId, setSocketId] = useState();
 	const [wordPoints, setWordPoints] = useState(0);
 	const [starting, setStarting] = useState(false);
