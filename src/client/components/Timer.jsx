@@ -25,7 +25,7 @@ function Timer({ time }) {
 		}
 	}
 	return seconds > 0 ? (
-		<>
+		<div className='flex center-all'>
 			<Box sx={{ position: 'relative', display: 'inline-flex' }}>
 				<CircularProgress
 					sx={{
@@ -34,7 +34,7 @@ function Timer({ time }) {
 						color: `${seconds < 11 ? 'red' : seconds < 31 ? '#32ec70' : ''}`,
 					}}
 					variant='determinate'
-					value={(100 / 60) * seconds}
+					value={seconds/time * 100}
 				/>
 				<Box
 					className='flex center-all'
@@ -45,7 +45,7 @@ function Timer({ time }) {
 					</Typography>
 				</Box>
 			</Box>
-		</>
+		</div>
 	) : (
 		<p>Time's Up</p>
 	);

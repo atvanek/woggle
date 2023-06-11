@@ -81,10 +81,10 @@ io.on('connect', (socket) => {
 		socket.join(room);
 	});
 	//GAME STARTED
-	socket.on('game-start', (id) => {
+	socket.on('game-start', (id, duration) => {
 		const letters = generateLetters();
 		//lets all rooms know letters are ready to be rendered
-		io.in(id).emit('letters-ready', letters);
+		io.in(id).emit('letters-ready', letters, duration);
 	});
 
 	//UPDATE SCORE

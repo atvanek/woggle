@@ -6,8 +6,8 @@ import Board from '../components/Board';
 import Controls from '../components/Controls';
 import Context from '../context';
 import Played from '../components/Played';
-import { CircularProgress } from '@mui/material';
 import Host from '../components/Host';
+import Timer from '../components/Timer';
 
 function Room() {
 	const navigate = useNavigate();
@@ -18,6 +18,7 @@ function Room() {
 	const [started, setStarted] = React.useState(false);
 	const [playerScores, setPlayerScores] = React.useState([]);
 	const [host, setHost] = React.useState(false);
+	const [duration, setDuration] = React.useState(null);
 	const {
 		setPossibleMoves,
 		setMultiplayer,
@@ -30,6 +31,8 @@ function Room() {
 		setScore,
 		wordPoints,
 		setPlayedWords,
+		starting,
+		setStarting,
 	} = useContext(Context);
 
 	function resetGame() {
@@ -38,24 +41,19 @@ function Room() {
 	}
 
 	function startGame(letters) {
-		setStarted(true);
-		setMultiplayer(true);
-		setServerLetters(letters);
-		setPossibleMoves(new Set());
+		setStarting(true);
+		setTimeout(() => {
+			setStarted(true);
+			setMultiplayer(true);
+			setServerLetters(letters);
+			setPossibleMoves(new Set());
+			setStarting(false);
+		}, 3000);
 	}
 
 	function handleLeave() {
 		socket.disconnect();
 		navigate('/');
-	}
-
-	function handleGameState() {
-		if (!started) {
-			socket.emit('game-start', id);
-			setStarted(true);
-		} else {
-			socket.emit('game-end', id);
-		}
 	}
 
 	//creates connection to websocket server
@@ -89,6 +87,7 @@ function Room() {
 		score,
 		users,
 		id,
+		starting,
 	};
 	//ALL RECEIVED EVENTS
 
@@ -106,7 +105,8 @@ function Room() {
 	});
 
 	//board generated on server
-	socket.on('letters-ready', (letters) => {
+	socket.on('letters-ready', (letters, duration) => {
+		setDuration(duration);
 		startGame(letters);
 	});
 
@@ -123,7 +123,6 @@ function Room() {
 		//determines winner
 		let highScore = 0;
 		let winners = [];
-
 		const parsedScores = JSON.parse(scores);
 		const finalScores = parsedScores.map((user) => {
 			if (user.score > highScore) {
@@ -158,57 +157,58 @@ function Room() {
 
 	return (
 		<>
-			<h1>{`Room ${id}`}</h1>
-			{!username ? (
-				<CircularProgress />
-			) : host ? (
-				<Host {...props} />
-			) : (
-				<div className='flex column center-all'>
-					<h2>
-						You are {username}
-						{host && ' - HOST'}
-					</h2>
-
-					{!started && (
-						<button className='button-size room-content' onClick={handleLeave}>
-							Leave Room
-						</button>
-					)}
-					<button className='button-size' onClick={handleGameState}>
-						{!started ? `Start Game` : 'End Game'}
-					</button>
-					{!started && (
-						<div>
-							<h4>Current Players</h4>
-							<ul>
-								{users.map((user, i) => (
-									<li key={i}>{user}</li>
-								))}
-							</ul>
-						</div>
-					)}
-					{serverLetters.length > 0 && (
-						<div className='flex around width-100'>
-							<section id='players-scores' className='flex column m-10'>
-								<h3>Players Scores</h3>
-								{playerScores.map((player, i) => {
-									return (
-										<p key={i}>
-											{player.username}: {player.score}
-										</p>
-									);
-								})}
-							</section>
-							<div className='m-10'>
-								<Board letters={serverLetters} />
-								Score: {score}
-								<Controls />
-							</div>
-							<Played />
-						</div>
-					)}
+			{starting && !started ? (
+				<div className='flex center-all'>
+					<h2>Game Starting in </h2>
+					<Timer time={3} />
 				</div>
+			) : (
+				<>
+					<h1>{`Room ${id}`}</h1>
+					{started && <Timer time={duration * 60} />}
+					<div className='flex center-all'>
+						<h2>
+							You are {username}
+							{host && ' - HOST'}
+						</h2>
+					</div>
+					{host && <Host {...props} />}
+					<div className='flex column center-all'>
+						{!host && !started && <h3>Waiting for host to start game...</h3>}
+						{!started && (
+							<div>
+								<h4>Current Players</h4>
+								<ul>
+									{users.map((user, i) => (
+										<li key={i}>{user}</li>
+									))}
+								</ul>
+							</div>
+						)}
+
+						{serverLetters.length > 0 && (
+							<div className='flex around width-100'>
+								<section id='players-scores' className='flex column m-10'>
+									<h3>Players Scores</h3>
+									{playerScores.map((player, i) => {
+										return (
+											<p key={i}>
+												{player.username}: {player.score}
+											</p>
+										);
+									})}
+								</section>
+								<div className='m-10'>
+									<Board letters={serverLetters} />
+									<div className='flex center-all'>Score: {score}</div>
+									<Controls />
+								</div>
+								<Played />
+							</div>
+						)}
+						{!started && <button onClick={handleLeave}>Leave Room</button>}
+					</div>
+				</>
 			)}
 		</>
 	);

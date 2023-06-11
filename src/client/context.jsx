@@ -23,6 +23,7 @@ export function ContextProvider({ children }) {
 	const [socket, setSocket] = useState();
 	const [socketId, setSocketId] = useState();
 	const [wordPoints, setWordPoints] = useState(0);
+	const [starting, setStarting] = useState(false);
 
 	function handleBoxClick(id, letter) {
 		const coordinates = boxCoords[id];
@@ -188,7 +189,9 @@ export function ContextProvider({ children }) {
 				setScore,
 				wordPoints,
 				setWordPoints,
-				handleToggle
+				handleToggle,
+				starting,
+				setStarting,
 			}}>
 			{children}
 		</Context.Provider>
