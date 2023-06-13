@@ -5,10 +5,10 @@
 	"main": "index.jsx",
 	"type": "module",
 	"scripts": {
-		"start": "node server/server.ts",
-		"prod": "nodemon src/server/server.js",
+		"start": "node server/server.js",
+		"prod": "NODE_ENV=production nodemon server/server.js",
 		"build": "vite build",
-		"dev": "concurrently 'nodemon src/server/server.js' 'vite --open'",
+		"dev": "NODE_ENV=development concurrently 'nodemon server/server.js' 'vite --open'",
 		"vite": "vite --open"
 	},
 	"repository": {

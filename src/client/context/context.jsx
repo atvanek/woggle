@@ -1,6 +1,6 @@
 import React, { createContext, useState } from 'react';
-import {generateMoves} from '../../utils/generateMoves.js'
-import boxCoords from '../../utils/coordinates.js'
+import { generateMoves } from '../../../utils/generateMoves.js';
+import boxCoords from '../../../utils/coordinates.js';
 import { io } from 'socket.io-client';
 const Context = createContext(null);
 

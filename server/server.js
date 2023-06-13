@@ -2,6 +2,9 @@ import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import userController from './controllers/userController.js';
+import path from 'path';
+import dotenv from 'dotenv';
+
 const app = express();
 const PORT = 3000;
 const httpServer = createServer(app);
@@ -10,6 +13,16 @@ const io = new Server(httpServer, {
 		origin: ['http://localhost:8080'],
 	},
 });
+
+dotenv.config();
+
+if (process.env.NODE_ENV === 'production') {
+	app.get('/', (_req, res) => {
+		res.sendFile(path.resolve('server', '../public/dist/index.html'));
+	});
+
+	app.use(express.static(path.resolve('server', '../public/dist')));
+}
 
 app.use(express.json());
 
@@ -56,7 +69,6 @@ io.on('connection', (socket) => {
 	socket.on('join-room', (user, room, socketId) => {
 		//add user to room
 		socket.join(room);
-		console.log('room join event', room, socketId, socket.id)
 		//retrieve list of socket ids in current room
 		const currentRoom = [...io.sockets.adapter.rooms.get(room)];
 		//generate username if not logged-in
