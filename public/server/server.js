@@ -2,9 +2,8 @@ import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import userController from './controllers/userController.js';
-import path from 'path'
-import dotenv from 'dotenv'
-
+import path from 'path';
+import dotenv from 'dotenv';
 
 const app = express();
 const PORT = 3000;
@@ -15,14 +14,14 @@ const io = new Server(httpServer, {
 	},
 });
 
-dotenv.config()
+dotenv.config();
 
 if (process.env.NODE_ENV === 'production') {
 	app.get('/', (_req, res) => {
-		res.sendFile(path.resolve('server', '../dist/index.html'))
-	})
+		res.sendFile(path.resolve('server', '../public/dist/index.html'));
+	});
 
-	app.use(express.static(path.resolve('server', '../dist')))
+	app.use(express.static(path.resolve('server', '../public/dist')));
 }
 
 app.use(express.json());
@@ -59,7 +58,7 @@ app.use((err, _req, res, _next) => {
 	res.status(500).send({ error: err });
 });
 
-import generateLetters from '../utils/generateLetters.js';
+import generateLetters from '../../utils/generateLetters.js';
 
 //username, room, websocket, score data
 const users = {};
@@ -70,7 +69,6 @@ io.on('connection', (socket) => {
 	socket.on('join-room', (user, room, socketId) => {
 		//add user to room
 		socket.join(room);
-		console.log('room join event', room, socketId, socket.id)
 		//retrieve list of socket ids in current room
 		const currentRoom = [...io.sockets.adapter.rooms.get(room)];
 		//generate username if not logged-in

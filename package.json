@@ -5,13 +5,13 @@
 	"main": "index.jsx",
 	"type": "module",
 	"engines": {
-    "node": "18.x"
-  },
+		"node": "18.x"
+	},
 	"scripts": {
 		"start": "node server/server.ts",
-		"prod": "nodemon src/server/server.js",
+		"prod": "NODE_ENV=production nodemon public/server/server.js",
 		"build": "vite build",
-		"dev": "concurrently 'nodemon src/server/server.js' 'vite --open'",
+		"dev": "NODE_ENV=development concurrently 'nodemon public/server/server.js' 'vite --open'",
 		"vite": "vite --open"
 	},
 	"repository": {
