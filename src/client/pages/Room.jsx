@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Board from '../components/Board';
 import Controls from '../components/Controls';
-import Context from '../context';
+import Context from '../context/context';
 import Played from '../components/Played';
 import Host from '../components/Host';
 import Timer from '../components/Timer';

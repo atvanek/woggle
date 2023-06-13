@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import Context from '../context.jsx';
+import Context from '../context/context';
 import { TextField } from '@mui/material';
 import UsernameInput from '../components/UsernameInput';
 

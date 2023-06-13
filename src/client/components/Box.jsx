@@ -1,5 +1,5 @@
 import React from 'react';
-import Context from '../context';
+import Context from '../context/context';
 
 function Box({ letter, id }) {
 	const { handleBoxClick } = React.useContext(Context);

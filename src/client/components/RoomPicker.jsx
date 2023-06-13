@@ -1,7 +1,7 @@
 import EmojiPicker from 'emoji-picker-react';
 import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Context from '../context';
+import Context from '../context/context';
 import {
 	Dialog,
 	DialogTitle,

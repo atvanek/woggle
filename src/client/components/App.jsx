@@ -3,7 +3,7 @@ import Home from '../pages/Home.jsx';
 import Nav from './Nav.jsx';
 import '../main.scss';
 import RoomPicker from './RoomPicker.jsx';
-import Context from '../context.jsx';
+import Context from '../context/context';
 
 function App() {
 	const { user } = useContext(Context);

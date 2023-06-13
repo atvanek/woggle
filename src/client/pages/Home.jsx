@@ -4,7 +4,7 @@ import generateLetters from '../../utils/generateLetters';
 import Timer from '../components/Timer.jsx';
 import Timed from '../components/Timed';
 import TimeLimit from '../components/TimeLimit';
-import Context from '../context';
+import Context from '../context/context';
 import Controls from '../components/Controls';
 import Played from '../components/Played';
 

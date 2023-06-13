@@ -1,6 +1,6 @@
 import TimeLimit from './TimeLimit';
 import { useContext } from 'react'
-import Context from '../context';
+import Context from '../context/context';
 
 function Host({ started, timeLimit, setTimeLimit }) {
 	const {room, starting, socket} = useContext(Context)

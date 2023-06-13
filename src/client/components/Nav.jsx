@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
-import Context from '../context.jsx';
+import Context from '../context/context';
 
 function Nav() {
 	const { loggedIn, setLoggedIn, user, setUser } = useContext(Context);

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import Context from '../context';
+import Context from '../context/context';
 
 function Controls() {
 	const { timed, timerStarted, validateWord, clearBoard } = useContext(Context);

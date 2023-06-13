@@ -4,7 +4,7 @@ import App from './components/App.jsx';
 import Login from './pages/login.jsx';
 import SignUp from './pages/SignUp.jsx';
 import Room from './pages/Room.jsx';
-import { ContextProvider } from './context.jsx';
+import { ContextProvider } from './context/context.jsx';
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
