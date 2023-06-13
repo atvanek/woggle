@@ -6,7 +6,8 @@
 	"type": "module",
 	"scripts": {
 		"start": "node server/server.ts",
-		"build": "NODE_ENV=production webpack",
+		"prod": "nodemon src/server/server.js",
+		"build": "vite build",
 		"dev": "concurrently 'nodemon src/server/server.js' 'vite --open'",
 		"vite": "vite --open"
 	},
