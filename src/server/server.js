@@ -51,18 +51,17 @@ import generateLetters from '../utils/generateLetters.js';
 const users = {};
 
 //websocket logic
-io.on('connect', (socket) => {
+io.on('connection', (socket) => {
 	//USER JOINS A ROOM
-	console.log('connection made')
 	socket.on('join-room', (user, room, socketId) => {
 		//add user to room
 		socket.join(room);
-		console.log('this is the roommm', room);
+		console.log('room join event', room, socketId, socket.id)
 		//retrieve list of socket ids in current room
 		const currentRoom = [...io.sockets.adapter.rooms.get(room)];
 		//generate username if not logged-in
 		const username = !user ? `guest${currentRoom.length + 1}` : user;
-		const host = currentRoom.length === 1
+		const host = currentRoom.length === 1;
 		//add user to users obj
 		users[socketId] = { username, score: 0, host };
 		//grab all usernames in current room
@@ -70,7 +69,7 @@ io.on('connect', (socket) => {
 			const { username } = users[socketId];
 			return username;
 		});
-		
+
 		//emit user-added event to all users in current room
 		io.in(room).emit('user-added', JSON.stringify(roomUsers));
 		// emits username-generated event to new socket
@@ -111,9 +110,10 @@ io.on('connect', (socket) => {
 		io.in(room).emit('end-game', JSON.stringify(scores));
 	});
 	//USER LEAVES ROOM
-	socket.on('disconnect', () => {
+	socket.on('disconnecting', () => {
 		delete users[socket.id];
-		console.log('disconndexted');
+		console.log('disconnecting');
+		console.log(...io.sockets.adapter.rooms);
 	});
 });
 

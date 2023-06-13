@@ -69,9 +69,11 @@ function Room() {
 		socket.on('connect', () => {
 			setSocketId(socket.id);
 			socket.emit('join-room', user, room.id, socket.id);
+			console.log('client room join')
 		});
 		resetGame();
 		return () => {
+			socket.removeAllListeners()
 			socket.disconnect(room.id);
 		};
 	}, []);
