@@ -1,8 +1,9 @@
 import { Schema, connect, model } from 'mongoose';
+import dotenv from 'dotenv';
 
-connect(
-	'mongodb+srv://atvanek:GkIu8WkNciV8tnRi@woggle.qpwf3fs.mongodb.net/?retryWrites=true&w=majority'
-)
+dotenv.config();
+
+connect(process.env.DB_URI)
 	.then(() => {
 		console.log('Connected to database');
 	})

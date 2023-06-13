@@ -2,6 +2,10 @@ import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import userController from './controllers/userController.js';
+import path from 'path'
+import dotenv from 'dotenv'
+
+
 const app = express();
 const PORT = 3000;
 const httpServer = createServer(app);
@@ -10,6 +14,16 @@ const io = new Server(httpServer, {
 		origin: ['http://localhost:8080'],
 	},
 });
+
+dotenv.config()
+
+if (process.env.NODE_ENV === 'production') {
+	app.get('/', (_req, res) => {
+		res.sendFile(path.resolve('server', '../dist/index.html'))
+	})
+
+	app.use(express.static(path.resolve('server', '../dist')))
+}
 
 app.use(express.json());
 
