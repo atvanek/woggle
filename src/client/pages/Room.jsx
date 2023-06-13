@@ -136,15 +136,35 @@ function Room() {
 				winners.push(user.username);
 			}
 			winnerMessage =
-				winners.length > 1
-					? `It's a tie! The winners are ${winners.map(
-							(winner) => winner + ' '
-					  )} with a score of ${highScore}!`
-					: `The winner is ${winners[0]}: ${highScore}\n`;
+				winners.length > 1 ? (
+					<>
+						<p>It's a tie!</p>
+						<p>
+							The winners are{' '}
+							<strong>{winners.map((winner) => winner + ' ')}</strong> with a
+							score of <strong>{highScore}</strong>!
+						</p>
+					</>
+				) : (
+					<>
+						<p>The winner is...</p>
+						<p>
+							<strong>{winners[0]}</strong> with a score of{' '}
+							<strong>{highScore}</strong>!
+						</p>
+					</>
+				);
 			return `${user.username}: ${user.score}\n`;
 		});
 		setMessage(
-			`Game ended!\nFinal Scores:\n${finalScores.join('')}\n${winnerMessage}`
+			<>
+				<h4>Final Scores:</h4>
+				{finalScores.map((score) => (
+					<p>{score}</p>
+				))}
+				<br />
+				<p>{winnerMessage}</p>
+			</>
 		);
 
 		//re-route to homescreen
@@ -162,7 +182,7 @@ function Room() {
 	return (
 		<>
 			{starting && !started ? (
-				<div className='flex center-all'>
+				<div className='flex column center-all'>
 					<h2>Game Starting in </h2>
 					<Timer time={3} />
 				</div>

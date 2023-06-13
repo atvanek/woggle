@@ -10,7 +10,7 @@ function FinalScores({ open, message }) {
 	const navigate = useNavigate();
 	return (
 		<Dialog open={open} onClose={() => setOpen(false)}>
-			<DialogTitle>Final Scores</DialogTitle>
+			<DialogTitle>Game Over</DialogTitle>
 			<DialogContent>
 				<DialogContentText>{message}</DialogContentText>
 				<button onClick={() => navigate('/')}>OK</button>
