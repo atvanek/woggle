@@ -5,6 +5,14 @@ import userController from './controllers/userController.js';
 import path from 'path';
 import dotenv from 'dotenv';
 
+dotenv.config();
+
+const MODE = process.end.NODE_ENV;
+const BASE_URL =
+	MODE === 'production'
+		? 'https://woggle.vercel.app/'
+		: 'http://localhost:3000';
+
 const app = express();
 const PORT = 3000;
 const httpServer = createServer(app);
@@ -13,8 +21,6 @@ const io = new Server(httpServer, {
 		origin: ['http://localhost:8080'],
 	},
 });
-
-dotenv.config();
 
 if (process.env.NODE_ENV === 'production') {
 	app.get('/', (_req, res) => {
@@ -65,6 +71,7 @@ const users = {};
 
 //websocket logic
 io.on('connection', (socket) => {
+	console.log('connection');
 	//USER JOINS A ROOM
 	socket.on('join-room', (user, room, socketId) => {
 		//add user to room
