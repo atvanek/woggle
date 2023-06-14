@@ -23,6 +23,7 @@ const io = new Server(httpServer, {
 });
 
 if (process.env.NODE_ENV === 'production') {
+	console.log('get hit')
 	app.get('/', (_req, res) => {
 		res.sendFile(path.resolve('server', '../dist/index.html'));
 	});
