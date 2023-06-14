@@ -46,6 +46,7 @@ app.post('user', userController.createUser, (_req, res) => {
 });
 
 app.use('/testWord', (req, res) => {
+	console.log('test word route');
 	const { word } = req.body;
 	fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`)
 		.then((res) => {
