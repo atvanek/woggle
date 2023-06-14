@@ -80,11 +80,11 @@ io.on('connection', (socket) => {
 		const currentRoom = [...io.sockets.adapter.rooms?.get(room)];
 		//generate username if not logged-in
 		const username = !user ? `guest${currentRoom.length + 1}` : user;
-		const host = currentRoom.length === 1;
+		const host = currentRoom?.length === 1;
 		//add user to users obj
 		users[socketId] = { username, score: 0, host };
 		//grab all usernames in current room
-		const roomUsers = currentRoom.map((socketId) => {
+		const roomUsers = currentRoom?.map((socketId) => {
 			const { username } = users[socketId];
 			return username;
 		});
@@ -111,7 +111,7 @@ io.on('connection', (socket) => {
 		//set new score for current user
 		users[socketId].score = score;
 		//grab username and scores of all players in room
-		const scores = currentRoom.map((socketId) => {
+		const scores = currentRoom?.map((socketId) => {
 			const { username, score } = users[socketId];
 			return { username, score };
 		});
@@ -121,7 +121,7 @@ io.on('connection', (socket) => {
 	//GAME ENDED
 	socket.on('game-end', (room) => {
 		const currentRoom = [...io.of('/').adapter.rooms?.get(room)];
-		const scores = currentRoom.map((socketId) => {
+		const scores = currentRoom?.map((socketId) => {
 			const { username, score } = users[socketId];
 			return { username, score };
 		});
