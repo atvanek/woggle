@@ -1,10 +1,12 @@
 import React, { createContext, useState } from 'react';
-import {generateMoves} from '../../../utils/generateMoves.js'
-import boxCoords from '../../../utils/coordinates.js'
+import { generateMoves } from '../../../utils/generateMoves.js';
+import boxCoords from '../../../utils/coordinates.js';
 import { io } from 'socket.io-client';
 const Context = createContext(null);
+import dotenv from 'dotenv';
 
 export function ContextProvider({ children }) {
+	dotenv.config();
 	const [loggedIn, setLoggedIn] = useState(false);
 	const [user, setUser] = useState('');
 	const [selectedBoxes, setSelectedBoxes] = useState(new Set());
@@ -21,9 +23,14 @@ export function ContextProvider({ children }) {
 	const [multiplayer, setMultiplayer] = useState(false);
 	const [room, setRoom] = useState({});
 	const [socket, setSocket] = useState(
-		io('http://localhost:3000/', {
-			autoConnect: false,
-		})
+		io(
+			process.env.NODE_ENV === 'development'
+				? 'http://localhost:3000'
+				: 'https://woggle.herokuapp.com/',
+			{
+				autoConnect: false,
+			}
+		)
 	);
 	const [socketId, setSocketId] = useState();
 	const [wordPoints, setWordPoints] = useState(0);
