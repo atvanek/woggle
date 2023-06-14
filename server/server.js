@@ -58,7 +58,7 @@ app.use((err, _req, res, _next) => {
 	res.status(500).send({ error: err });
 });
 
-import generateLetters from '../../utils/generateLetters.js';
+import generateLetters from '../utils/generateLetters.js';
 
 //username, room, websocket, score data
 const users = {};

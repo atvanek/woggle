@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './components/App.jsx';
-import Login from './pages/login.jsx';
-import SignUp from './pages/SignUp.jsx';
-import Room from './pages/Room.jsx';
-import { ContextProvider } from './context/context.jsx';
+import App from './src/components/App.jsx';
+import Login from './src/pages/login.jsx';
+import SignUp from './src/pages/SignUp.jsx';
+import Room from './src/pages/Room.jsx';
+import { ContextProvider } from './src/context/context.jsx';
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
