@@ -8,7 +8,7 @@
 		"node": "18.x"
 	},
 	"scripts": {
-		"start": "NODE_ENV=production nodemon server/server.js",
+		"start": "NODE_ENV=production node server/server.js",
 		"build": "NODE_ENV=production vite build",
 		"dev": "concurrently 'nodemon server/server.js' 'vite --open'",
 		"vite": "vite --open"
