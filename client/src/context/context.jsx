@@ -22,7 +22,7 @@ export function ContextProvider({ children }) {
 	const [multiplayer, setMultiplayer] = useState(false);
 	const [room, setRoom] = useState({});
 	const [socket, setSocket] = useState(
-		io(config.API_BASE_URL, {
+		io(config.WS_BASE_URL, {
 			autoConnect: false,
 		})
 	);
@@ -103,7 +103,7 @@ export function ContextProvider({ children }) {
 		}
 		e.preventDefault();
 		// sends post request to server with selected word
-		fetch('/api/testWord', {
+		fetch(`${API_BASE_URL}/testWord`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ word: currentWord.toLowerCase() }),
