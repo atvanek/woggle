@@ -3,11 +3,11 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import userController from './controllers/userController.js';
 import path from 'path';
-import dotenv from 'dotenv';
+import dotenv from 'dotenv'
 
 dotenv.config();
 
-const MODE = process.end.NODE_ENV;
+const MODE = process.env.NODE_ENV;
 const BASE_URL =
 	MODE === 'production'
 		? 'https://woggle.vercel.app/'
