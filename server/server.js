@@ -14,7 +14,7 @@ const BASE_URL =
 		: 'http://localhost:3000';
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
 	cors: {
@@ -23,7 +23,7 @@ const io = new Server(httpServer, {
 });
 
 if (process.env.NODE_ENV === 'production') {
-	console.log('get hit')
+	console.log('get hit');
 	app.get('/', (_req, res) => {
 		res.sendFile(path.resolve('server', '../dist/index.html'));
 	});
