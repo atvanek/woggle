@@ -3,7 +3,7 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import userController from './controllers/userController.js';
 import path from 'path';
-import dotenv from 'dotenv'
+import dotenv from 'dotenv';
 
 dotenv.config();
 
@@ -18,7 +18,7 @@ const PORT = 3000;
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
 	cors: {
-		origin: ['http://localhost:8080'],
+		origin: ['http://localhost:8080', BASE_URL],
 	},
 });
 
