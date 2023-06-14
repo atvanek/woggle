@@ -24,7 +24,6 @@ const io = new Server(httpServer, {
 app.use(express.json());
 app.use(cors());
 if (process.env.NODE_ENV === 'production') {
-	console.log('get hit');
 	app.get('/', (_req, res) => {
 		res.sendFile(path.resolve('server', '../dist/index.html'));
 	});
@@ -45,7 +44,6 @@ app.post('user', userController.createUser, (_req, res) => {
 });
 
 app.use('/testWord', (req, res) => {
-	console.log('test word route');
 	const { word } = req.body;
 	fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`)
 		.then((res) => {
@@ -75,10 +73,11 @@ io.on('connection', (socket) => {
 	console.log('connection');
 	//USER JOINS A ROOM
 	socket.on('join-room', (user, room, socketId) => {
+		console.log('room join');
 		//add user to room
 		socket.join(room);
 		//retrieve list of socket ids in current room
-		const currentRoom = [...io.sockets.adapter.rooms.get(room)];
+		const currentRoom = [...io.sockets.adapter.rooms?.get(room)];
 		//generate username if not logged-in
 		const username = !user ? `guest${currentRoom.length + 1}` : user;
 		const host = currentRoom.length === 1;
@@ -108,7 +107,7 @@ io.on('connection', (socket) => {
 
 	//UPDATE SCORE
 	socket.on('update-score', (room, score, socketId) => {
-		const currentRoom = [...io.sockets.adapter.rooms.get(room)];
+		const currentRoom = [...io.sockets.adapter.rooms?.get(room)];
 		//set new score for current user
 		users[socketId].score = score;
 		//grab username and scores of all players in room
@@ -121,7 +120,7 @@ io.on('connection', (socket) => {
 	});
 	//GAME ENDED
 	socket.on('game-end', (room) => {
-		const currentRoom = [...io.of('/').adapter.rooms.get(room)];
+		const currentRoom = [...io.of('/').adapter.rooms?.get(room)];
 		const scores = currentRoom.map((socketId) => {
 			const { username, score } = users[socketId];
 			return { username, score };
@@ -131,6 +130,7 @@ io.on('connection', (socket) => {
 	});
 	//USER LEAVES ROOM
 	socket.on('disconnecting', () => {
+		console.log('disconnecting', socket.id);
 		delete users[socket.id];
 	});
 });
