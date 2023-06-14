@@ -18,10 +18,10 @@ dotenv.config();
 
 if (process.env.NODE_ENV === 'production') {
 	app.get('/', (_req, res) => {
-		res.sendFile(path.resolve('server', '../public/dist/index.html'));
+		res.sendFile(path.resolve('server', '../dist/index.html'));
 	});
 
-	app.use(express.static(path.resolve('server', '../public/dist')));
+	app.use(express.static(path.resolve('server', '../dist')));
 }
 
 app.use(express.json());
@@ -124,8 +124,6 @@ io.on('connection', (socket) => {
 	//USER LEAVES ROOM
 	socket.on('disconnecting', () => {
 		delete users[socket.id];
-		console.log('disconnecting');
-		console.log(...io.sockets.adapter.rooms);
 	});
 });
 

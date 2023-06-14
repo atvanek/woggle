@@ -4,6 +4,9 @@
 	"description": "",
 	"main": "index.jsx",
 	"type": "module",
+	"engines": {
+		"node": "18.x"
+	},
 	"scripts": {
 		"start": "NODE_ENV=production nodemon server/server.js",
 		"build": "NODE_ENV=production vite build",
