@@ -1,6 +1,7 @@
 import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
+import cors from 'cors';
 import userController from './controllers/userController.js';
 import path from 'path';
 import dotenv from 'dotenv';
@@ -20,6 +21,8 @@ const io = new Server(httpServer, {
 	},
 });
 
+app.use(express.json());
+app.use(cors());
 if (process.env.NODE_ENV === 'production') {
 	console.log('get hit');
 	app.get('/', (_req, res) => {
@@ -28,8 +31,6 @@ if (process.env.NODE_ENV === 'production') {
 
 	app.use(express.static(path.resolve('server', '../dist')));
 }
-
-app.use(express.json());
 
 app.get('room/:id', (req, res) => {
 	const { id } = req.params;
