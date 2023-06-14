@@ -103,7 +103,7 @@ export function ContextProvider({ children }) {
 		}
 		e.preventDefault();
 		// sends post request to server with selected word
-		fetch(`${API_BASE_URL}/testWord`, {
+		fetch(`${config.API_BASE_URL}/testWord`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ word: currentWord.toLowerCase() }),
