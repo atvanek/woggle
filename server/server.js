@@ -65,7 +65,7 @@ const users = {};
 
 //websocket logic
 io.on('connection', (socket) => {
-	console.log('connection', socket);
+	console.log('connection', socket.id);
 	//USER JOINS A ROOM
 	socket.on('join-room', async (user, room, socketId) => {
 		//add user to room
