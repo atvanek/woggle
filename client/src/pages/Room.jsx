@@ -7,6 +7,7 @@ import Played from '../components/Played';
 import Host from '../components/Host';
 import Timer from '../components/Timer';
 import FinalScores from '../components/FinalScores';
+import {CircularProgress} from '@mui/material'
 
 function Room() {
 	const navigate = useNavigate();
@@ -182,6 +183,12 @@ function Room() {
 
 	return (
 		<>
+			{!username && (
+				<div className='flex center-all column m-10'>
+					<CircularProgress />
+					<p className='m-10'>connecting...</p>
+					</div>
+			)}
 			{starting && !started ? (
 				<div className='flex column center-all'>
 					<h2>Game Starting in </h2>
