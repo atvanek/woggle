@@ -73,7 +73,7 @@ function Room() {
 		resetGame();
 		return () => {
 			socket.removeAllListeners();
-			socket.disconnect(room.id);
+			socket.disconnect();
 		};
 	}, []);
 

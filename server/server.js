@@ -31,11 +31,6 @@ if (process.env.NODE_ENV === 'production') {
 	app.use(express.static(path.resolve('server', '../dist')));
 }
 
-app.get('room/:id', (req, res) => {
-	const { id } = req.params;
-	res.status(200).json(`You are in room ${id}`);
-});
-
 app.post('/login', userController.verifyUser, (_req, res) => {
 	res.status(200).json({ verified: true });
 });
