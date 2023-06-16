@@ -4,7 +4,7 @@ const config = {
 	DEV_PORT: 8080,
 	WS_BASE_URL: isProduction
 		? 'https://woggle.herokuapp.com'
-		: 'http://localhost:8080',
+		: 'http://localhost:3000',
 	API_BASE_URL: isProduction
 		? 'https://woggle.herokuapp.com'
 		: 'http://localhost:8080/api',

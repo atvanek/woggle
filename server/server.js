@@ -72,10 +72,10 @@ const users = {};
 io.on('connection', (socket) => {
 	console.log('connection');
 	//USER JOINS A ROOM
-	socket.on('join-room', (user, room, socketId) => {
-		console.log('room join');
+	socket.on('join-room', async (user, room, socketId) => {
 		//add user to room
-		socket.join(room);
+		await socket.join(room);
+		console.log('room join');
 		//retrieve list of socket ids in current room
 		const currentRoom = [...io.sockets.adapter.rooms?.get(room)];
 		//generate username if not logged-in
