@@ -1,5 +1,5 @@
 import React from 'react';
-import Box from './Box.jsx';
+import Box from './Box';
 
 function Row({ row, letters}) {
 	const boxes = letters.map((letter, i) => {

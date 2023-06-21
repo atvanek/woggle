@@ -5,8 +5,9 @@ import {
 	DialogContent,
 	DialogContentText,
 } from '@mui/material';
+import { FinalScoresProps } from '../types';
 
-function FinalScores({ open, message }) {
+function FinalScores({ open, setOpen, message }: FinalScoresProps) {
 	const navigate = useNavigate();
 	return (
 		<Dialog open={open} onClose={() => setOpen(false)}>

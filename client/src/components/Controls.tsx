@@ -1,8 +1,9 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import Context from '../context/context';
 
 function Controls() {
-	const { timed, timerStarted, validateWord, clearBoard } = useContext(Context);
+	const { timed, timerStarted, validateWord, clearBoard } =
+		useContext(Context)!;
 	return (
 		<div className='flex around m-10'>
 			<button

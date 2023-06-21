@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 
 function RoomPicker() {
-	const { room, setRoom } = useContext(Context);
+	const { room, setRoom } = useContext(Context)!;
 	const [open, setOpen] = useState(false);
 	const navigate = useNavigate();
 	function handleJoinRoom() {

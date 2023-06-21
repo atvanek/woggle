@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Board from '../components/Board';
 import Controls from '../components/Controls';
@@ -34,7 +34,7 @@ function Room() {
 		setPlayedWords,
 		starting,
 		setStarting,
-	} = useContext(Context);
+	} = useContext(Context)!;
 
 	function resetGame() {
 		setPlayedWords(new Set());

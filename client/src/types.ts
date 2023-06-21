@@ -26,17 +26,19 @@ export type ContextValues = {
 	setTimed: React.Dispatch<React.SetStateAction<boolean>>;
 	timerStarted: boolean;
 	setTimerStarted: React.Dispatch<React.SetStateAction<boolean>>;
-	validateWord: (e: MouseEvent) => void;
+	validateWord: (
+		e: React.SyntheticEvent<HTMLButtonElement, MouseEvent>
+	) => void;
 	playedWords: Set<string>;
 	setPlayedWords: React.Dispatch<React.SetStateAction<Set<string>>>;
 	clearBoard: () => void;
 	multiplayer: boolean;
 	setMultiplayer: React.Dispatch<React.SetStateAction<boolean>>;
-	room: object;
+	room: { id: string; emoji: string };
 	setRoom: React.Dispatch<React.SetStateAction<object>>;
 	socket: Socket;
 	setSocket: React.Dispatch<React.SetStateAction<Socket>>;
-	socketId: any;
+	socketId: string;
 	setSocketId: React.Dispatch<React.SetStateAction<any>>;
 	score: number;
 	setScore: React.Dispatch<React.SetStateAction<number>>;
@@ -45,4 +47,35 @@ export type ContextValues = {
 	handleToggle: (e: ChangeEvent<HTMLInputElement>) => void;
 	starting: boolean;
 	setStarting: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export type BoardProps = {
+	letters: string[];
+};
+
+export type BoxProps = {
+	letter: string;
+	id: string;
+};
+
+export type FinalScoresProps = {
+	open: boolean;
+	setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+	message: string;
+};
+
+export type HostProps = {
+	started: boolean;
+	timeLimit: Number;
+	setTimeLimit: React.Dispatch<React.SetStateAction<Number>>;
+};
+
+export type ErrorObj = {
+	type: string;
+	message: string;
+};
+
+export type UsernameInputProps = {
+	error: ErrorObj;
+	setError: React.Dispatch<React.SetStateAction<ErrorObj>>;
 };

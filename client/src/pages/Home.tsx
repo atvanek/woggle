@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState } from 'react';
+import { useEffect, useContext, useState } from 'react';
 import Board from '../components/Board';
 import generateLetters from '../../../utils/generateLetters';
 import Timer from '../components/Timer.jsx';
