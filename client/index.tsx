@@ -20,18 +20,15 @@ const router = createBrowserRouter([
 	{ path: '/room/:id', element: <Room /> },
 ]);
 
-const rootElement = document.getElementById('root');
 const routerProps: RouterProviderProps = {
 	router,
 };
 
-if (rootElement) {
-	const root = ReactDOM.createRoot(rootElement);
-	root.render(
-		<ContextProvider>
-			<RouterProvider {...routerProps}>
-				<App />
-			</RouterProvider>
-		</ContextProvider>
-	);
-}
+const root = ReactDOM.createRoot(document.getElementById('root')!);
+root.render(
+	<ContextProvider>
+		<RouterProvider {...routerProps}>
+			<App />
+		</RouterProvider>
+	</ContextProvider>
+);

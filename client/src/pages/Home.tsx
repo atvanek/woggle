@@ -8,10 +8,9 @@ import Context from '../context/context';
 import Controls from '../components/Controls';
 import Played from '../components/Played';
 
-function Home(): React.FC {
+function Home() {
 	const [letters, setLetters] = useState([]);
 	const [timeLimit, setTimeLimit] = useState(1);
-
 
 	const {
 		timed,
@@ -20,7 +19,7 @@ function Home(): React.FC {
 		score,
 		setScore,
 		handleToggle,
-	} = useContext(Context);
+	} = useContext(Context)!;
 
 	//logic for initial render of board and letters
 	useEffect(() => {

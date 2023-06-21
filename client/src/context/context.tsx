@@ -1,4 +1,4 @@
-import React, { ReactNode, createContext, useState } from 'react';
+import React, { createContext, useState } from 'react';
 import { generateMoves } from '../../../utils/generateMoves.js';
 import boxCoords from '../../../utils/coordinates.js';
 import { io } from 'socket.io-client';
@@ -158,7 +158,7 @@ export function ContextProvider({ children }: ContextProps) {
 		setTimed(e.target.checked);
 	}
 
-	const contextProps: React.ProviderProps<ContextValues | null> = {
+	const contextProps: React.ProviderProps<ContextValues> = {
 		value: {
 			loggedIn,
 			setLoggedIn,
