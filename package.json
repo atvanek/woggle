@@ -2,7 +2,7 @@
 	"name": "woggle",
 	"version": "1.0.0",
 	"description": "",
-	"main": "index.jsx",
+	"main": "index.tsx",
 	"type": "module",
 	"engines": {
 		"node": "18.x"
@@ -45,7 +45,10 @@
 		"webpack-cli": "^5.0.1"
 	},
 	"devDependencies": {
+		"@types/react": "^18.2.13",
+		"@types/react-dom": "^18.2.6",
 		"concurrently": "^8.0.1",
-		"sass": "^1.60.0"
+		"sass": "^1.60.0",
+		"typescript": "^5.1.3"
 	}
 }

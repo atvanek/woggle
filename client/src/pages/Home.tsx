@@ -8,9 +8,10 @@ import Context from '../context/context';
 import Controls from '../components/Controls';
 import Played from '../components/Played';
 
-function Home() {
+function Home(): React.FC {
 	const [letters, setLetters] = useState([]);
 	const [timeLimit, setTimeLimit] = useState(1);
+
 
 	const {
 		timed,

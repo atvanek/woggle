@@ -1,10 +1,10 @@
-import React, { useContext } from 'react';
-import Home from '../pages/Home.jsx';
-import Nav from './Nav.jsx';
+import { useContext } from 'react';
+import Home from '../pages/Home';
+import Nav from './Nav';
 import '../../main.scss';
-import RoomPicker from './RoomPicker.jsx';
+import RoomPicker from './RoomPicker';
 import Context from '../context/context';
-import blocks from '../img/blocks.png'
+import blocks from '../img/blocks.png';
 
 function App() {
 	const { user } = useContext(Context);

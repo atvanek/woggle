@@ -1,24 +1,26 @@
-import React, { createContext, useState } from 'react';
+import React, { ReactNode, createContext, useState } from 'react';
 import { generateMoves } from '../../../utils/generateMoves.js';
 import boxCoords from '../../../utils/coordinates.js';
 import { io } from 'socket.io-client';
-const Context = createContext(null);
 import config from '../config.js';
+import { ContextValues, ContextProps } from '../types.js';
 
-export function ContextProvider({ children }) {
+const Context = createContext<ContextValues | null>(null);
+
+export function ContextProvider({ children }: ContextProps) {
 	const [loggedIn, setLoggedIn] = useState(false);
 	const [user, setUser] = useState('');
-	const [selectedBoxes, setSelectedBoxes] = useState(new Set());
+	const [selectedBoxes, setSelectedBoxes] = useState<Set<string>>(new Set());
 	const [wordStarted, setWordStarted] = useState(false);
-	const [possibleMoves, setPossibleMoves] = useState(new Set());
+	const [possibleMoves, setPossibleMoves] = useState<Set<string>>(new Set());
 	const [currentWord, setCurrentWord] = useState('');
 	const [alert, setAlert] = useState({ type: '', message: '' });
 	const [open, setOpen] = useState(false);
-	const [alertTimer, setAlertTimer] = useState(null);
+	const [alertTimer, setAlertTimer] = useState<NodeJS.Timeout | null>(null);
 	const [timed, setTimed] = useState(false);
 	const [timerStarted, setTimerStarted] = useState(false);
 	const [score, setScore] = useState(0);
-	const [playedWords, setPlayedWords] = useState(new Set());
+	const [playedWords, setPlayedWords] = useState<Set<string>>(new Set());
 	const [multiplayer, setMultiplayer] = useState(false);
 	const [room, setRoom] = useState({});
 	const [socket, setSocket] = useState(
@@ -30,7 +32,7 @@ export function ContextProvider({ children }) {
 	const [wordPoints, setWordPoints] = useState(0);
 	const [starting, setStarting] = useState(false);
 
-	function handleBoxClick(id, letter) {
+	function handleBoxClick(id: string, letter: string) {
 		const coordinates = boxCoords[id];
 		//validating selected box
 		if (selectedBoxes.has(String(coordinates))) {
@@ -57,11 +59,11 @@ export function ContextProvider({ children }) {
 		});
 		//adds CSS styling
 		const currentBox = document.getElementById(id);
-		currentBox.classList.add('selected');
+		currentBox?.classList.add('selected');
 	}
 
-	function handleAlert(type) {
-		clearTimeout(alertTimer);
+	function handleAlert(type: string) {
+		alertTimer && clearTimeout(alertTimer);
 		setOpen(true);
 		switch (type) {
 			case 'length':
@@ -83,14 +85,13 @@ export function ContextProvider({ children }) {
 				setAlert({ type: 'error', message: 'Please select adjacent box' });
 				break;
 		}
-		setAlertTimer(
-			setTimeout(() => {
-				setOpen(false);
-			}, 4000)
-		);
+		const newTimeout = setTimeout(() => {
+			setOpen(false);
+		}, 4000);
+		setAlertTimer(newTimeout);
 	}
 
-	function validateWord(e) {
+	function validateWord(e: MouseEvent): void {
 		//checks word length
 		if (currentWord.length < 3) {
 			handleAlert('length');
@@ -114,7 +115,7 @@ export function ContextProvider({ children }) {
 				if (word === 'valid') {
 					setPlayedWords((prev) => new Set(prev).add(currentWord));
 					//determines points of word
-					let points;
+					let points: number;
 					//calculates points based on word length
 					if (currentWord.length < 5) {
 						points = 1;
@@ -149,7 +150,7 @@ export function ContextProvider({ children }) {
 			.forEach((node) => node.classList.remove('selected'));
 	}
 
-	function handleToggle(e) {
+	function handleToggle(e: React.ChangeEvent<HTMLInputElement>) {
 		if (timed) {
 			setScore(0);
 			setTimerStarted(false);
@@ -157,49 +158,51 @@ export function ContextProvider({ children }) {
 		setTimed(e.target.checked);
 	}
 
-	return (
-		<Context.Provider
-			value={{
-				loggedIn,
-				setLoggedIn,
-				user,
-				setUser,
-				setSelectedBoxes,
-				setWordStarted,
-				setPossibleMoves,
-				currentWord,
-				setCurrentWord,
-				alert,
-				open,
-				handleAlert,
-				handleBoxClick,
-				timed,
-				setTimed,
-				timerStarted,
-				setTimerStarted,
-				validateWord,
-				playedWords,
-				setPlayedWords,
-				clearBoard,
-				multiplayer,
-				setMultiplayer,
-				room,
-				setRoom,
-				socket,
-				setSocket,
-				socketId,
-				setSocketId,
-				score,
-				setScore,
-				wordPoints,
-				setWordPoints,
-				handleToggle,
-				starting,
-				setStarting,
-			}}>
-			{children}
-		</Context.Provider>
-	);
+	const contextProps: React.ProviderProps<ContextValues | null> = {
+		value: {
+			loggedIn,
+			setLoggedIn,
+			user,
+			setUser,
+			setSelectedBoxes,
+			setWordStarted,
+			setPossibleMoves,
+			currentWord,
+			setCurrentWord,
+			alert,
+			open,
+			handleAlert,
+			handleBoxClick,
+			timed,
+			setTimed,
+			timerStarted,
+			setTimerStarted,
+			validateWord,
+			playedWords,
+			setPlayedWords,
+			clearBoard,
+			multiplayer,
+			setMultiplayer,
+			room,
+			setRoom,
+			socket,
+			setSocket,
+			socketId,
+			setSocketId,
+			score,
+			setScore,
+			wordPoints,
+			setWordPoints,
+			handleToggle,
+			starting,
+			setStarting,
+			selectedBoxes,
+			wordStarted,
+			possibleMoves,
+		},
+	};
+
+	return <Context.Provider {...contextProps}>{children}</Context.Provider>;
 }
 
 export default Context;

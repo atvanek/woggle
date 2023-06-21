@@ -5,8 +5,11 @@ import Login from './src/pages/Login.jsx';
 import SignUp from './src/pages/SignUp.jsx';
 import Room from './src/pages/Room.jsx';
 import { ContextProvider } from './src/context/context.jsx';
-
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import {
+	createBrowserRouter,
+	RouterProvider,
+	RouterProviderProps,
+} from 'react-router-dom';
 
 //defines routes
 const router = createBrowserRouter([
@@ -17,9 +20,18 @@ const router = createBrowserRouter([
 	{ path: '/room/:id', element: <Room /> },
 ]);
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-	<ContextProvider>
-		<RouterProvider router={router} />
-	</ContextProvider>
-);
+const rootElement = document.getElementById('root');
+const routerProps: RouterProviderProps = {
+	router,
+};
+
+if (rootElement) {
+	const root = ReactDOM.createRoot(rootElement);
+	root.render(
+		<ContextProvider>
+			<RouterProvider {...routerProps}>
+				<App />
+			</RouterProvider>
+		</ContextProvider>
+	);
+}
