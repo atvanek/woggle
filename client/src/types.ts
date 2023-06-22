@@ -79,3 +79,8 @@ export type UsernameInputProps = {
 	error: ErrorObj;
 	setError: React.Dispatch<React.SetStateAction<ErrorObj>>;
 };
+
+export type RowProps = {
+	row: number;
+	letters: [];
+};

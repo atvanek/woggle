@@ -7,19 +7,21 @@ import Played from '../components/Played';
 import Host from '../components/Host';
 import Timer from '../components/Timer';
 import FinalScores from '../components/FinalScores';
-import {CircularProgress} from '@mui/material'
+import { CircularProgress } from '@mui/material';
 
 function Room() {
 	const navigate = useNavigate();
 	const [users, setUsers] = useState([]);
-	const [serverLetters, setServerLetters] = useState([]);
+	const [serverLetters, setServerLetters] = useState<string[]>([]);
 	const [username, setUsername] = useState(null);
 	const [started, setStarted] = useState(false);
-	const [playerScores, setPlayerScores] = useState([]);
+	const [playerScores, setPlayerScores] = useState<
+		{ username: string; score: number }[]
+	>([]);
 	const [host, setHost] = useState(false);
 	const [timeLimit, setTimeLimit] = useState(1);
 	const [ended, setEnded] = useState(false);
-	const [message, setMessage] = useState('');
+	const [message, setMessage] = useState<JSX.Element | null>(null);
 	const {
 		setPossibleMoves,
 		setMultiplayer,
@@ -42,10 +44,10 @@ function Room() {
 		setStarted(false);
 	}
 
-	let startingTimer;
-	let startTimer;
+	let startingTimer: NodeJS.Timer;
+	let startTimer: NodeJS.Timer;
 
-	function startGame(letters) {
+	function startGame(letters: string[]) {
 		setStarting(true);
 		startingTimer = setTimeout(() => {
 			setStarted(true);
@@ -120,7 +122,7 @@ function Room() {
 		const parsedScores = JSON.parse(newScores);
 		setPlayerScores(parsedScores);
 	});
-	let winnerMessage;
+	let winnerMessage: JSX.Element;
 	//end game logic
 	socket.on('end-game', (scores) => {
 		//generates string for end-game pop-up
@@ -128,40 +130,42 @@ function Room() {
 		console.log('game ended');
 		setEnded(true);
 		let highScore = 0;
-		let winners = [];
+		let winners: string[] = [];
 		const parsedScores = JSON.parse(scores);
-		const finalScores = parsedScores.map((user) => {
-			if (user.score > highScore) {
-				highScore = user.score;
-				winners = [user.username];
-			} else if (highScore === user.score) {
-				winners.push(user.username);
+		const finalScores = parsedScores.map(
+			(user: { username: string; score: number }) => {
+				if (user.score > highScore) {
+					highScore = user.score;
+					winners = [user.username];
+				} else if (highScore === user.score) {
+					winners.push(user.username);
+				}
+				winnerMessage =
+					winners.length > 1 ? (
+						<>
+							<p>It's a tie!</p>
+							<p>
+								The winners are{' '}
+								<strong>{winners.map((winner) => winner + ' ')}</strong> with a
+								score of <strong>{highScore}</strong>!
+							</p>
+						</>
+					) : (
+						<>
+							<p>The winner is...</p>
+							<p>
+								<strong>{winners[0]}</strong> with a score of{' '}
+								<strong>{highScore}</strong>!
+							</p>
+						</>
+					);
+				return `${user.username}: ${user.score}\n`;
 			}
-			winnerMessage =
-				winners.length > 1 ? (
-					<>
-						<p>It's a tie!</p>
-						<p>
-							The winners are{' '}
-							<strong>{winners.map((winner) => winner + ' ')}</strong> with a
-							score of <strong>{highScore}</strong>!
-						</p>
-					</>
-				) : (
-					<>
-						<p>The winner is...</p>
-						<p>
-							<strong>{winners[0]}</strong> with a score of{' '}
-							<strong>{highScore}</strong>!
-						</p>
-					</>
-				);
-			return `${user.username}: ${user.score}\n`;
-		});
+		);
 		setMessage(
 			<>
 				<h4>Final Scores:</h4>
-				{finalScores.map((score) => (
+				{finalScores.map((score: string) => (
 					<p>{score}</p>
 				))}
 				<br />
@@ -187,7 +191,7 @@ function Room() {
 				<div className='flex center-all column m-10'>
 					<CircularProgress />
 					<p className='m-10'>connecting...</p>
-					</div>
+				</div>
 			)}
 			{starting && !started ? (
 				<div className='flex column center-all'>
