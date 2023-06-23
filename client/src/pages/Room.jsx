@@ -7,7 +7,7 @@ import Played from '../components/Played';
 import Host from '../components/Host';
 import Timer from '../components/Timer';
 import FinalScores from '../components/FinalScores';
-import {CircularProgress} from '@mui/material'
+import { CircularProgress } from '@mui/material';
 
 function Room() {
 	const navigate = useNavigate();
@@ -20,6 +20,8 @@ function Room() {
 	const [timeLimit, setTimeLimit] = useState(1);
 	const [ended, setEnded] = useState(false);
 	const [message, setMessage] = useState('');
+	const [startTimer, setStartTimer] = useState(null)
+	const [startingTimer, setStartingTimer] = useState(null)
 	const {
 		setPossibleMoves,
 		setMultiplayer,
@@ -36,31 +38,36 @@ function Room() {
 		setStarting,
 	} = useContext(Context);
 
-	function resetGame() {
-		setPlayedWords(new Set());
-		setScore(0);
-		setStarted(false);
-	}
-
-	let startingTimer;
-	let startTimer;
-
-	function startGame(letters) {
+	//starts game with letters and game duration from server
+	function startGame(letters, duration) {
+		//invokes starting phase (3 second countdown)
 		setStarting(true);
-		startingTimer = setTimeout(() => {
+		setStartingTimer(setTimeout(() => {
 			setStarted(true);
 			setMultiplayer(true);
 			setServerLetters(letters);
 			setPossibleMoves(new Set());
 			setStarting(false);
-		}, 3000);
-		startTimer = setTimeout(() => {
+		}, 3000));
+		//invokes gameplay phase (duration from server (seconds) + 3 second delay)
+		setStartTimer(setTimeout(() => {
 			socket.emit('game-end', room.id);
-		}, 3000 + timeLimit * 60 * 1000);
+		}, 3000 + duration * 60 * 1000));
 	}
 
+	//helper invoked on mount/dismount to handle edge cases
+	function resetGame() {
+		setPlayedWords(new Set());
+		setScore(0);
+		setStarted(false);
+		setStartingTimer(null)
+		setStartTimer(null)
+	}
+
+	//click handler for leave room button
 	function handleLeave() {
 		socket.disconnect();
+		resetGame()
 		navigate('/');
 	}
 
@@ -78,12 +85,14 @@ function Room() {
 		};
 	}, []);
 
+	//emits update-score event to server whenever current player score changes
 	useEffect(() => {
 		if (score > 0) {
 			socket.emit('update-score', room.id, score + wordPoints, socketId);
 		}
 	}, [score]);
 
+	//props for Host component
 	const props = {
 		username,
 		started,
@@ -95,91 +104,87 @@ function Room() {
 		setTimeLimit,
 	};
 
-	//ALL RECEIVED EVENTS
-
-	// individual username generated
-
-	socket.on('username-generated', (newUsername, host) => {
-		setUsername(newUsername);
-		if (host) {
-			setHost(true);
-		}
-	});
-	//new user joins room
-	socket.on('user-added', (newUsers) => {
-		setUsers(JSON.parse(newUsers));
-	});
-	//board generated on server
-	socket.on('letters-ready', (letters, timeLimit) => {
-		setTimeLimit(timeLimit);
-		startGame(letters);
-	});
-	//new players scores
-	socket.on('new-scores', (newScores) => {
-		//sets player scores
-		const parsedScores = JSON.parse(newScores);
-		setPlayerScores(parsedScores);
-	});
-	let winnerMessage;
-	//end game logic
-	socket.on('end-game', (scores) => {
-		//generates string for end-game pop-up
-		//determines winner
-		console.log('game ended');
-		setEnded(true);
-		let highScore = 0;
-		let winners = [];
-		const parsedScores = JSON.parse(scores);
-		const finalScores = parsedScores.map((user) => {
-			if (user.score > highScore) {
-				highScore = user.score;
-				winners = [user.username];
-			} else if (highScore === user.score) {
-				winners.push(user.username);
+	//event listeners for all ws connection
+	useEffect(() => {
+		socket.on('username-generated', (newUsername, host) => {
+			setUsername(newUsername);
+			if (host) {
+				setHost(true);
 			}
-			winnerMessage =
-				winners.length > 1 ? (
-					<>
-						<p>It's a tie!</p>
-						<p>
-							The winners are{' '}
-							<strong>{winners.map((winner) => winner + ' ')}</strong> with a
-							score of <strong>{highScore}</strong>!
-						</p>
-					</>
-				) : (
-					<>
-						<p>The winner is...</p>
-						<p>
-							<strong>{winners[0]}</strong> with a score of{' '}
-							<strong>{highScore}</strong>!
-						</p>
-					</>
-				);
-			return `${user.username}: ${user.score}\n`;
 		});
-		setMessage(
-			<>
-				<h4>Final Scores:</h4>
-				{finalScores.map((score) => (
-					<p>{score}</p>
-				))}
-				<br />
-				<p>{winnerMessage}</p>
-			</>
-		);
-
-		//re-route to homescreen
-	});
-	socket.on('game-end', () => {
-		setStarted(false);
-	});
-	socket.on('disconnect', () => {
-		setStarting(false);
-		clearTimeout(startingTimer);
-		clearTimeout(startTimer);
-		resetGame();
-	});
+		//new user joins room
+		socket.on('user-added', (newUsers) => {
+			setUsers(JSON.parse(newUsers));
+		});
+		//board generated on server
+		socket.on('letters-ready', (letters, duration) => {
+			setTimeLimit(duration)
+			startGame(letters, duration);
+		});
+		//new players scores
+		socket.on('new-scores', (newScores) => {
+			//sets player scores
+			const parsedScores = JSON.parse(newScores);
+			setPlayerScores(parsedScores);
+		});
+		let winnerMessage;
+		//end game logic
+		socket.on('end-game', (scores) => {
+			//generates string for end-game pop-up
+			//determines winner
+			setEnded(true);
+			let highScore = 0;
+			let winners = [];
+			const parsedScores = JSON.parse(scores);
+			const finalScores = parsedScores.map((user) => {
+				if (user.score > highScore) {
+					highScore = user.score;
+					winners = [user.username];
+				} else if (highScore === user.score) {
+					winners.push(user.username);
+				}
+				winnerMessage =
+					winners.length > 1 ? (
+						<>
+							<p>It's a tie!</p>
+							<p>
+								The winners are{' '}
+								<strong>{winners.map((winner) => winner + ' ')}</strong> with a
+								score of <strong>{highScore}</strong>!
+							</p>
+						</>
+					) : (
+						<>
+							<p>The winner is...</p>
+							<p>
+								<strong>{winners[0]}</strong> with a score of{' '}
+								<strong>{highScore}</strong>!
+							</p>
+						</>
+					);
+				return `${user.username}: ${user.score}\n`;
+			});
+			setMessage(
+				<>
+					<h4>Final Scores:</h4>
+					{finalScores.map((score) => (
+						<p>{score}</p>
+					))}
+					<br />
+					<p>{winnerMessage}</p>
+				</>
+			);
+		});
+		socket.on('game-end', () => {
+			setStarted(false);
+		});
+		socket.on('disconnect', () => {
+			setStarting(false);
+			clearTimeout(startingTimer);
+			clearTimeout(startTimer);
+			resetGame();
+		});
+	}, []);
 
 	return (
 		<>
@@ -187,7 +192,7 @@ function Room() {
 				<div className='flex center-all column m-10'>
 					<CircularProgress />
 					<p className='m-10'>connecting...</p>
-					</div>
+				</div>
 			)}
 			{starting && !started ? (
 				<div className='flex column center-all'>
