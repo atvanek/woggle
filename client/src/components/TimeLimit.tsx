@@ -14,7 +14,10 @@ function TimeLimit({
 					<h3>Choose Time Limit</h3>
 					<ToggleButtonGroup
 						value={timeLimit}
-						onChange={(e, limit) => setTimeLimit(limit)}
+						onChange={(e, limit) => {
+							console.log(limit)
+							setTimeLimit(limit)
+						}}
 						sx={{
 							backgroundColor: '#32ec70',
 							margin: '10px',

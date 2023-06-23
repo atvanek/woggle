@@ -96,6 +96,7 @@ io.on('connection', (socket) => {
 	//GAME STARTED
 	socket.on('game-start', (id, duration) => {
 		const letters = generateLetters();
+		console.log('duration is', duration)
 		//lets all rooms know letters are ready to be rendered
 		io.in(id).emit('letters-ready', letters, duration);
 	});
