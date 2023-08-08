@@ -1,4 +1,4 @@
-import { Coordinates } from '../client/src/types';
+import { Coordinates } from '../client/src/types/types';
 
 const coordinates: Coordinates = {
 	1: [0, 0],

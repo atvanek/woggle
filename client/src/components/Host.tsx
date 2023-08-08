@@ -1,7 +1,7 @@
 import TimeLimit from './TimeLimit';
 import { useContext } from 'react';
 import Context from '../context/context';
-import { HostProps } from '../types';
+import { HostProps } from '../types/types';
 
 function Host({ started, timeLimit, setTimeLimit }: HostProps) {
 	const { room, starting, socket } = useContext(Context)!;

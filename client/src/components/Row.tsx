@@ -1,5 +1,5 @@
 import Box from './Box';
-import { RowProps } from '../types';
+import { RowProps } from '../types/types';
 
 function Row({ row, letters }: RowProps) {
 	const boxes = letters.map((letter, i) => {

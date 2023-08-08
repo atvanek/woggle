@@ -1,5 +1,5 @@
 import { TextField } from '@mui/material';
-import { UsernameInputProps } from '../types';
+import { UsernameInputProps } from '../types/types';
 function UsernameInput({ error, setError }: UsernameInputProps) {
 	return (
 		<TextField

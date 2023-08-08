@@ -1,7 +1,7 @@
 import Row from './Row';
 import { CircularProgress } from '@mui/material';
 import Alerts from './Alerts';
-import { BoardProps } from '../types';
+import { BoardProps } from '../types/types';
 
 function Board({ letters }: BoardProps) {
 	const rows = letters.map((arr, i) => (

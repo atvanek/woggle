@@ -29,6 +29,7 @@ export type ContextValues = {
 		message: string;
 	};
 	open: boolean;
+	setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 	handleAlert: (type: string) => void;
 	handleBoxClick: (id: string, letter: string) => void;
 	timed: boolean;
@@ -71,15 +72,13 @@ export type BoxProps = {
 };
 
 export type FinalScoresProps = {
-	open: boolean;
-	setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-	message: string;
+	message: JSX.Element | null;
 };
 
 export type HostProps = {
 	started: boolean;
 	timeLimit: Number;
-	setTimeLimit: React.Dispatch<React.SetStateAction<Number>>;
+	setTimeLimit: React.Dispatch<React.SetStateAction<number>>;
 };
 
 export type ErrorObj = {
@@ -104,7 +103,7 @@ export type Coordinates = {
 
 export type TimeLimitProps = {
 	timeLimit: Number;
-	setTimeLimit: React.Dispatch<React.SetStateAction<Number>>;
+	setTimeLimit: React.Dispatch<React.SetStateAction<number>>;
 	handleGameStart: () => void;
 	show: boolean;
 };

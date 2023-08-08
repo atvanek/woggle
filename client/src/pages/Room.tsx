@@ -244,7 +244,7 @@ function Room() {
 						)}
 						{!started && <button onClick={handleLeave}>Leave Room</button>}
 					</div>
-					<FinalScores open={ended} message={message} />
+					<FinalScores message={message} />
 				</>
 			)}
 		</>

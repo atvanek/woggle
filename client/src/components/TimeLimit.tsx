@@ -1,5 +1,5 @@
 import { Collapse, ToggleButton, ToggleButtonGroup } from '@mui/material';
-import { TimeLimitProps } from '../types';
+import { TimeLimitProps } from '../types/types';
 
 function TimeLimit({
 	timeLimit,

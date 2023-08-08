@@ -8,7 +8,7 @@ import { generateMoves } from '../../../utils/generateMoves';
 import boxCoords from '../../../utils/coordinates';
 import { io } from 'socket.io-client';
 import config from '../config.js';
-import { ContextValues, ContextProps, Alert } from '../types.js';
+import { ContextValues, ContextProps, Alert } from '../types/types.js';
 import { AlertColor } from '@mui/material';
 
 const Context = createContext<ContextValues | null>(null);
@@ -178,6 +178,7 @@ export function ContextProvider({ children }: ContextProps) {
 			setCurrentWord,
 			alert,
 			open,
+			setOpen,
 			handleAlert,
 			handleBoxClick,
 			timed,

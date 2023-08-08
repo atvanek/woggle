@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import Context from '../context/context';
-import { BoxProps } from '../types';
+import { BoxProps } from '../types/types';
 
 function Box({ letter, id }: BoxProps) {
 	const { handleBoxClick } = useContext(Context)!;
