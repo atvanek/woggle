@@ -1,4 +1,6 @@
-const coordinates = {
+import { Coordinates } from '../client/src/types';
+
+const coordinates: Coordinates = {
 	1: [0, 0],
 	2: [0, 1],
 	3: [0, 2],

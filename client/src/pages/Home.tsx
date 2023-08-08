@@ -9,17 +9,11 @@ import Controls from '../components/Controls';
 import Played from '../components/Played';
 
 function Home() {
-	const [letters, setLetters] = useState([]);
+	const [letters, setLetters] = useState<Array<string[]>>([]);
 	const [timeLimit, setTimeLimit] = useState(1);
 
-	const {
-		timed,
-		timerStarted,
-		setTimerStarted,
-		score,
-		setScore,
-		handleToggle,
-	} = useContext(Context)!;
+	const { timed, timerStarted, setTimerStarted, score, setScore } =
+		useContext(Context)!;
 
 	//logic for initial render of board and letters
 	useEffect(() => {
@@ -48,7 +42,7 @@ function Home() {
 		<>
 			<main className='flex around m-10'>
 				<section id='board' className='flex column center'>
-					<Timed timed={timed} handleToggle={handleToggle} />
+					<Timed />
 					<Board letters={letters} />
 					<div id='score'>Score: {score}</div>
 					<TimeLimit {...props} />

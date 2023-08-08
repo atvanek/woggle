@@ -1,8 +1,14 @@
 import { Socket } from 'socket.io-client';
 import { ChangeEvent, ReactNode } from 'react';
+import { AlertColor } from '@mui/material';
 
 export type ContextProps = {
 	children: ReactNode;
+};
+
+export type Alert = {
+	type: AlertColor;
+	message: string;
 };
 
 export type ContextValues = {
@@ -18,7 +24,10 @@ export type ContextValues = {
 	setPossibleMoves: React.Dispatch<React.SetStateAction<Set<string>>>;
 	currentWord: string;
 	setCurrentWord: React.Dispatch<React.SetStateAction<string>>;
-	alert: { type: string; message: string };
+	alert: {
+		type: AlertColor;
+		message: string;
+	};
 	open: boolean;
 	handleAlert: (type: string) => void;
 	handleBoxClick: (id: string, letter: string) => void;
@@ -26,16 +35,14 @@ export type ContextValues = {
 	setTimed: React.Dispatch<React.SetStateAction<boolean>>;
 	timerStarted: boolean;
 	setTimerStarted: React.Dispatch<React.SetStateAction<boolean>>;
-	validateWord: (
-		e: React.SyntheticEvent<HTMLButtonElement, MouseEvent>
-	) => void;
+	validateWord: React.MouseEventHandler<HTMLButtonElement>;
 	playedWords: Set<string>;
 	setPlayedWords: React.Dispatch<React.SetStateAction<Set<string>>>;
 	clearBoard: () => void;
 	multiplayer: boolean;
 	setMultiplayer: React.Dispatch<React.SetStateAction<boolean>>;
 	room: { id: string; emoji: string };
-	setRoom: React.Dispatch<React.SetStateAction<object>>;
+	setRoom: React.Dispatch<React.SetStateAction<Room>>;
 	socket: Socket;
 	setSocket: React.Dispatch<React.SetStateAction<Socket>>;
 	socketId: string;
@@ -49,8 +56,13 @@ export type ContextValues = {
 	setStarting: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
+export type Room = {
+	id: string;
+	emoji: string;
+};
+
 export type BoardProps = {
-	letters: string[];
+	letters: Array<string[]>;
 };
 
 export type BoxProps = {
@@ -82,5 +94,17 @@ export type UsernameInputProps = {
 
 export type RowProps = {
 	row: number;
-	letters: [];
+	letters: string[];
+	id: string;
+};
+
+export type Coordinates = {
+	[key: string]: [number, number];
+};
+
+export type TimeLimitProps = {
+	timeLimit: Number;
+	setTimeLimit: React.Dispatch<React.SetStateAction<Number>>;
+	handleGameStart: () => void;
+	show: boolean;
 };

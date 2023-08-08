@@ -1,9 +1,15 @@
-import React, { createContext, useState } from 'react';
-import { generateMoves } from '../../../utils/generateMoves.js';
-import boxCoords from '../../../utils/coordinates.js';
+import React, {
+	MouseEventHandler,
+	SyntheticEvent,
+	createContext,
+	useState,
+} from 'react';
+import { generateMoves } from '../../../utils/generateMoves';
+import boxCoords from '../../../utils/coordinates';
 import { io } from 'socket.io-client';
 import config from '../config.js';
-import { ContextValues, ContextProps } from '../types.js';
+import { ContextValues, ContextProps, Alert } from '../types.js';
+import { AlertColor } from '@mui/material';
 
 const Context = createContext<ContextValues | null>(null);
 
@@ -14,7 +20,7 @@ export function ContextProvider({ children }: ContextProps) {
 	const [wordStarted, setWordStarted] = useState(false);
 	const [possibleMoves, setPossibleMoves] = useState<Set<string>>(new Set());
 	const [currentWord, setCurrentWord] = useState('');
-	const [alert, setAlert] = useState({ type: '', message: '' });
+	const [alert, setAlert] = useState<Alert>({ type: 'success', message: '' });
 	const [open, setOpen] = useState(false);
 	const [alertTimer, setAlertTimer] = useState<NodeJS.Timeout | null>(null);
 	const [timed, setTimed] = useState(false);
@@ -22,13 +28,13 @@ export function ContextProvider({ children }: ContextProps) {
 	const [score, setScore] = useState(0);
 	const [playedWords, setPlayedWords] = useState<Set<string>>(new Set());
 	const [multiplayer, setMultiplayer] = useState(false);
-	const [room, setRoom] = useState({});
+	const [room, setRoom] = useState({ id: '', emoji: '' });
 	const [socket, setSocket] = useState(
 		io(config.WS_BASE_URL, {
 			autoConnect: false,
 		})
 	);
-	const [socketId, setSocketId] = useState();
+	const [socketId, setSocketId] = useState('');
 	const [wordPoints, setWordPoints] = useState(0);
 	const [starting, setStarting] = useState(false);
 
@@ -65,13 +71,14 @@ export function ContextProvider({ children }: ContextProps) {
 	function handleAlert(type: string) {
 		alertTimer && clearTimeout(alertTimer);
 		setOpen(true);
+		const error = 'error' as AlertColor;
 		switch (type) {
 			case 'length':
 				setAlert({ type: 'error', message: 'Word must be at least 3 letters' });
 				break;
 			case 'played':
 				setAlert({
-					type: 'error',
+					type: error,
 					message: 'Word has already been played. Please choose new word',
 				});
 				break;
@@ -91,7 +98,7 @@ export function ContextProvider({ children }: ContextProps) {
 		setAlertTimer(newTimeout);
 	}
 
-	function validateWord(e: MouseEvent): void {
+	const validateWord: React.MouseEventHandler<HTMLButtonElement> = (e) => {
 		//checks word length
 		if (currentWord.length < 3) {
 			handleAlert('length');
@@ -138,7 +145,7 @@ export function ContextProvider({ children }: ContextProps) {
 				//reset board
 				clearBoard();
 			});
-	}
+	};
 
 	function clearBoard() {
 		setWordStarted(false);

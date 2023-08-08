@@ -12,7 +12,7 @@ import { CircularProgress } from '@mui/material';
 function Room() {
 	const navigate = useNavigate();
 	const [users, setUsers] = useState([]);
-	const [serverLetters, setServerLetters] = useState<string[]>([]);
+	const [serverLetters, setServerLetters] = useState<Array<string[]>>([]);
 	const [username, setUsername] = useState(null);
 	const [started, setStarted] = useState(false);
 	const [playerScores, setPlayerScores] = useState<
@@ -47,7 +47,7 @@ function Room() {
 	let startingTimer: NodeJS.Timer;
 	let startTimer: NodeJS.Timer;
 
-	function startGame(letters: string[]) {
+	function startGame(letters: Array<string[]>) {
 		setStarting(true);
 		startingTimer = setTimeout(() => {
 			setStarted(true);

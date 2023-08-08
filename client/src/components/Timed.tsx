@@ -1,6 +1,9 @@
 import { Switch } from '@mui/material';
+import { useContext } from 'react';
+import Context from '../context/context';
 
-function Timed({ timed, handleToggle }) {
+function Timed() {
+	const { timed, handleToggle } = useContext(Context)!;
 	return (
 		<div
 			id='timed-wrapper'

@@ -1,11 +1,12 @@
 import { Collapse, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { TimeLimitProps } from '../types';
 
 function TimeLimit({
 	timeLimit,
 	setTimeLimit,
 	handleGameStart,
 	show,
-}) {
+}: TimeLimitProps) {
 	return (
 		<Collapse in={show}>
 			<div className='flex center-all'>
@@ -35,10 +36,8 @@ function TimeLimit({
 						<ToggleButton value={3}>3 min</ToggleButton>
 					</ToggleButtonGroup>
 					<div className='flex column'>
-						<p>Time Limit: {timeLimit} min</p>
-						<button
-							className='green'
-							onClick={handleGameStart}>
+						<p>Time Limit: {String(timeLimit)} min</p>
+						<button className='green' onClick={handleGameStart}>
 							Start Game
 						</button>
 					</div>

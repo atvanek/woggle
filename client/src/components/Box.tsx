@@ -1,9 +1,9 @@
-import React from 'react';
+import { useContext } from 'react';
 import Context from '../context/context';
 import { BoxProps } from '../types';
 
 function Box({ letter, id }: BoxProps) {
-	const { handleBoxClick } = React.useContext(Context)!;
+	const { handleBoxClick } = useContext(Context)!;
 	return (
 		<div className='scene' onClick={() => handleBoxClick(id, letter)}>
 			<div className='cube pointer' id={id}>
