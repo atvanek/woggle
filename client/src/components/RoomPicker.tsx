@@ -24,7 +24,7 @@ function RoomPicker() {
 				<DialogContent>
 					<DialogContentText>Select an emoji to pick a room!</DialogContentText>
 					<EmojiPicker
-						id='emoji'
+						// id='emoji'
 						lazyLoadEmojis={true}
 						onEmojiClick={({ emoji, unified }) => {
 							setRoom({ emoji, id: unified });

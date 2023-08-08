@@ -1,8 +1,9 @@
-import React, {
-	MouseEventHandler,
-	SyntheticEvent,
+import {
 	createContext,
 	useState,
+	MouseEventHandler,
+	ChangeEvent,
+	ProviderProps
 } from 'react';
 import { generateMoves } from '../../../utils/generateMoves';
 import boxCoords from '../../../utils/coordinates';
@@ -98,7 +99,7 @@ export function ContextProvider({ children }: ContextProps) {
 		setAlertTimer(newTimeout);
 	}
 
-	const validateWord: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+	const validateWord: MouseEventHandler<HTMLButtonElement> = (e) => {
 		//checks word length
 		if (currentWord.length < 3) {
 			handleAlert('length');
@@ -157,7 +158,7 @@ export function ContextProvider({ children }: ContextProps) {
 			.forEach((node) => node.classList.remove('selected'));
 	}
 
-	function handleToggle(e: React.ChangeEvent<HTMLInputElement>) {
+	function handleToggle(e: ChangeEvent<HTMLInputElement>) {
 		if (timed) {
 			setScore(0);
 			setTimerStarted(false);
@@ -165,7 +166,7 @@ export function ContextProvider({ children }: ContextProps) {
 		setTimed(e.target.checked);
 	}
 
-	const contextProps: React.ProviderProps<ContextValues> = {
+	const contextProps: ProviderProps<ContextValues> = {
 		value: {
 			loggedIn,
 			setLoggedIn,

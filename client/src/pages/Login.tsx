@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext, useState, FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import Context from '../context/context';
@@ -8,11 +8,11 @@ import UsernameInput from '../components/UsernameInput';
 function Login() {
 	const navigate = useNavigate();
 	const { setUser, setLoggedIn } = useContext(Context)!;
-	const [error, setError] = React.useState({
+	const [error, setError] = useState({
 		type: '',
 		message: '',
 	});
-	function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+	function handleSubmit(e: FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 		const target = e.target as HTMLFormElement;
 		const username = (target[0] as HTMLInputElement).value;
