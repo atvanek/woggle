@@ -1,12 +1,12 @@
-import blocks from './blocks';
+import blocks from './blocks.js';
 
 export default function generateLetters() {
 	const blocksCopy = [...blocks];
-	const lettersGrid: Array<string[]> = [];
+	const lettersGrid = [];
 	let column = 0;
 	let row = 0;
 	let id = 1;
-	let currentRow: string[] = [];
+	let currentRow = [];
 	while (blocksCopy.length) {
 		const randomIndex = Math.floor(Math.random() * blocksCopy.length);
 		const randomBlock = blocksCopy[randomIndex];

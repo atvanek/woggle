@@ -1,6 +1,6 @@
 import { useEffect, useContext, useState } from 'react';
 import Board from '../components/Board';
-import generateLetters from '../../../utils/generateLetters';
+import generateLetters from '../../../utils/generateLetters.js';
 import Timer from '../components/Timer.jsx';
 import Timed from '../components/Timed';
 import TimeLimit from '../components/TimeLimit';
