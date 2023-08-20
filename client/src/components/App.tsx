@@ -1,14 +1,10 @@
-import React, { useContext } from 'react';
-import Home from '../pages/Home.jsx';
-import Nav from './Nav.jsx';
+import Home from '../pages/Home';
+import Nav from './Nav';
 import '../../main.scss';
-import RoomPicker from './RoomPicker.jsx';
-import Context from '../context/context';
-import blocks from '../img/blocks.png'
+import RoomPicker from './RoomPicker';
+import blocks from '../img/blocks.png';
 
 function App() {
-	const { user } = useContext(Context);
-
 	return (
 		<div className='flex column width-100'>
 			<Nav />
@@ -18,7 +14,7 @@ function App() {
 			</div>
 			<div id='play-area' className='flex center'>
 				<RoomPicker />
-				<Home user={user} />
+				<Home />
 			</div>
 		</div>
 	);

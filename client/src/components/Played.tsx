@@ -1,8 +1,8 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import Context from '../context/context';
 
 function Played() {
-	const { playedWords } = useContext(Context);
+	const { playedWords } = useContext(Context)!;
 	return (
 		<section id='played-list' className='flex column p-10'>
 			<h3>Played words</h3>

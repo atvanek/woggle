@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react';
 import { CircularProgress, Box, Typography } from '@mui/material';
 
-function Timer({ time }) {
+function Timer({ time }: { time: number }) {
 	const [seconds, setSeconds] = React.useState(time);
-	let timer;
+	let timer: NodeJS.Timer;
 	useEffect(() => {
 		seconds <= 0
 			? clearInterval(timer)
 			: (timer = setInterval(() => {
-					setSeconds((prev) => prev - 1);
+					setSeconds((prev: number) => prev - 1);
 			  }, 1000));
 		return () => {
 			clearInterval(timer);
@@ -19,7 +19,7 @@ function Timer({ time }) {
 		if (seconds > 60) {
 			const mins = Math.floor(seconds / 60);
 			const secs = seconds % 60;
-			return `${mins.toFixed(0)}:${secs.toString().padStart(2, 0)} `;
+			return `${mins.toFixed(0)}:${secs.toString().padStart(2, '0')} `;
 		} else {
 			return `${seconds}`;
 		}
@@ -34,7 +34,7 @@ function Timer({ time }) {
 						color: `${seconds < 11 ? 'red' : seconds < 31 ? '#32ec70' : ''}`,
 					}}
 					variant='determinate'
-					value={seconds/time * 100}
+					value={(seconds / time) * 100}
 				/>
 				<Box
 					className='flex center-all'

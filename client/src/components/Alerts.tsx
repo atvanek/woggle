@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { Collapse, Alert } from '@mui/material';
 import Context from '../context/context';
 
 function Alerts() {
-	const { open, alert } = useContext(Context);
+	const { open, alert } = useContext(Context)!;
 	return (
 		<div id='alert-wrapper'>
 			<Collapse in={open}>

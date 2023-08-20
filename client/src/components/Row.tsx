@@ -1,13 +1,13 @@
-import React from 'react';
-import Box from './Box.jsx';
+import Box from './Box';
+import { RowProps } from '../types/types';
 
-function Row({ row, letters}) {
+function Row({ row, letters }: RowProps) {
 	const boxes = letters.map((letter, i) => {
 		return (
 			<Box
-				className={`row-${row} column-${i + 1}`}
+				// className={`row-${row} column-${i + 1}`}
 				letter={letter}
-				id={i + (row - 1) * 4 + 1}
+				id={String(i + (row - 1) * 4 + 1)}
 				key={i + (row - 1) * 4 + 1}
 			/>
 		);

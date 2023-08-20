@@ -1,7 +1,6 @@
-import React from 'react';
 import { TextField } from '@mui/material';
-
-function UsernameInput({ error, setError }) {
+import { UsernameInputProps } from '../types/types';
+function UsernameInput({ error, setError }: UsernameInputProps) {
 	return (
 		<TextField
 			type='string'

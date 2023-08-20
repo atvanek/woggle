@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import Context from '../context/context';
 
 function Nav() {
-	const { loggedIn, setLoggedIn, user, setUser } = useContext(Context);
+	const { loggedIn, setLoggedIn, user, setUser } = useContext(Context)!;
 	return (
 		<nav id='nav' className='flex width-100'>
 			<ul className='flex'>

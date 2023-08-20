@@ -5,9 +5,13 @@ import {
 	DialogContent,
 	DialogContentText,
 } from '@mui/material';
+import { FinalScoresProps } from '../types/types';
+import { useContext } from 'react';
+import Context from '../context/context';
 
-function FinalScores({ open, message }) {
+function FinalScores({ message }: FinalScoresProps) {
 	const navigate = useNavigate();
+	const { open, setOpen } = useContext(Context)!;
 	return (
 		<Dialog open={open} onClose={() => setOpen(false)}>
 			<DialogTitle>Game Over</DialogTitle>

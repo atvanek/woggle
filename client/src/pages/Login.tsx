@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext, useState, FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import Context from '../context/context';
@@ -7,15 +7,16 @@ import UsernameInput from '../components/UsernameInput';
 
 function Login() {
 	const navigate = useNavigate();
-	const { setUser, setLoggedIn } = useContext(Context);
-	const [error, setError] = React.useState({
+	const { setUser, setLoggedIn } = useContext(Context)!;
+	const [error, setError] = useState({
 		type: '',
 		message: '',
 	});
-	function handleSubmit(e) {
+	function handleSubmit(e: FormEvent<HTMLFormElement>) {
 		e.preventDefault();
-		const username = e.target[0].value;
-		const password = e.target[1].value;
+		const target = e.target as HTMLFormElement;
+		const username = (target[0] as HTMLInputElement).value;
+		const password = (target[1] as HTMLInputElement).value;
 		//validates username/password based on length
 		if (username.length < 5) {
 			setError({
@@ -49,8 +50,6 @@ function Login() {
 				navigate('/');
 			});
 	}
-
-
 
 	return (
 		<div className='flex column center-all auth-wrapper'>

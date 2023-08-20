@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useState, useContext, FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Context from '../context/context';
 import { TextField } from '@mui/material';
@@ -6,19 +6,20 @@ import UsernameInput from '../components/UsernameInput';
 
 function SignUp() {
 	const navigate = useNavigate();
-	const { setUser } = useContext(Context);
-	const [error, setError] = React.useState({
+	const { setUser } = useContext(Context)!;
+	const [error, setError] = useState({
 		type: '',
 		message: '',
 	});
-	function handleSubmit(e) {
+	function handleSubmit(e: FormEvent<HTMLFormElement>) {
 		e.preventDefault();
-		if (e.target[1].value !== e.target[2].value) {
+		const target = e.target as HTMLFormElement;
+		const username = (target[0] as HTMLInputElement).value;
+		const password = (target[1] as HTMLInputElement).value;
+		if (username !== password) {
 			setError({ type: 'password', message: 'Passwords must match.' });
 			return;
 		}
-		const username = e.target[0].value;
-		const password = e.target[1].value;
 		if (username.length < 5) {
 			setError({
 				type: 'username',

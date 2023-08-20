@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Board from '../components/Board';
 import Controls from '../components/Controls';
@@ -12,16 +12,16 @@ import { CircularProgress } from '@mui/material';
 function Room() {
 	const navigate = useNavigate();
 	const [users, setUsers] = useState([]);
-	const [serverLetters, setServerLetters] = useState([]);
+	const [serverLetters, setServerLetters] = useState<Array<string[]>>([]);
 	const [username, setUsername] = useState(null);
 	const [started, setStarted] = useState(false);
-	const [playerScores, setPlayerScores] = useState([]);
+	const [playerScores, setPlayerScores] = useState<
+		{ username: string; score: number }[]
+	>([]);
 	const [host, setHost] = useState(false);
 	const [timeLimit, setTimeLimit] = useState(1);
 	const [ended, setEnded] = useState(false);
-	const [message, setMessage] = useState('');
-	const [startTimer, setStartTimer] = useState(null)
-	const [startingTimer, setStartingTimer] = useState(null)
+	const [message, setMessage] = useState<JSX.Element | null>(null);
 	const {
 		setPossibleMoves,
 		setMultiplayer,
@@ -36,38 +36,33 @@ function Room() {
 		setPlayedWords,
 		starting,
 		setStarting,
-	} = useContext(Context);
+	} = useContext(Context)!;
 
-	//starts game with letters and game duration from server
-	function startGame(letters, duration) {
-		//invokes starting phase (3 second countdown)
+	function resetGame() {
+		setPlayedWords(new Set());
+		setScore(0);
+		setStarted(false);
+	}
+
+	let startingTimer: NodeJS.Timer;
+	let startTimer: NodeJS.Timer;
+
+	function startGame(letters: Array<string[]>) {
 		setStarting(true);
-		setStartingTimer(setTimeout(() => {
+		startingTimer = setTimeout(() => {
 			setStarted(true);
 			setMultiplayer(true);
 			setServerLetters(letters);
 			setPossibleMoves(new Set());
 			setStarting(false);
-		}, 3000));
-		//invokes gameplay phase (duration from server (seconds) + 3 second delay)
-		setStartTimer(setTimeout(() => {
+		}, 3000);
+		startTimer = setTimeout(() => {
 			socket.emit('game-end', room.id);
-		}, 3000 + duration * 60 * 1000));
+		}, 3000 + timeLimit * 60 * 1000);
 	}
 
-	//helper invoked on mount/dismount to handle edge cases
-	function resetGame() {
-		setPlayedWords(new Set());
-		setScore(0);
-		setStarted(false);
-		setStartingTimer(null)
-		setStartTimer(null)
-	}
-
-	//click handler for leave room button
 	function handleLeave() {
 		socket.disconnect();
-		resetGame()
 		navigate('/');
 	}
 
@@ -85,14 +80,12 @@ function Room() {
 		};
 	}, []);
 
-	//emits update-score event to server whenever current player score changes
 	useEffect(() => {
 		if (score > 0) {
 			socket.emit('update-score', room.id, score + wordPoints, socketId);
 		}
 	}, [score]);
 
-	//props for Host component
 	const props = {
 		username,
 		started,
@@ -104,39 +97,43 @@ function Room() {
 		setTimeLimit,
 	};
 
-	//event listeners for all ws connection
-	useEffect(() => {
-		socket.on('username-generated', (newUsername, host) => {
-			setUsername(newUsername);
-			if (host) {
-				setHost(true);
-			}
-		});
-		//new user joins room
-		socket.on('user-added', (newUsers) => {
-			setUsers(JSON.parse(newUsers));
-		});
-		//board generated on server
-		socket.on('letters-ready', (letters, duration) => {
-			setTimeLimit(duration)
-			startGame(letters, duration);
-		});
-		//new players scores
-		socket.on('new-scores', (newScores) => {
-			//sets player scores
-			const parsedScores = JSON.parse(newScores);
-			setPlayerScores(parsedScores);
-		});
-		let winnerMessage;
-		//end game logic
-		socket.on('end-game', (scores) => {
-			//generates string for end-game pop-up
-			//determines winner
-			setEnded(true);
-			let highScore = 0;
-			let winners = [];
-			const parsedScores = JSON.parse(scores);
-			const finalScores = parsedScores.map((user) => {
+	//ALL RECEIVED EVENTS
+
+	// individual username generated
+
+	socket.on('username-generated', (newUsername, host) => {
+		setUsername(newUsername);
+		if (host) {
+			setHost(true);
+		}
+	});
+	//new user joins room
+	socket.on('user-added', (newUsers) => {
+		setUsers(JSON.parse(newUsers));
+	});
+	//board generated on server
+	socket.on('letters-ready', (letters, timeLimit) => {
+		setTimeLimit(timeLimit);
+		startGame(letters);
+	});
+	//new players scores
+	socket.on('new-scores', (newScores) => {
+		//sets player scores
+		const parsedScores = JSON.parse(newScores);
+		setPlayerScores(parsedScores);
+	});
+	let winnerMessage: JSX.Element;
+	//end game logic
+	socket.on('end-game', (scores) => {
+		//generates string for end-game pop-up
+		//determines winner
+		console.log('game ended');
+		setEnded(true);
+		let highScore = 0;
+		let winners: string[] = [];
+		const parsedScores = JSON.parse(scores);
+		const finalScores = parsedScores.map(
+			(user: { username: string; score: number }) => {
 				if (user.score > highScore) {
 					highScore = user.score;
 					winners = [user.username];
@@ -163,28 +160,30 @@ function Room() {
 						</>
 					);
 				return `${user.username}: ${user.score}\n`;
-			});
-			setMessage(
-				<>
-					<h4>Final Scores:</h4>
-					{finalScores.map((score) => (
-						<p>{score}</p>
-					))}
-					<br />
-					<p>{winnerMessage}</p>
-				</>
-			);
-		});
-		socket.on('game-end', () => {
-			setStarted(false);
-		});
-		socket.on('disconnect', () => {
-			setStarting(false);
-			clearTimeout(startingTimer);
-			clearTimeout(startTimer);
-			resetGame();
-		});
-	}, []);
+			}
+		);
+		setMessage(
+			<>
+				<h4>Final Scores:</h4>
+				{finalScores.map((score: string) => (
+					<p>{score}</p>
+				))}
+				<br />
+				<p>{winnerMessage}</p>
+			</>
+		);
+
+		//re-route to homescreen
+	});
+	socket.on('game-end', () => {
+		setStarted(false);
+	});
+	socket.on('disconnect', () => {
+		setStarting(false);
+		clearTimeout(startingTimer);
+		clearTimeout(startTimer);
+		resetGame();
+	});
 
 	return (
 		<>
@@ -245,7 +244,7 @@ function Room() {
 						)}
 						{!started && <button onClick={handleLeave}>Leave Room</button>}
 					</div>
-					<FinalScores open={ended} message={message} />
+					<FinalScores message={message} />
 				</>
 			)}
 		</>

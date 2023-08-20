@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 
 function RoomPicker() {
-	const { room, setRoom } = useContext(Context);
+	const { room, setRoom } = useContext(Context)!;
 	const [open, setOpen] = useState(false);
 	const navigate = useNavigate();
 	function handleJoinRoom() {
@@ -24,7 +24,7 @@ function RoomPicker() {
 				<DialogContent>
 					<DialogContentText>Select an emoji to pick a room!</DialogContentText>
 					<EmojiPicker
-						id='emoji'
+						// id='emoji'
 						lazyLoadEmojis={true}
 						onEmojiClick={({ emoji, unified }) => {
 							setRoom({ emoji, id: unified });
