@@ -10,7 +10,7 @@ dotenv.config();
 
 const MODE = process.env.NODE_ENV;
 const BASE_URL =
-	MODE === 'production' ? 'https://woggle.vercel.app' : 'http://localhost:3000';
+	MODE === 'production' ? 'https://woggle-0283af63f9a9.herokuapp.com' : 'http://localhost:3000';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
