@@ -38,7 +38,7 @@ app.post('user', userController.createUser, (_req, res) => {
 	res.status(200).json(res.locals.newUser);
 });
 
-app.use('/testWord', (req, res) => {
+app.post('/testWord', (req, res) => {
 	const { word } = req.body;
 	fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`)
 		.then((res) => {
@@ -96,7 +96,7 @@ io.on('connection', (socket) => {
 	//GAME STARTED
 	socket.on('game-start', (id, duration) => {
 		const letters = generateLetters();
-		console.log('duration is', duration)
+		console.log('duration is', duration);
 		//lets all rooms know letters are ready to be rendered
 		io.in(id).emit('letters-ready', letters, duration);
 	});
