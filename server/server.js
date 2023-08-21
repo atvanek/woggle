@@ -38,7 +38,7 @@ app.post('user', userController.createUser, (_req, res) => {
 	res.status(200).json(res.locals.newUser);
 });
 
-app.post('/testWord', (req, res) => {
+app.use('/testWord', (req, res) => {
 	const { word } = req.body;
 	fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`)
 		.then((res) => {
@@ -50,7 +50,9 @@ app.post('/testWord', (req, res) => {
 			} else {
 				res.json({ word: 'valid' });
 			}
-		});
+		}).catch(err => {
+			console.log(err)
+		})
 });
 
 app.use((err, _req, res, _next) => {
