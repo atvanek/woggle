@@ -1,17 +1,23 @@
 'use client';
 
+import { selectLetter, resetWord } from '@/redux/slices/gameSlice';
+import { MouseEvent, MouseEventHandler } from 'react';
+import { useDispatch } from 'react-redux';
+
 type BlockProps = {
 	letter: string;
 	id: string;
 };
 
 function Block({ letter, id }: BlockProps) {
+	const dispatch = useDispatch();
 	function handleBlockClick() {
 		const currentBox = document.getElementById(id);
 		console.log(currentBox?.classList);
 		currentBox?.classList.contains('selected')
 			? currentBox?.classList.remove('selected')
 			: currentBox?.classList.add('selected');
+		dispatch(selectLetter(letter));
 	}
 	return (
 		<div className='scene cursor-pointer' onClick={handleBlockClick}>
