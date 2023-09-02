@@ -1,3 +1,96 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+* {
+  box-sizing: border-box;
+  --block-size: 75px;
+  --block-translate: calc(var(--block-size) / -2)
+}
+
+.scene,
+.cube,
+.cube__face {
+  width: var(--block-size);
+  height: var(--block-size);
+}
+
+.scene {
+  margin: 5px;
+  perspective: 150px;
+}
+
+.cube {
+  animation: rotateX(-90deg) translateZ(var(--block-translate)) scale(-1, 1);
+  position: relative;
+  transform-style: preserve-3d;
+  transform: translateZ(var(--block-translate));
+  transition: transform 1s;
+
+  p {
+    font: bold 36px arial, sans-serif;
+    background-color: rgb(130 78 16 / 99%);
+    color: transparent;
+    text-shadow: 2px 2px 3px rgba(255, 255, 255, 0.5);
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    background-clip: text;
+    transition: 0.2s;
+  }
+
+  &:hover {
+    p {
+      text-shadow: none;
+    }
+  }
+}
+
+.selected {
+  transform: translateZ(var(--block-translate)) rotateY(180deg);
+}
+
+.cube__face {
+  position: absolute;
+  font-size: 36px;
+  background-size: cover;
+  background-color: #fffbf4;
+  border-radius: 15px;
+  font-weight: bold;
+  text-align: center;
+  border: 4px solid #c5b5910f;
+  transition: 0.5s;
+  transition-timing-function: ease-in;
+}
+
+.selected>* {
+  transition: 0.5s;
+  background-image: none;
+
+  p {
+    text-shadow: none;
+  }
+}
+
+.cube__face--front {
+  transform: rotateY(0deg) translateZ(var(--block-translate)) scale(-1, 1);
+}
+
+.cube__face--right {
+  transform: rotateY(90deg) translateZ(var(--block-translate))scale(-1, 1);
+}
+
+.cube__face--back {
+  transform: rotateY(180deg) translateZ(var(--block-translate)) scale(-1, 1);
+}
+
+.cube__face--left {
+  transform: rotateY(-90deg) translateZ(var(--block-translate)) scale(-1, 1);
+}
+
+.cube__face--top {
+  transform: rotateX(90deg) translateZ(var(--block-translate)) scale(-1, 1);
+}
+
+.cube__face--bottom {
+  transform: rotateX(-90deg) translateZ(var(--block-translate)) scale(-1, 1);
+}

@@ -1,6 +1,12 @@
-import Block from "./Block";
+import Block from './Block';
 
-function Row({ row, letters }) {
+type RowProps = {
+	row: number;
+	letters: string[];
+	id: string;
+};
+
+function Row({ row, letters }: RowProps) {
 	const boxes = letters.map((letter, i) => {
 		return (
 			<Block
