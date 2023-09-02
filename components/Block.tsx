@@ -12,12 +12,7 @@ type BlockProps = {
 function Block({ letter, id }: BlockProps) {
 	const dispatch = useDispatch();
 	function handleBlockClick() {
-		const currentBox = document.getElementById(id);
-		console.log(currentBox?.classList);
-		currentBox?.classList.contains('selected')
-			? currentBox?.classList.remove('selected')
-			: currentBox?.classList.add('selected');
-		dispatch(selectLetter(letter));
+		dispatch(selectLetter({ letter, id }));
 	}
 	return (
 		<div className='scene cursor-pointer' onClick={handleBlockClick}>

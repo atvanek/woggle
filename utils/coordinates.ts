@@ -1,4 +1,8 @@
-const coordinates = {
+export type Coordinates = {
+	[key: string]: [number, number];
+};
+
+const coordinates: Coordinates = {
 	1: [0, 0],
 	2: [0, 1],
 	3: [0, 2],
