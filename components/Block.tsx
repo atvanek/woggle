@@ -1,7 +1,6 @@
 'use client';
 
-import { selectLetter, resetWord } from '@/redux/slices/gameSlice';
-import { MouseEvent, MouseEventHandler } from 'react';
+import { selectLetter } from '@/redux/slices/gameSlice';
 import { useDispatch } from 'react-redux';
 
 type BlockProps = {

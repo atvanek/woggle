@@ -6,7 +6,7 @@ import { enableMapSet } from 'immer';
 
 enableMapSet();
 
-type GameState = {
+export type GameState = {
 	currentWord: string;
 	selectedBlocks: Set<string>;
 	possibleMoves: Set<string>;
