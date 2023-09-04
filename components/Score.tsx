@@ -1,3 +1,5 @@
+'use client';
+
 import { useRootSelector } from '@/redux/hooks';
 
 function Score() {

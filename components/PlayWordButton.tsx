@@ -6,8 +6,12 @@ import { validateWord } from '@/redux/slices/gameSlice';
 function PlayWordButton() {
 	const word = useRootSelector((state) => state.game.currentWord);
 	const dispatch = useRootDispatch();
+
+	const handlePlayWord = () => {
+		dispatch(validateWord(word))
+	}
 	return (
-		<button onClick={() => dispatch(validateWord(word))}>Play Word</button>
+		<button onClick={handlePlayWord}>Play Word</button>
 	);
 }
 

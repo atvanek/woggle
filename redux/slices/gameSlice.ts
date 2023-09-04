@@ -8,13 +8,14 @@ enableMapSet();
 
 export type GameState = {
 	currentWord: string;
-	selectedBlocks: Set<string>;
-	possibleMoves: Set<string>;
+	selectedBlocks: string[];
+	possibleMoves: string[];
 	wordStarted: boolean;
 	score: number;
 	alert: {
 		active: boolean;
 		message: string;
+		timerId: NodeJS.Timeout | null;
 	};
 	playedWords: string[];
 };
@@ -22,12 +23,13 @@ export type GameState = {
 const initialState: GameState = {
 	currentWord: '',
 	wordStarted: false,
-	selectedBlocks: new Set(),
-	possibleMoves: new Set(),
+	selectedBlocks: [],
+	possibleMoves: [],
 	score: 0,
 	alert: {
 		active: false,
 		message: '',
+		timerId: null,
 	},
 	playedWords: [],
 };
@@ -38,30 +40,18 @@ const gameSlice = createSlice({
 	reducers: {
 		selectLetter: (
 			state,
-			action: PayloadAction<{ letter: string; id: string }>
+			action: PayloadAction<{
+				letter: string;
+				id: string;
+				currentCoordinates: [number, number];
+			}>
 		) => {
-			const { letter, id } = action.payload;
-			const currentCoordinates = coordinates[id];
-			if (state.selectedBlocks.has(String(coordinates))) {
-				window.alert('block already selected');
-				return;
-			}
-			if (
-				state.wordStarted &&
-				!state.possibleMoves.has(String(currentCoordinates))
-			) {
-				window.alert('please choose adjacent block');
-				return;
-			}
-			if (state.selectedBlocks.size === 0) {
-				state.wordStarted = true;
-			}
+			const { letter, id, currentCoordinates } = action.payload;
 			const [blocks, moves] = generateMoves(
 				currentCoordinates,
 				state.selectedBlocks
 			);
 			state.possibleMoves = moves;
-			console.log(moves);
 			state.selectedBlocks = blocks;
 			const currentBox = document.getElementById(id);
 			currentBox?.classList.add('selected');
@@ -84,20 +74,40 @@ const gameSlice = createSlice({
 			}
 			state.score += points;
 		},
-		invalidWord: (state, action) => {
-			const word = action.payload;
-			state.alert = {
-				active: true,
-				message: word,
-			};
-		},
+
 		resetBoard: (state) => {
 			state.currentWord = '';
 			state.wordStarted = false;
-			state.selectedBlocks = new Set();
-			state.possibleMoves = new Set();
+			state.selectedBlocks = [];
+			state.possibleMoves = [];
 			const selected = document.querySelectorAll('.selected');
 			selected.forEach((block) => block.classList.remove('selected'));
+		},
+		validateBlock: (state, action) => {},
+		createAlert: (
+			state,
+			action: PayloadAction<{ type: string; timerId: NodeJS.Timeout }>
+		) => {
+			const { timerId } = action.payload;
+			if (state.alert.timerId) {
+				clearTimeout(state.alert.timerId);
+			}
+
+			state.alert = {
+				active: true,
+				message: 'This is an alert',
+				timerId,
+			};
+		},
+		resetAlert: (state) => {
+			state.alert = {
+				active: false,
+				message: '',
+				timerId: null,
+			};
+		},
+		startWord: (state) => {
+			state.wordStarted = true;
 		},
 	},
 });
@@ -105,20 +115,39 @@ const gameSlice = createSlice({
 export const validateWord = createAsyncThunk(
 	'validateWord',
 	async (word: string, { dispatch }) => {
-		const res = await fetch(
-			`https://api.dictionaryapi.dev/api/v2/entries/en/${word.toLowerCase()}`
-		);
-		const data = await res.json();
-		if (Array.isArray(data)) {
-			dispatch(validWord(word));
-		} else {
-			dispatch(invalidWord(word));
+		try {
+			const res = await fetch(
+				`https://api.dictionaryapi.dev/api/v2/entries/en/${word.toLowerCase()}`
+			);
+			if (res.ok) {
+				dispatch(validWord(word));
+			} else {
+				dispatch(handleAlert('invalidWord'));
+			}
+		} catch (err) {
+			console.log(err);
 		}
 		dispatch(resetBoard());
 	}
 );
 
+export const handleAlert = createAsyncThunk(
+	'handleAlert',
+	async (type: string, { dispatch }) => {
+		const timerId = setTimeout(() => {
+			dispatch(resetAlert());
+		}, 3000);
+		dispatch(createAlert({ type, timerId }));
+	}
+);
+
 export const gameReducer = gameSlice.reducer;
-export const { selectLetter, resetBoard, invalidWord, validWord } =
-	gameSlice.actions;
+export const {
+	selectLetter,
+	resetBoard,
+	validWord,
+	createAlert,
+	resetAlert,
+	startWord,
+} = gameSlice.actions;
 export default gameSlice;

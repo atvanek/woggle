@@ -1,10 +1,9 @@
-'use client';
-
 import generateLetters from '@/utils/generateLetters';
 import Row from '@/components/Row';
 import ResetButton from '@/components/ResetButton';
 import PlayWordButton from '@/components/PlayWordButton';
 import Score from '@/components/Score';
+import Alert from '@/components/Alert';
 
 export default function Home() {
 	const letters = generateLetters();
@@ -18,6 +17,7 @@ export default function Home() {
 			<PlayWordButton />
 			<ResetButton />
 			<Score />
+			<Alert />
 		</main>
 	);
 }
