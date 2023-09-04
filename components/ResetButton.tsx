@@ -1,16 +1,11 @@
 'use client';
 
-import { resetWord } from '@/redux/slices/gameSlice';
-import { useDispatch } from 'react-redux';
+import { useRootDispatch } from '@/redux/hooks';
+import { resetBoard } from '@/redux/slices/gameSlice';
 
 function ResetButton() {
-	const dispatch = useDispatch();
-	function handleReset() {
-		const selectedBlocks = document.querySelectorAll('.selected');
-		selectedBlocks.forEach((block) => block.classList.remove('selected'));
-		dispatch(resetWord());
-	}
-	return <button onClick={handleReset}>Reset Word</button>;
+	const dispatch = useRootDispatch();
+	return <button onClick={() => dispatch(resetBoard())}>Reset Word</button>;
 }
 
 export default ResetButton;
