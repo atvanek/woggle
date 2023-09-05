@@ -3,11 +3,13 @@ import { PayloadAction } from '@reduxjs/toolkit';
 import { generateMoves } from '@/utils/generateMoves';
 import { AlertColor } from '@mui/material';
 import coordinates from '@/utils/coordinates';
+import handleAlert from '../helpers/handleAlert';
 
 type Alert = {
 	active: boolean;
 	message: string;
 	type: AlertColor;
+	timerId: NodeJS.Timeout | null;
 };
 
 export type GameState = {
@@ -31,6 +33,7 @@ const initialState: GameState = {
 		active: false,
 		message: '',
 		type: 'error',
+		timerId: null,
 	},
 	playedWords: [],
 	timed: false,
@@ -59,7 +62,7 @@ const gameSlice = createSlice({
 			currentBox?.classList.add('selected');
 			state.currentWord += letter;
 		},
-		validWord: (state, action) => {
+		playWord: (state, action) => {
 			const word = action.payload;
 			state.playedWords.push(word);
 			let points: number;
@@ -85,12 +88,20 @@ const gameSlice = createSlice({
 			const selected = document.querySelectorAll('.selected');
 			selected.forEach((block) => block.classList.remove('selected'));
 		},
-		createAlert: (state, action: PayloadAction<string>) => {
-			const type = action.payload;
+		triggerAlert: (
+			state,
+			action: PayloadAction<{ type: string; newTimerId: NodeJS.Timeout }>
+		) => {
+			const { type, newTimerId } = action.payload;
+			const { timerId } = state.alert;
+			if (timerId) {
+				clearTimeout(timerId);
+			}
 			const newAlert: Alert = {
 				message: '',
 				type: 'error',
 				active: true,
+				timerId: newTimerId,
 			};
 			switch (type) {
 				case 'length':
@@ -104,7 +115,7 @@ const gameSlice = createSlice({
 					break;
 				case 'invalid':
 					newAlert.type = 'error';
-					newAlert.message = `${state.currentWord} is not a word`;
+					newAlert.message = `${state.currentWord.toLowerCase()} is not a word`;
 					break;
 				case 'selected':
 					newAlert.type = 'error';
@@ -122,6 +133,7 @@ const gameSlice = createSlice({
 				active: false,
 				type: 'error',
 				message: '',
+				timerId: null,
 			};
 		},
 		startWord: (state) => {
@@ -141,9 +153,9 @@ export const validateWord = createAsyncThunk(
 				`https://api.dictionaryapi.dev/api/v2/entries/en/${word.toLowerCase()}`
 			);
 			if (res.ok) {
-				dispatch(validWord(word));
+				dispatch(playWord(word));
 			} else {
-				dispatch(createAlert('invalidWord'));
+				handleAlert(dispatch, 'invalid', 3000)
 			}
 		} catch (err) {
 			console.log(err);
@@ -156,8 +168,8 @@ export const gameReducer = gameSlice.reducer;
 export const {
 	selectLetter,
 	resetBoard,
-	validWord,
-	createAlert,
+	playWord,
+	triggerAlert,
 	resetAlert,
 	startWord,
 	toggleTimed,
