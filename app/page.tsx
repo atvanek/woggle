@@ -1,10 +1,10 @@
 import generateLetters from '@/utils/generateLetters';
-import Row from '@/components/views/Row';
-import ResetButton from '@/components/views/ResetButton';
-import PlayWordButton from '@/components/views/PlayWordButton';
-import Score from '@/components/views/Score';
-import Alert from '@/components/views/Alert';
-import TimeToggle from '@/components/views/TimeToggle';
+import Row from '@/components/Row';
+import ResetButton from '@/components/ResetButton';
+import PlayWordButton from '@/components/PlayWordButton';
+import Score from '@/components/Score';
+import Alert from '@/components/Alert';
+import TimeToggle from '@/components/TimeToggle';
 
 export default function Home() {
 	const letters = generateLetters();
@@ -14,7 +14,7 @@ export default function Home() {
 	));
 	return (
 		<main>
-			<TimeToggle/>
+			<TimeToggle />
 			{rows}
 			<PlayWordButton />
 			<ResetButton />
