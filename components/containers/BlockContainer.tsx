@@ -4,7 +4,7 @@ import { useRootSelector, useRootDispatch } from '@/redux/hooks';
 import coordinates from '@/utils/coordinates';
 import { handleAlert, startWord, selectLetter } from '@/redux/slices/gameSlice';
 import { MouseEventHandler, ReactNode } from 'react';
-import Block from '@/components/Block';
+import Block from '../views/Block';
 
 type BlockContainerProps = {
 	letter: string;

@@ -2,7 +2,7 @@ import generateLetters from '@/utils/generateLetters';
 import Row from '@/components/Row';
 import ResetButton from '@/components/ResetButton';
 import PlayWordButtonContainer from '@/components/containers/PlayWordContainer';
-import Score from '@/components/Score';
+import Score from '@/components/views/Score';
 import Alert from '@/components/Alert';
 
 export default function Home() {

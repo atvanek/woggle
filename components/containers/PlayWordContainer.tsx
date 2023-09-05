@@ -2,7 +2,7 @@
 
 import { useRootDispatch, useRootSelector } from '@/redux/hooks';
 import { handleAlert, validateWord } from '@/redux/slices/gameSlice';
-import PlayWordButton from '../PlayWordButton';
+import PlayWordButton from '../views/PlayWordButton';
 import { MouseEventHandler } from 'react';
 
 function PlayWordButtonContainer() {
