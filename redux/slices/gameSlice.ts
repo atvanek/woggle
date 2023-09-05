@@ -1,10 +1,14 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { PayloadAction } from '@reduxjs/toolkit';
-import coordinates from '@/utils/coordinates';
 import { generateMoves } from '@/utils/generateMoves';
-import { enableMapSet } from 'immer';
+import { AlertColor } from '@mui/material';
 
-enableMapSet();
+type Alert = {
+	active: boolean;
+	message: string;
+	timerId: NodeJS.Timeout | null;
+	type: AlertColor;
+};
 
 export type GameState = {
 	currentWord: string;
@@ -12,11 +16,7 @@ export type GameState = {
 	possibleMoves: string[];
 	wordStarted: boolean;
 	score: number;
-	alert: {
-		active: boolean;
-		message: string;
-		timerId: NodeJS.Timeout | null;
-	};
+	alert: Alert;
 	playedWords: string[];
 };
 
@@ -30,6 +30,7 @@ const initialState: GameState = {
 		active: false,
 		message: '',
 		timerId: null,
+		type: 'error',
 	},
 	playedWords: [],
 };
@@ -83,25 +84,49 @@ const gameSlice = createSlice({
 			const selected = document.querySelectorAll('.selected');
 			selected.forEach((block) => block.classList.remove('selected'));
 		},
-		validateBlock: (state, action) => {},
 		createAlert: (
 			state,
 			action: PayloadAction<{ type: string; timerId: NodeJS.Timeout }>
 		) => {
-			const { timerId } = action.payload;
+			const { timerId, type } = action.payload;
 			if (state.alert.timerId) {
 				clearTimeout(state.alert.timerId);
 			}
-
-			state.alert = {
+			const newAlert: Alert = {
+				message: '',
+				type: 'error',
 				active: true,
-				message: 'This is an alert',
 				timerId,
 			};
+			switch (type) {
+				case 'length':
+					newAlert.type = 'error';
+					newAlert.message = 'Word must be at least 3 letters';
+					break;
+				case 'played':
+					newAlert.type = 'error';
+					newAlert.message =
+						'Word has already been played. Please choose new word';
+					break;
+				case 'invalid':
+					newAlert.type = 'error';
+					newAlert.message = `${state.currentWord} is not a word`;
+					break;
+				case 'selected':
+					newAlert.type = 'error';
+					newAlert.message = 'Box already selected';
+					break;
+				case 'adjacent':
+					newAlert.type = 'error';
+					newAlert.message = 'Please select adjacent box';
+					break;
+			}
+			state.alert = newAlert;
 		},
 		resetAlert: (state) => {
 			state.alert = {
 				active: false,
+				type: 'error',
 				message: '',
 				timerId: null,
 			};

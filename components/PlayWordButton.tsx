@@ -1,18 +1,13 @@
 'use client';
 
-import { useRootDispatch, useRootSelector } from '@/redux/hooks';
-import { validateWord } from '@/redux/slices/gameSlice';
+import { MouseEventHandler } from 'react';
 
-function PlayWordButton() {
-	const word = useRootSelector((state) => state.game.currentWord);
-	const dispatch = useRootDispatch();
+type PlayWordButtonProps = {
+	handlePlayWord: MouseEventHandler<HTMLButtonElement>;
+};
 
-	const handlePlayWord = () => {
-		dispatch(validateWord(word))
-	}
-	return (
-		<button onClick={handlePlayWord}>Play Word</button>
-	);
+function PlayWordButton({ handlePlayWord }: PlayWordButtonProps) {
+	return <button onClick={handlePlayWord}>Play Word</button>;
 }
 
-export default PlayWordButton
+export default PlayWordButton;

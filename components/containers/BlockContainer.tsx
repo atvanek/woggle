@@ -17,9 +17,9 @@ function BlockContainer({ letter, id }: BlockContainerProps) {
 	);
 	const dispatch = useRootDispatch();
 
-	const validateBlock: MouseEventHandler<HTMLDivElement> = (e) => {
+	const validateBlock: MouseEventHandler<HTMLDivElement> = () => {
 		const currentCoordinates = coordinates[id];
-		if (selectedBlocks.includes(String(coordinates))) {
+		if (selectedBlocks.includes(String(currentCoordinates))) {
 			dispatch(handleAlert('selected'));
 			return;
 		}
@@ -27,7 +27,7 @@ function BlockContainer({ letter, id }: BlockContainerProps) {
 			dispatch(handleAlert('adjacent'));
 			return;
 		}
-		if (selectedBlocks.length === 0) {
+		if (!selectedBlocks.length) {
 			dispatch(startWord());
 		}
 		dispatch(selectLetter({ letter, id, currentCoordinates }));

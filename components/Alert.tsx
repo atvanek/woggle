@@ -4,11 +4,13 @@ import { Collapse, Alert } from '@mui/material';
 import { useRootSelector } from '@/redux/hooks';
 
 function Alerts() {
-	const { active, message } = useRootSelector((state) => state.game.alert);
+	const { active, type, message } = useRootSelector(
+		(state) => state.game.alert
+	);
 	return (
 		<div id='alert-wrapper'>
 			<Collapse in={active}>
-				<Alert severity='error'>{message}</Alert>
+				<Alert severity={type}>{message}</Alert>
 			</Collapse>
 		</div>
 	);

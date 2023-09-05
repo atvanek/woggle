@@ -1,7 +1,7 @@
 import generateLetters from '@/utils/generateLetters';
 import Row from '@/components/Row';
 import ResetButton from '@/components/ResetButton';
-import PlayWordButton from '@/components/PlayWordButton';
+import PlayWordButtonContainer from '@/components/containers/PlayWordContainer';
 import Score from '@/components/Score';
 import Alert from '@/components/Alert';
 
@@ -14,7 +14,7 @@ export default function Home() {
 	return (
 		<main>
 			{rows}
-			<PlayWordButton />
+			<PlayWordButtonContainer />
 			<ResetButton />
 			<Score />
 			<Alert />
