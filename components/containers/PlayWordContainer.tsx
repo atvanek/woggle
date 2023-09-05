@@ -1,7 +1,7 @@
 'use client';
 
 import { useRootDispatch, useRootSelector } from '@/redux/hooks';
-import { handleAlert, validateWord } from '@/redux/slices/gameSlice';
+import { validateWord, createAlert} from '@/redux/slices/gameSlice';
 import PlayWordButton from '../views/PlayWordButton';
 import { MouseEventHandler } from 'react';
 
@@ -11,11 +11,11 @@ function PlayWordButtonContainer() {
 
 	const handlePlayWord: MouseEventHandler<HTMLButtonElement> = () => {
 		if (currentWord.length < 3) {
-			dispatch(handleAlert('length'));
+			dispatch(createAlert('length'));
 			return;
 		}
 		if (playedWords.includes(currentWord)) {
-			dispatch(handleAlert('played'));
+			dispatch(createAlert('played'));
 			return;
 		}
 		dispatch(validateWord(currentWord));

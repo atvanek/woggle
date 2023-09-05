@@ -1,18 +1,17 @@
 'use client';
 
-import { MouseEventHandler } from 'react';
+import { useRootDispatch } from '@/redux/hooks';
+import { selectLetter } from '@/redux/slices/gameSlice';
 
 type BlockProps = {
 	letter: string;
 	id: string;
-	validateBlock: MouseEventHandler<HTMLDivElement>
 };
 
-function Block({ letter, id, validateBlock }: BlockProps) {
+function Block({ letter, id }: BlockProps) {
+	const dispatch = useRootDispatch()
 	return (
-		<div
-			className='scene cursor-pointer'
-			onClick={validateBlock}>
+		<div className='scene cursor-pointer' onClick={() => dispatch(selectLetter({letter, id}))}>
 			<div className='cube' id={id}>
 				<div className='cube__face cube__face--front flex justify-center items-center'>
 					<p>{letter}</p>

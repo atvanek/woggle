@@ -2,11 +2,11 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { generateMoves } from '@/utils/generateMoves';
 import { AlertColor } from '@mui/material';
+import coordinates from '@/utils/coordinates';
 
 type Alert = {
 	active: boolean;
 	message: string;
-	timerId: NodeJS.Timeout | null;
 	type: AlertColor;
 };
 
@@ -18,6 +18,7 @@ export type GameState = {
 	score: number;
 	alert: Alert;
 	playedWords: string[];
+	timed: boolean;
 };
 
 const initialState: GameState = {
@@ -29,10 +30,10 @@ const initialState: GameState = {
 	alert: {
 		active: false,
 		message: '',
-		timerId: null,
 		type: 'error',
 	},
 	playedWords: [],
+	timed: false,
 };
 
 const gameSlice = createSlice({
@@ -44,10 +45,10 @@ const gameSlice = createSlice({
 			action: PayloadAction<{
 				letter: string;
 				id: string;
-				currentCoordinates: [number, number];
 			}>
 		) => {
-			const { letter, id, currentCoordinates } = action.payload;
+			const { letter, id } = action.payload;
+			const currentCoordinates = coordinates[id];
 			const [blocks, moves] = generateMoves(
 				currentCoordinates,
 				state.selectedBlocks
@@ -84,19 +85,12 @@ const gameSlice = createSlice({
 			const selected = document.querySelectorAll('.selected');
 			selected.forEach((block) => block.classList.remove('selected'));
 		},
-		createAlert: (
-			state,
-			action: PayloadAction<{ type: string; timerId: NodeJS.Timeout }>
-		) => {
-			const { timerId, type } = action.payload;
-			if (state.alert.timerId) {
-				clearTimeout(state.alert.timerId);
-			}
+		createAlert: (state, action: PayloadAction<string>) => {
+			const type = action.payload;
 			const newAlert: Alert = {
 				message: '',
 				type: 'error',
 				active: true,
-				timerId,
 			};
 			switch (type) {
 				case 'length':
@@ -128,11 +122,13 @@ const gameSlice = createSlice({
 				active: false,
 				type: 'error',
 				message: '',
-				timerId: null,
 			};
 		},
 		startWord: (state) => {
 			state.wordStarted = true;
+		},
+		toggleTimed: (state) => {
+			state.timed = !state.timed;
 		},
 	},
 });
@@ -147,22 +143,12 @@ export const validateWord = createAsyncThunk(
 			if (res.ok) {
 				dispatch(validWord(word));
 			} else {
-				dispatch(handleAlert('invalidWord'));
+				dispatch(createAlert('invalidWord'));
 			}
 		} catch (err) {
 			console.log(err);
 		}
 		dispatch(resetBoard());
-	}
-);
-
-export const handleAlert = createAsyncThunk(
-	'handleAlert',
-	async (type: string, { dispatch }) => {
-		const timerId = setTimeout(() => {
-			dispatch(resetAlert());
-		}, 3000);
-		dispatch(createAlert({ type, timerId }));
 	}
 );
 
@@ -174,5 +160,6 @@ export const {
 	createAlert,
 	resetAlert,
 	startWord,
+	toggleTimed,
 } = gameSlice.actions;
 export default gameSlice;
