@@ -1,7 +1,7 @@
 import generateLetters from '@/utils/generateLetters';
 import Row from '@/components/views/Row';
 import ResetButton from '@/components/views/ResetButton';
-import PlayWordButtonContainer from '@/components/containers/PlayWordContainer';
+import PlayWordButton from '@/components/views/PlayWordButton';
 import Score from '@/components/views/Score';
 import Alert from '@/components/views/Alert';
 import TimeToggle from '@/components/views/TimeToggle';
@@ -16,7 +16,7 @@ export default function Home() {
 		<main>
 			<TimeToggle/>
 			{rows}
-			<PlayWordButtonContainer />
+			<PlayWordButton />
 			<ResetButton />
 			<Score />
 			<Alert />
