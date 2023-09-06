@@ -1,28 +1,13 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { generateMoves } from '@/utils/generateMoves';
-import { AlertColor } from '@mui/material';
 import coordinates from '@/utils/coordinates';
 import handleAlert from '../helpers/handleAlert';
 import { RootState } from '../store';
-import { MouseEventHandler } from 'react';
-type Alert = {
-	active: boolean;
-	message: string;
-	type: AlertColor;
-	timerId: NodeJS.Timeout | null;
-};
+import calculatePoints from '../helpers/calculatePoints';
+import generateAlert from '../helpers/generateAlert';
 
-export type GameState = {
-	currentWord: string;
-	selectedBlocks: string[];
-	possibleMoves: string[];
-	wordStarted: boolean;
-	score: number;
-	alert: Alert;
-	playedWords: string[];
-	timed: boolean;
-};
+import { GameState } from '@/types/types';
 
 const initialState: GameState = {
 	currentWord: '',
@@ -66,19 +51,7 @@ const gameSlice = createSlice({
 		playWord: (state) => {
 			const { currentWord } = state;
 			state.playedWords.push(currentWord);
-			let points: number;
-			if (currentWord.length < 5) {
-				points = 1;
-			} else if (currentWord.length < 6) {
-				points = 2;
-			} else if (currentWord.length < 7) {
-				points = 3;
-			} else if (currentWord.length < 8) {
-				points = 5;
-			} else {
-				points = 11;
-			}
-			state.score += points;
+			state.score += calculatePoints(currentWord);
 		},
 
 		resetBoard: (state) => {
@@ -98,36 +71,7 @@ const gameSlice = createSlice({
 			if (timerId) {
 				clearTimeout(timerId);
 			}
-			const newAlert: Alert = {
-				message: '',
-				type: 'error',
-				active: true,
-				timerId: newTimerId,
-			};
-			switch (type) {
-				case 'length':
-					newAlert.type = 'error';
-					newAlert.message = 'Word must be at least 3 letters';
-					break;
-				case 'played':
-					newAlert.type = 'error';
-					newAlert.message =
-						'Word has already been played. Please choose new word';
-					break;
-				case 'invalid':
-					newAlert.type = 'error';
-					newAlert.message = `${state.currentWord.toLowerCase()} is not a word`;
-					break;
-				case 'selected':
-					newAlert.type = 'error';
-					newAlert.message = 'Box already selected';
-					break;
-				case 'adjacent':
-					newAlert.type = 'error';
-					newAlert.message = 'Please select adjacent box';
-					break;
-			}
-			state.alert = newAlert;
+			state.alert = generateAlert(type, newTimerId, state.currentWord);
 		},
 		resetAlert: (state) => {
 			state.alert = {
@@ -178,10 +122,7 @@ export const validateWord = createAsyncThunk(
 
 export const validateBlock = createAsyncThunk(
 	'validateBlock',
-	async (
-		{ id, letter }: { id: string; letter: string },
-		{ dispatch, getState }
-	) => {
+	({ id, letter }: { id: string; letter: string }, { dispatch, getState }) => {
 		const { selectedBlocks, possibleMoves, wordStarted } = (
 			getState() as RootState
 		).game;
