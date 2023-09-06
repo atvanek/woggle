@@ -1,4 +1,4 @@
-import BlockContainer from "../containers/BlockContainer";
+import Block from './Block';
 
 type RowProps = {
 	row: number;
@@ -9,7 +9,7 @@ type RowProps = {
 function Row({ row, letters }: RowProps) {
 	const boxes = letters.map((letter, i) => {
 		return (
-			<BlockContainer
+			<Block
 				letter={letter}
 				id={String(i + (row - 1) * 4 + 1)}
 				key={i + (row - 1) * 4 + 1}

@@ -5,6 +5,7 @@ import { AlertColor } from '@mui/material';
 import coordinates from '@/utils/coordinates';
 import handleAlert from '../helpers/handleAlert';
 import { RootState } from '../store';
+import { MouseEventHandler } from 'react';
 type Alert = {
 	active: boolean;
 	message: string;
@@ -148,7 +149,17 @@ const gameSlice = createSlice({
 export const validateWord = createAsyncThunk(
 	'validateWord',
 	async (_, { dispatch, getState }) => {
-		const currentWord = (getState() as RootState).game.currentWord;
+		const { currentWord, playedWords } = (getState() as RootState).game;
+
+		if (currentWord.length < 3) {
+			handleAlert(dispatch, 'length', 3000);
+			return;
+		}
+		if (playedWords.includes(currentWord)) {
+			handleAlert(dispatch, 'played', 3000);
+			return;
+		}
+
 		try {
 			const res = await fetch(
 				`https://api.dictionaryapi.dev/api/v2/entries/en/${currentWord.toLowerCase()}`
@@ -162,6 +173,31 @@ export const validateWord = createAsyncThunk(
 			console.log(err);
 		}
 		dispatch(resetBoard());
+	}
+);
+
+export const validateBlock = createAsyncThunk(
+	'validateBlock',
+	async (
+		{ id, letter }: { id: string; letter: string },
+		{ dispatch, getState }
+	) => {
+		const { selectedBlocks, possibleMoves, wordStarted } = (
+			getState() as RootState
+		).game;
+		const currentCoordinates = coordinates[id];
+		if (selectedBlocks.includes(String(coordinates))) {
+			handleAlert(dispatch, 'selected', 3000);
+			return;
+		}
+		if (wordStarted && !possibleMoves.includes(String(currentCoordinates))) {
+			handleAlert(dispatch, 'adjacent', 3000);
+			return;
+		}
+		if (selectedBlocks.length === 0) {
+			dispatch(startWord());
+		}
+		dispatch(selectLetter({ letter, id }));
 	}
 );
 
