@@ -6,7 +6,6 @@ import handleAlert from '../helpers/handleAlert';
 import { RootState } from '../store';
 import calculatePoints from '../helpers/calculatePoints';
 import generateAlert from '../helpers/generateAlert';
-
 import { GameState } from '@/types/types';
 
 const initialState: GameState = {
