@@ -6,9 +6,7 @@ import handleAlert from '../helpers/handleAlert';
 import { RootState } from '../store';
 import calculateScore from '../helpers/calculateScore';
 import createAlert from '../helpers/createAlert';
-import { GameState } from '@/types/gameSliceTypes';
-import alertDisplayTime from '@/utils/alertDisplayTime';
-
+import { AlertType, GameState } from '@/types/gameSliceTypes';
 
 const initialState: GameState = {
 	currentWord: '',
@@ -65,7 +63,7 @@ const gameSlice = createSlice({
 		},
 		triggerAlert: (
 			state,
-			action: PayloadAction<{ type: string; newTimerId: NodeJS.Timeout }>
+			action: PayloadAction<{ type: AlertType; newTimerId: NodeJS.Timeout }>
 		) => {
 			const { type, newTimerId } = action.payload;
 			const { currentWord } = state;
@@ -117,7 +115,7 @@ export const validateWord = createAsyncThunk(
 		} catch (err) {
 			console.log(err);
 		}
-		handleAlert(dispatch, 'validated')
+		handleAlert(dispatch, 'validated');
 		dispatch(resetBoard());
 	}
 );

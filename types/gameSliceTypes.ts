@@ -17,3 +17,5 @@ export type GameState = {
 	playedWords: string[];
 	timed: boolean;
 };
+
+export type AlertType = 'length' | 'played' | 'invalid' | 'selected' | 'adjacent' | 'validated'
