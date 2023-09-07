@@ -4,6 +4,7 @@ import { generateMoves } from '@/utils/generateMoves';
 import { AlertColor } from '@mui/material';
 import coordinates from '@/utils/coordinates';
 import handleAlert from '../helpers/handleAlert';
+import { RootState } from '../store';
 
 type Alert = {
 	active: boolean;
@@ -62,17 +63,17 @@ const gameSlice = createSlice({
 			currentBox?.classList.add('selected');
 			state.currentWord += letter;
 		},
-		playWord: (state, action) => {
-			const word = action.payload;
-			state.playedWords.push(word);
+		playWord: (state) => {
+			const { currentWord } = state;
+			state.playedWords.push(currentWord);
 			let points: number;
-			if (word.length < 5) {
+			if (currentWord.length < 5) {
 				points = 1;
-			} else if (word.length < 6) {
+			} else if (currentWord.length < 6) {
 				points = 2;
-			} else if (word.length < 7) {
+			} else if (currentWord.length < 7) {
 				points = 3;
-			} else if (word.length < 8) {
+			} else if (currentWord.length < 8) {
 				points = 5;
 			} else {
 				points = 11;
@@ -147,20 +148,22 @@ const gameSlice = createSlice({
 
 export const validateWord = createAsyncThunk(
 	'validateWord',
-	async (word: string, { dispatch }) => {
+	async (_, { getState, dispatch }) => {
 		try {
+			const { currentWord } = (getState() as RootState).game;
 			const res = await fetch(
-				`https://api.dictionaryapi.dev/api/v2/entries/en/${word.toLowerCase()}`
+				`https://api.dictionaryapi.dev/api/v2/entries/en/${currentWord.toLowerCase()}`
 			);
 			if (res.ok) {
-				dispatch(playWord(word));
+				dispatch(playWord());
+				dispatch(resetBoard());
 			} else {
-				handleAlert(dispatch, 'invalid', 3000)
+				handleAlert(dispatch, 'invalid', 3000);
+				dispatch(resetBoard());
 			}
 		} catch (err) {
 			console.log(err);
 		}
-		dispatch(resetBoard());
 	}
 );
 

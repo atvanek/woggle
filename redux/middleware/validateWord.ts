@@ -1,4 +1,5 @@
 import { Middleware } from '@reduxjs/toolkit';
+import { validateWord } from '../slices/gameSlice';
 import handleAlert from '../helpers/handleAlert';
 
 const validateWordMiddleware: Middleware = (store) => (next) => (action) => {
