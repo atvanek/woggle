@@ -4,9 +4,9 @@ import { generateMoves } from '@/utils/generateMoves';
 import coordinates from '@/utils/coordinates';
 import handleAlert from '../helpers/handleAlert';
 import { RootState } from '../store';
-import calculatePoints from '../helpers/calculatePoints';
-import generateAlert from '../helpers/generateAlert';
-import { GameState } from '@/types/types';
+import calculateScore from '../helpers/calculateScore';
+import createAlert from '../helpers/createAlert';
+import { AlertType, GameState } from '@/types/gameSliceTypes';
 
 const initialState: GameState = {
 	currentWord: '',
@@ -50,7 +50,7 @@ const gameSlice = createSlice({
 		playWord: (state) => {
 			const { currentWord } = state;
 			state.playedWords.push(currentWord);
-			state.score += calculatePoints(currentWord);
+			state.score += calculateScore(currentWord);
 		},
 
 		resetBoard: (state) => {
@@ -63,20 +63,21 @@ const gameSlice = createSlice({
 		},
 		triggerAlert: (
 			state,
-			action: PayloadAction<{ type: string; newTimerId: NodeJS.Timeout }>
+			action: PayloadAction<{ type: AlertType; newTimerId: NodeJS.Timeout }>
 		) => {
 			const { type, newTimerId } = action.payload;
+			const { currentWord } = state;
 			const { timerId } = state.alert;
 			if (timerId) {
 				clearTimeout(timerId);
 			}
-			state.alert = generateAlert(type, newTimerId, state.currentWord);
+			state.alert = createAlert(type, currentWord, newTimerId);
 		},
 		resetAlert: (state) => {
 			state.alert = {
 				active: false,
-				type: 'error',
-				message: '',
+				type: state.alert.type,
+				message: state.alert.message,
 				timerId: null,
 			};
 		},
@@ -91,29 +92,29 @@ const gameSlice = createSlice({
 
 export const validateWord = createAsyncThunk(
 	'validateWord',
-	async (_, { dispatch, getState }) => {
+	async (_, { getState, dispatch }) => {
 		const { currentWord, playedWords } = (getState() as RootState).game;
-
 		if (currentWord.length < 3) {
-			handleAlert(dispatch, 'length', 3000);
+			handleAlert(dispatch, 'length');
 			return;
 		}
 		if (playedWords.includes(currentWord)) {
-			handleAlert(dispatch, 'played', 3000);
+			handleAlert(dispatch, 'played');
 			return;
 		}
-
 		try {
+			const { currentWord } = (getState() as RootState).game;
 			const res = await fetch(
 				`https://api.dictionaryapi.dev/api/v2/entries/en/${currentWord.toLowerCase()}`
 			);
 			if (res.ok) {
 				dispatch(playWord());
+				handleAlert(dispatch, 'validated');
 			} else {
-				handleAlert(dispatch, 'invalid', 3000);
+				handleAlert(dispatch, 'invalid');
 			}
 		} catch (err) {
-			console.log(err);
+			handleAlert(dispatch, 'fetchError');
 		}
 		dispatch(resetBoard());
 	}
@@ -127,11 +128,11 @@ export const validateBlock = createAsyncThunk(
 		).game;
 		const currentCoordinates = coordinates[id];
 		if (selectedBlocks.includes(String(coordinates))) {
-			handleAlert(dispatch, 'selected', 3000);
+			handleAlert(dispatch, 'selected');
 			return;
 		}
 		if (wordStarted && !possibleMoves.includes(String(currentCoordinates))) {
-			handleAlert(dispatch, 'adjacent', 3000);
+			handleAlert(dispatch, 'adjacent');
 			return;
 		}
 		if (selectedBlocks.length === 0) {

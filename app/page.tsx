@@ -1,25 +1,28 @@
-import generateLetters from '@/utils/generateLetters';
-import Row from '@/components/Row';
-import ResetButton from '@/components/ResetButton';
-import Score from '@/components/Score';
-import Alert from '@/components/Alert';
-import TimeToggle from '@/components/TimeToggle';
-import PlayWordButton from '@/components/PlayWordButton';
+import Buttons from '@/components/containers/Buttons';
+import Score from '@/components/views/Score';
+import Alert from '@/components/views/Alert';
+import Board from '@/components/containers/Board';
+import PlayedWords from '@/components/containers/PlayedWords';
+import TimeToggle from '@/components/views/TimeToggle';
 
 export default function Home() {
-	const letters = generateLetters();
-
-	const rows = letters.map((arr, i) => (
-		<Row id={`row-${i + 1}`} row={i + 1} key={i + 1} letters={arr} />
-	));
 	return (
-		<main>
-			<TimeToggle />
-			{rows}
-			<PlayWordButton />
-			<ResetButton />
-			<Score />
-			<Alert />
-		</main>
+		<>
+			<h2 className='text-4xl text-center my-5'>Woggle</h2>
+			<main className='flex w-full my-20'>
+				<section id='played-words' className='w-4/12'>
+					<PlayedWords />
+				</section>
+				<section id='board' className='flex flex-col items-center w-4/12'>
+					<Board />
+					<Buttons />
+					<Score />
+					<Alert />
+				</section>
+				<section className='flex flex-col w-4/12 items-center'>
+					<TimeToggle />
+				</section>
+			</main>
+		</>
 	);
 }

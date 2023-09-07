@@ -17,7 +17,7 @@
 
 .scene {
   margin: 5px;
-  perspective: 150px;
+  perspective: 170px;
 }
 
 .cube {
@@ -64,7 +64,7 @@
 
 .selected>* {
   transition: 0.5s;
-  background-image: none;
+  background-color: #fff06c;
 
   p {
     text-shadow: none;
