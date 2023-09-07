@@ -4,11 +4,12 @@ import { Middleware } from '@reduxjs/toolkit';
 import { startWord } from '../slices/gameSlice';
 import coordinates from '@/utils/coordinates';
 import handleAlert from '../helpers/handleAlert';
+import { RootState } from '../store';
 
 const validateBlockMiddleware: Middleware = (store) => (next) => (action) => {
 	if (action.type === 'game/selectLetter') {
 		const { selectedBlocks, wordStarted, possibleMoves } =
-			store.getState().game;
+			(store.getState() as RootState).game;
 		const { id } = action.payload;
 		const { dispatch } = store;
 		const currentCoordinates = coordinates[id];
@@ -16,8 +17,8 @@ const validateBlockMiddleware: Middleware = (store) => (next) => (action) => {
 			handleAlert(dispatch, 'selected');
 			return;
 		}
-
 		if (wordStarted && !possibleMoves.includes(String(currentCoordinates))) {
+			console.log(wordStarted, possibleMoves, currentCoordinates)
 			handleAlert(dispatch, 'adjacent');
 			return;
 		}

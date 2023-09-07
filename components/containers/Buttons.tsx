@@ -1,4 +1,4 @@
-import PlayWordButton from '../views/PlayWordButton';
+import PlayWordButton from '../views/PlayButton';
 import ResetButton from '../views/ResetButton';
 
 function Buttons() {
