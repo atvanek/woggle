@@ -18,4 +18,4 @@ export type GameState = {
 	timed: boolean;
 };
 
-export type AlertType = 'length' | 'played' | 'invalid' | 'selected' | 'adjacent' | 'validated'
+export type AlertType = 'length' | 'played' | 'invalid' | 'selected' | 'adjacent' | 'validated' | 'fetchError'

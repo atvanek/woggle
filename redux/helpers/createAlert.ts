@@ -36,6 +36,10 @@ function createAlert(
 			newAlert.type = 'success';
 			newAlert.message = `${word.toLowerCase()} successfully played!`;
 			break;
+		case 'fetchError':
+			newAlert.type = 'error';
+			newAlert.message = 'Error validating word. Please try again later.';
+			break;
 	}
 	return newAlert;
 }

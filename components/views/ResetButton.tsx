@@ -6,7 +6,14 @@ import { Button } from '@mui/material';
 
 function ResetButton() {
 	const dispatch = useRootDispatch();
-	return <Button onClick={() => dispatch(resetBoard())}>Reset Word</Button>;
+	return (
+		<Button
+			color='secondary'
+			variant='contained'
+			onClick={() => dispatch(resetBoard())}>
+			Reset
+		</Button>
+	);
 }
 
 export default ResetButton;

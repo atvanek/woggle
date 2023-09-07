@@ -109,13 +109,13 @@ export const validateWord = createAsyncThunk(
 			);
 			if (res.ok) {
 				dispatch(playWord());
+				handleAlert(dispatch, 'validated');
 			} else {
 				handleAlert(dispatch, 'invalid');
 			}
 		} catch (err) {
-			console.log(err);
+			handleAlert(dispatch, 'fetchError');
 		}
-		handleAlert(dispatch, 'validated');
 		dispatch(resetBoard());
 	}
 );

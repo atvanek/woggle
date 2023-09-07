@@ -64,7 +64,6 @@
 
 .selected>* {
   transition: 0.5s;
-  background-image: none;
 
   p {
     text-shadow: none;
