@@ -10,6 +10,7 @@ function ResetButton() {
 		<Button
 			color='secondary'
 			variant='contained'
+			sx={{ margin: 15 + 'px' }}
 			onClick={() => dispatch(resetBoard())}>
 			Reset
 		</Button>

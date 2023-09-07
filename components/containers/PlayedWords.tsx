@@ -6,13 +6,13 @@ function PlayedWords() {
 
 	return (
 		<div id='played-list' className='flex flex-col mx-24'>
-			<h3>Played words</h3>
+			<h3 className='text-xl mb-10'>Played Words</h3>
 			<div id='played-words'>
-				{[...playedWords].map((word) => {
+				{playedWords.map((word) => {
 					return (
 						<div key={word}>
 							{word.split('').map((letter) => {
-								return <span key={word}>{letter}</span>;
+								return <span key={word + 'block'}>{letter}</span>;
 							})}
 						</div>
 					);

@@ -77,7 +77,7 @@ const gameSlice = createSlice({
 			state.alert = {
 				active: false,
 				type: state.alert.type,
-				message: '',
+				message: state.alert.message,
 				timerId: null,
 			};
 		},

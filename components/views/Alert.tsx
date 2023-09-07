@@ -1,6 +1,6 @@
 'use client';
 
-import { Collapse, Alert, useTheme } from '@mui/material';
+import { Collapse, Alert } from '@mui/material';
 import { useRootSelector } from '@/redux/hooks';
 
 function Alerts() {

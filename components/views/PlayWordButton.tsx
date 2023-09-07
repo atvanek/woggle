@@ -7,7 +7,7 @@ import { Button } from '@mui/material';
 function PlayWordButton() {
 	const dispatch = useRootDispatch();
 	return (
-		<Button variant='contained' onClick={() => dispatch(validateWord())}>
+		<Button variant='contained' sx={{ margin: 15 + 'px' }} onClick={() => dispatch(validateWord())}>
 			Play
 		</Button>
 	);
