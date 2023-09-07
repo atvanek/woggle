@@ -7,6 +7,7 @@ import { RootState } from '../store';
 import calculateScore from '../helpers/calculateScore';
 import createAlert from '../helpers/createAlert';
 import { GameState } from '@/types/gameSliceTypes';
+import alertDisplayTime from '@/utils/alertDisplayTime';
 
 
 const initialState: GameState = {
@@ -77,7 +78,7 @@ const gameSlice = createSlice({
 		resetAlert: (state) => {
 			state.alert = {
 				active: false,
-				type: 'error',
+				type: state.alert.type,
 				message: '',
 				timerId: null,
 			};
@@ -96,11 +97,11 @@ export const validateWord = createAsyncThunk(
 	async (_, { getState, dispatch }) => {
 		const { currentWord, playedWords } = (getState() as RootState).game;
 		if (currentWord.length < 3) {
-			handleAlert(dispatch, 'length', 3000);
+			handleAlert(dispatch, 'length');
 			return;
 		}
 		if (playedWords.includes(currentWord)) {
-			handleAlert(dispatch, 'played', 3000);
+			handleAlert(dispatch, 'played');
 			return;
 		}
 		try {
@@ -111,11 +112,12 @@ export const validateWord = createAsyncThunk(
 			if (res.ok) {
 				dispatch(playWord());
 			} else {
-				handleAlert(dispatch, 'invalid', 3000);
+				handleAlert(dispatch, 'invalid');
 			}
 		} catch (err) {
 			console.log(err);
 		}
+		handleAlert(dispatch, 'validated')
 		dispatch(resetBoard());
 	}
 );

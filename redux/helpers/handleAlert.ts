@@ -1,9 +1,10 @@
 import { triggerAlert, resetAlert } from '../slices/gameSlice';
+import alertDisplayTime from '@/utils/alertDisplayTime';
 
-const handleAlert = (dispatch: any, type: string, duration: number) => {
+const handleAlert = (dispatch: any, type: string) => {
 	const timer = setTimeout(() => {
 		dispatch(resetAlert());
-	}, duration);
+	}, alertDisplayTime);
 	dispatch(triggerAlert({ type, newTimerId: timer }));
 };
 

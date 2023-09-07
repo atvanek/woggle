@@ -32,6 +32,10 @@ function createAlert(
 			newAlert.type = 'error';
 			newAlert.message = 'Please select adjacent box';
 			break;
+		case 'validated':
+			newAlert.type = 'success';
+			newAlert.message = `${word.toLowerCase()} successfully played!`;
+			break;
 	}
 	return newAlert;
 }

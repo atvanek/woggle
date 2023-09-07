@@ -13,12 +13,12 @@ const validateBlockMiddleware: Middleware = (store) => (next) => (action) => {
 		const { dispatch } = store;
 		const currentCoordinates = coordinates[id];
 		if (selectedBlocks.includes(String(currentCoordinates))) {
-			handleAlert(dispatch, 'selected', 3000);
+			handleAlert(dispatch, 'selected');
 			return;
 		}
 
 		if (wordStarted && !possibleMoves.includes(String(currentCoordinates))) {
-			handleAlert(dispatch, 'adjacent', 3000);
+			handleAlert(dispatch, 'adjacent');
 			return;
 		}
 		if (!selectedBlocks.length) {
