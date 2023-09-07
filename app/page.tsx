@@ -1,25 +1,19 @@
-import generateLetters from '@/utils/generateLetters';
-import Row from '@/components/views/Row';
-import ResetButton from '@/components/views/ResetButton';
-import PlayWordButton from '@/components/views/PlayWordButton';
+import Buttons from '@/components/containers/Buttons';
 import Score from '@/components/views/Score';
 import Alert from '@/components/views/Alert';
 import TimeToggle from '@/components/views/TimeToggle';
+import Board from '@/components/containers/Board';
 
 export default function Home() {
-	const letters = generateLetters();
-
-	const rows = letters.map((arr, i) => (
-		<Row id={`row-${i + 1}`} row={i + 1} key={i + 1} letters={arr} />
-	));
 	return (
 		<main>
-			<TimeToggle />
-			{rows}
-			<PlayWordButton />
-			<ResetButton />
-			<Score />
-			<Alert />
+			<section id='board' className='flex flex-col w-full items-center'>
+				<TimeToggle />
+				<Board />
+				<Buttons />
+				<Score />
+				<Alert />
+			</section>
 		</main>
 	);
 }
