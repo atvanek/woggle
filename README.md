@@ -1,4 +1,6 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Woggle
+
+Woogle is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app). Woggle uses [Redux Toolkit](https://redux-toolkit.js.org/) for state management and [Material UI](https://mui.com/) for pre-built components.
 
 ## Getting Started
 
