@@ -1,6 +1,6 @@
 'use client';
 
-import { createTheme } from '@mui/material/styles';
+import { createTheme, ThemeOptions } from '@mui/material/styles';
 
 const tealPalette = {
 	light: '#33ab9f',
@@ -16,13 +16,15 @@ const orangePalette = {
 	contrastText: '#fff',
 };
 
-const theme = createTheme({
+const options: ThemeOptions = {
 	palette: {
 		primary: tealPalette,
 		secondary: orangePalette,
 		success: tealPalette,
 		error: orangePalette,
 	},
-});
+};
+
+const theme = createTheme(options);
 
 export default theme;
