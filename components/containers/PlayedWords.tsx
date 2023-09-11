@@ -6,7 +6,7 @@ function PlayedWords() {
 
 	return (
 		<div id='played-list' className='flex flex-col mx-24'>
-			<h3 className='text-xl mb-10'>Played Words</h3>
+			<h3 className='text-xl mb-10 text-center'>Played Words</h3>
 			<div id='played-words'>
 				{playedWords.map((word) => {
 					return (
