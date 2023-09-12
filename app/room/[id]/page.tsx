@@ -1,6 +1,7 @@
 'use client';
 
 import { useParams } from 'next/navigation';
+import {io} from 'socket.io-client'
 
 function Page() {
 	const params = useParams();
