@@ -15,15 +15,22 @@ type EmojiDialogProps = {
 	open: boolean;
 	setOpen: Dispatch<SetStateAction<boolean>>;
 };
+import { useRouter } from 'next/navigation';
 
 interface EmojiClickEvent extends MouseEvent {
 	native: string;
+	name: string;
 }
 
 function EmojiDialog({ data, open, setOpen }: EmojiDialogProps) {
 	const [emoji, setEmoji] = useState('');
+	const router = useRouter();
+	function handleClose() {
+		setEmoji('');
+		setOpen(false);
+	}
 	return (
-		<Dialog open={open} onClose={() => setOpen(false)}>
+		<Dialog open={open} onClose={handleClose}>
 			<DialogTitle>Choose your Room</DialogTitle>
 			<DialogContent>
 				<DialogContentText>Select an emoji to pick a room!</DialogContentText>
@@ -32,7 +39,10 @@ function EmojiDialog({ data, open, setOpen }: EmojiDialogProps) {
 					onEmojiSelect={({ native }: EmojiClickEvent) => setEmoji(native)}
 				/>
 				<DialogContent>Room: {emoji}</DialogContent>
-				<Button variant='contained' disabled={!emoji}>
+				<Button
+					variant='contained'
+					disabled={!emoji}
+					onClick={() => router.push(`/room/${emoji}`)}>
 					Join Room {emoji}
 				</Button>
 			</DialogContent>
