@@ -4,15 +4,15 @@ import Alert from '@/components/views/Alert';
 import Board from '@/components/containers/Board';
 import PlayedWords from '@/components/containers/PlayedWords';
 import TimeToggle from '@/components/views/TimeToggle';
+import RoomPicker from '@/components/containers/RoomPickerContainer';
 
 export default function Home() {
 	return (
 		<>
 			<h2 className='text-4xl text-center my-5'>Woggle</h2>
+			<RoomPicker />
 			<main className='flex w-full my-20 max-md:flex-col sm:max-md:flex-wrap'>
-				<section
-					id='played-words'
-					className='w-4/12 min-w-min max-md:w-full'>
+				<section id='played-words' className='w-4/12 min-w-min max-md:w-full'>
 					<PlayedWords />
 				</section>
 				<section
