@@ -1,8 +1,7 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import { io } from 'socket.io-client';
-import { useEffect } from 'react';
+import useSocketConnect from '@/hooks/useSocketConnect';
 
 export async function generateStaticParams() {
 	const params: string[] = [];
@@ -23,24 +22,10 @@ export async function generateStaticParams() {
 }
 
 function Page() {
-	const WS_SERVER_URL = (
-		process.env.NODE_ENV === 'production'
-			? process.env.NEXT_PUBLIC_PROD_WS_SERVER
-			: process.env.NEXT_PUBLIC_DEV_WS_SERVER
-	) as string;
 	const params = useParams();
 	const id = params.id as string;
-	const socket = io(WS_SERVER_URL);
-	useEffect(() => {
-		socket.on('connect', () => {
-			console.log('connected');
-		});
-		return () => {
-			socket.removeAllListeners();
-			socket.disconnect();
-		};
-	}, [socket]);
-	return <p>You are in room {decodeURI(id)}</p>;
+	const { message } = useSocketConnect(id);
+	return <p>{message}</p>;
 }
 
 export default Page;
