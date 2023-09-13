@@ -28,7 +28,6 @@ function Page() {
 			? process.env.NEXT_PUBLIC_PROD_WS_SERVER
 			: process.env.NEXT_PUBLIC_DEV_WS_SERVER
 	) as string;
-	console.log(WS_SERVER_URL);
 	const params = useParams();
 	const id = params.id as string;
 	const socket = io(WS_SERVER_URL);
