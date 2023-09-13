@@ -1,20 +1,21 @@
+import RoomContainer from '@/components/containers/RoomContainer';
+
 export async function generateStaticParams() {
 	const params: { id: string }[] = [];
 
-	const posts = await fetch(
+	const data = await fetch(
 		'https://cdn.jsdelivr.net/npm/@emoji-mart/data'
 	).then((res) => res.json());
 
-	for (const key in await posts.emojis) {
+	for (const key in await data.emojis) {
 		params.push({ id: key });
 	}
 	return params;
 }
 
-function Page({ params }: any) {
+function Page({ params }: { params: { id: string } }) {
 	const { id } = params;
-	// const { message } = useSocketConnect(id);
-	return <p>You are in room {id}</p>;
+	return <RoomContainer id={id} />;
 }
 
 export default Page;
