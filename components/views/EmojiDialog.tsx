@@ -53,7 +53,7 @@ function EmojiDialog({ data, open, setOpen }: EmojiDialogProps) {
 				<Button
 					variant='contained'
 					disabled={!emoji.native}
-					onClick={() => router.push(`/room/${emoji}`)}>
+					onClick={() => router.push(`/room/${emoji.id}`)}>
 					Join Room {emoji.native}
 				</Button>
 			</DialogContent>
