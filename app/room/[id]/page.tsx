@@ -24,7 +24,7 @@ export async function generateStaticParams() {
 
 function Page() {
 	const WS_SERVER_URL = (
-		process.env.NODE_ENV === 'development'
+		process.env.NODE_ENV === 'production'
 			? process.env.NEXT_PUBLIC_PROD_WS_SERVER
 			: process.env.NEXT_PUBLIC_DEV_WS_SERVER
 	) as string;
