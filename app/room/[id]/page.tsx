@@ -1,31 +1,20 @@
-'use client';
-
-import { useParams } from 'next/navigation';
-import useSocketConnect from '@/hooks/useSocketConnect';
-
 export async function generateStaticParams() {
-	const params: string[] = [];
+	const params: { id: string }[] = [];
 
 	const posts = await fetch(
 		'https://cdn.jsdelivr.net/npm/@emoji-mart/data'
 	).then((res) => res.json());
 
 	for (const key in await posts.emojis) {
-		params.push(key);
+		params.push({ id: key });
 	}
-
 	return params;
-
-	// return posts.map((post) => ({
-	// 	slug: post.slug,
-	// }));
 }
 
-function Page() {
-	const params = useParams();
-	const id = params.id as string;
-	const { message } = useSocketConnect(id);
-	return <p>{message}</p>;
+function Page({ params }: any) {
+	const { id } = params;
+	// const { message } = useSocketConnect(id);
+	return <p>You are in room {id}</p>;
 }
 
 export default Page;
