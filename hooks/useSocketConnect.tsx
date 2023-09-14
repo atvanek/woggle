@@ -24,11 +24,10 @@ function useSocketConnect(id: string) {
 
 	useEffect(() => {
 		if (!socket) {
-			let newSocket = io(WS_SERVER_URL, {
-				transports: ['websocket', 'polling'],
-			});
+			let newSocket = io(WS_SERVER_URL);
 
 			newSocket.on('connect', () => {
+				console.log('connect')
 				setLoading(false);
 				setMessage(`You are in room ${id}`);
 			});
