@@ -30,26 +30,30 @@ function useSocketConnect(id: string) {
 		if (!socket) {
 			let newSocket = io(WS_SERVER_URL);
 			newSocket.on('connect', () => {
+				console.log('client connected')
 				setSocketId(newSocket.id);
 				setLoading(false);
 				setMessage(`You are in room ${id}`);
 				newSocket.emit('join-room', user, id, newSocket.id);
-				setSocketId(newSocket.id)
+				setSocketId(newSocket.id);
 			});
 			newSocket.io.on('error', () => {
 				setError(true);
 				setLoading(false);
 				setMessage('Error connecting to server. Please try again later.');
 			});
-		
+
 			setSocket(newSocket);
 		}
 		//cleans up listeners and closes socket
 		return () => {
-			socket?.removeAllListeners();
-			socket?.disconnect();
+			if (socket) {
+				console.log('client disconnected');
+				socket?.removeAllListeners();
+				socket?.disconnect();
+			}
 		};
-	}, [socket, id, WS_SERVER_URL, user, socketId]);
+	}, [socket]);
 
 	return { error, loading, message };
 }
