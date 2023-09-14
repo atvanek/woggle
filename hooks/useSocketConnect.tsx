@@ -14,7 +14,10 @@ function useSocketConnect(id: string) {
 	const [loading, setLoading] = useState(false);
 	const [message, setMessage] = useState('Connecting to your room...');
 	const [socket, setSocket] = useState<Socket | null>(null);
+	const [socketId, setSocketId] = useState<string | null>(null);
+	const [user, setUser] = useState<string>('guest');
 
+	//handles loading state
 	useEffect(() => {
 		setLoading(true);
 		return () => {
@@ -22,26 +25,32 @@ function useSocketConnect(id: string) {
 		};
 	}, []);
 
+	//checks for ws connection & adds listeners
 	useEffect(() => {
 		if (!socket) {
 			let newSocket = io(WS_SERVER_URL);
-
 			newSocket.on('connect', () => {
+				setSocketId(newSocket.id);
 				setLoading(false);
 				setMessage(`You are in room ${id}`);
+				newSocket.emit('join-room', user, id, newSocket.id);
+				setSocketId(newSocket.id)
 			});
 			newSocket.io.on('error', () => {
 				setError(true);
 				setLoading(false);
 				setMessage('Error connecting to server. Please try again later.');
 			});
+		
 			setSocket(newSocket);
 		}
+		//cleans up listeners and closes socket
 		return () => {
 			socket?.removeAllListeners();
 			socket?.disconnect();
 		};
-	}, [socket, id, WS_SERVER_URL]);
+	}, [socket, id, WS_SERVER_URL, user, socketId]);
+
 	return { error, loading, message };
 }
 export default useSocketConnect;
