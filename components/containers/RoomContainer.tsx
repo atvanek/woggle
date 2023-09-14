@@ -2,8 +2,8 @@
 
 import useSocketConnect from '@/hooks/useSocketConnect';
 
-function RoomContainer({ id }: { id: string }) {
-	const { error, loading } = useSocketConnect(id);
+function RoomContainer({ emoji}: { emoji: string }) {
+	const { error, loading } = useSocketConnect(emoji);
 	let statusMessage: JSX.Element;
 	if (loading) {
 		statusMessage = <p>Connecting to your room...</p>;
@@ -15,7 +15,7 @@ function RoomContainer({ id }: { id: string }) {
 
 	return (
 		<>
-			<p>Room {id}</p>
+			<p>Room {decodeURIComponent(emoji)}</p>
 			{statusMessage}
 		</>
 	);

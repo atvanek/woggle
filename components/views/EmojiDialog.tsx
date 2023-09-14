@@ -16,6 +16,7 @@ type EmojiDialogProps = {
 	setOpen: Dispatch<SetStateAction<boolean>>;
 };
 import { useRouter } from 'next/navigation';
+import { toUnicode } from 'punycode';
 
 interface EmojiClickEvent extends MouseEvent, Emoji {}
 
@@ -53,7 +54,7 @@ function EmojiDialog({ data, open, setOpen }: EmojiDialogProps) {
 				<Button
 					variant='contained'
 					disabled={!emoji.native}
-					onClick={() => router.push(`/room/${emoji.id}`)}>
+					onClick={() => router.push(`/room/${emoji.native}`)}>
 					Join Room {emoji.native}
 				</Button>
 			</DialogContent>

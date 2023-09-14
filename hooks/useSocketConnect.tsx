@@ -3,7 +3,7 @@
 import { io, Socket } from 'socket.io-client';
 import { useEffect, useState } from 'react';
 
-function useSocketConnect(id: string) {
+function useSocketConnect(emoji: string) {
 	const WS_SERVER_URL = (
 		process.env.NODE_ENV === 'production'
 			? process.env.NEXT_PUBLIC_PROD_WS_SERVER
@@ -33,8 +33,8 @@ function useSocketConnect(id: string) {
 				console.log('client connected')
 				setSocketId(newSocket.id);
 				setLoading(false);
-				setMessage(`You are in room ${id}`);
-				newSocket.emit('join-room', user, id, newSocket.id);
+				setMessage(`You are in room ${emoji}`);
+				newSocket.emit('join-room', user, emoji, newSocket.id);
 				setSocketId(newSocket.id);
 			});
 			newSocket.io.on('error', () => {
