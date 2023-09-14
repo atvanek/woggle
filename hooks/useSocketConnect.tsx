@@ -24,7 +24,9 @@ function useSocketConnect(id: string) {
 
 	useEffect(() => {
 		if (!socket) {
-			let newSocket = io(WS_SERVER_URL);
+			let newSocket = io(WS_SERVER_URL, {
+				transports: ['websocket', 'polling'],
+			});
 
 			newSocket.on('connect', () => {
 				setLoading(false);
