@@ -27,7 +27,6 @@ function useSocketConnect(id: string) {
 			let newSocket = io(WS_SERVER_URL);
 
 			newSocket.on('connect', () => {
-				console.log('connect')
 				setLoading(false);
 				setMessage(`You are in room ${id}`);
 			});
@@ -39,10 +38,8 @@ function useSocketConnect(id: string) {
 			setSocket(newSocket);
 		}
 		return () => {
-			if (socket) {
-				socket.removeAllListeners();
-				socket.disconnect();
-			}
+			socket?.removeAllListeners();
+			socket?.disconnect();
 		};
 	}, [socket, id, WS_SERVER_URL]);
 	return { error, loading, message };
