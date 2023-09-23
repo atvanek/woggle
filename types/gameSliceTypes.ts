@@ -19,3 +19,5 @@ export type GameState = {
 };
 
 export type AlertType = 'length' | 'played' | 'invalid' | 'selected' | 'adjacent' | 'validated' | 'fetchError'
+
+export type Letters = string[][]

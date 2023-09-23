@@ -1,4 +1,4 @@
-import RoomContainer from '@/components/containers/RoomContainer';
+import RoomWithParams from "@/components/containers/RoomWithParams";
 
 export async function generateStaticParams() {
 	const params: { emoji: string }[] = [];
@@ -14,7 +14,7 @@ export async function generateStaticParams() {
 
 function Page({ params }: { params: { emoji: string } }) {
 	const { emoji } = params;
-	return <RoomContainer emoji={emoji} />;
+	return <RoomWithParams emoji={emoji} />;
 }
 
 export default Page;
