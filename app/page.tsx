@@ -6,6 +6,7 @@ import Board from '@/components/containers/Board';
 import TimeToggle from '@/components/views/TimeToggle';
 
 async function getLetters() {
+	console.log(SERVER_URL);
 	const res: Response = await fetch(`${SERVER_URL}/letters`);
 	const letters: Promise<Letters> = await res.json();
 	return letters;
