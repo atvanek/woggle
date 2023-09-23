@@ -1,4 +1,4 @@
-import { Alert } from "@/types/types";
+import { Alert } from "@/types/gameSliceTypes";
 
 function generateAlert(type: string, newTimerId: NodeJS.Timeout, currentWord: string): Alert {
   const newAlert: Alert = {
