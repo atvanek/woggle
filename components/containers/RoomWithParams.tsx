@@ -2,7 +2,8 @@
 
 import useSocket from '@/hooks/useSocket';
 import { Button } from '@mui/material';
-import Board from '../views/Board';
+import Board from './Board';
+import Grid from '../views/Grid';
 
 function RoomWithParams({ emoji }: { emoji: string }) {
 	const { error, loading, socket, serverLetters } = useSocket(emoji);

@@ -1,12 +1,17 @@
-import Buttons from '@/components/containers/Buttons';
-import Score from '@/components/views/Score';
-import Alert from '@/components/views/Alert';
-import Board from '@/components/containers/BoardWithLetters';
 import PlayedWords from '@/components/containers/PlayedWords';
 import TimeToggle from '@/components/views/TimeToggle';
 import RoomPicker from '@/components/containers/RoomPickerContainer';
+import Board from '@/components/containers/Board';
+import SERVER_URL from '@/utils/serverURL';
 
-export default function Home() {
+async function getLetters() {
+	const res = await fetch(`${SERVER_URL}/letters`);
+	const letters = await res.json();
+	return letters;
+}
+
+export default async function Home() {
+	const letters = await getLetters();
 	return (
 		<>
 			<h2 className='text-4xl text-center my-5'>Woggle</h2>
@@ -18,10 +23,7 @@ export default function Home() {
 				<section
 					id='board'
 					className='flex flex-col items-center w-4/12 min-w-min max-md:w-full'>
-					<Board />
-					<Buttons />
-					<Score />
-					<Alert />
+					<Board letters={letters} />
 				</section>
 				<section className='flex flex-col w-4/12 items-center min-w-min max-md:w-full'>
 					<TimeToggle />
