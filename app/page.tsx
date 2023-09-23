@@ -4,6 +4,7 @@ import PlayedWords from '@/components/containers/PlayedWords';
 import Board from '@/components/containers/Board';
 import TimeToggle from '@/components/views/TimeToggle';
 import SERVER_URL from '@/utils/serverURL';
+import type { Data } from 'emoji-mart/dist-es/utils/data.d.ts';
 
 async function getLetters() {
 	const res: Response = await fetch(`${SERVER_URL}/letters`);
@@ -12,8 +13,10 @@ async function getLetters() {
 }
 
 async function getEmojiData() {
-	const res = await fetch('https://cdn.jsdelivr.net/npm/@emoji-mart/data');
-	const data = await res.json();
+	const res: Response = await fetch(
+		'https://cdn.jsdelivr.net/npm/@emoji-mart/data'
+	);
+	const data: Promise<Data> = await res.json();
 	return data;
 }
 
