@@ -1,12 +1,14 @@
 import { Letters } from '@/types/gameSliceTypes';
-import SERVER_URL from '@/utils/serverURL';
 import RoomPicker from '@/components/containers/RoomPicker';
 import PlayedWords from '@/components/containers/PlayedWords';
 import Board from '@/components/containers/Board';
 import TimeToggle from '@/components/views/TimeToggle';
 
 async function getLetters() {
-	console.log(SERVER_URL);
+	const SERVER_URL =
+	process.env.NEXT_PUBLIC_NODE_ENV === 'development'
+		? (process.env.NEXT_PUBLIC_DEV_WS_SERVER as string)
+		: (process.env.NEXT_PUBLIC_PROD_WS_SERVER as string);
 	const res: Response = await fetch(`${SERVER_URL}/letters`);
 	const letters: Promise<Letters> = await res.json();
 	return letters;
