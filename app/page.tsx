@@ -1,12 +1,13 @@
-import PlayedWords from '@/components/containers/PlayedWords';
-import TimeToggle from '@/components/views/TimeToggle';
-import RoomPicker from '@/components/containers/RoomPickerContainer';
-import Board from '@/components/containers/Board';
+import { Letters } from '@/types/gameSliceTypes';
 import SERVER_URL from '@/utils/serverURL';
+import RoomPicker from '@/components/containers/RoomPicker';
+import PlayedWords from '@/components/containers/PlayedWords';
+import Board from '@/components/containers/Board';
+import TimeToggle from '@/components/views/TimeToggle';
 
 async function getLetters() {
-	const res = await fetch(`${SERVER_URL}/letters`);
-	const letters = await res.json();
+	const res: Response = await fetch(`${SERVER_URL}/letters`);
+	const letters: Promise<Letters> = await res.json();
 	return letters;
 }
 
