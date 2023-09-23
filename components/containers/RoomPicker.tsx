@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Button } from '@mui/material';
 import EmojiDialog from '../views/EmojiDialog';
 
-function RoomPicker({ data }: any) {
+function RoomPicker({ emojiData }: any) {
 	const [open, setOpen] = useState(false);
 
 	return (
@@ -12,7 +12,7 @@ function RoomPicker({ data }: any) {
 			<Button variant='contained' onClick={() => setOpen(true)}>
 				Join Room
 			</Button>
-			<EmojiDialog data={data} open={open} setOpen={setOpen} />
+			<EmojiDialog data={emojiData} open={open} setOpen={setOpen} />
 		</div>
 	);
 }

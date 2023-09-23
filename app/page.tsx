@@ -11,12 +11,19 @@ async function getLetters() {
 	return letters;
 }
 
+async function getEmojiData() {
+	const res = await fetch('https://cdn.jsdelivr.net/npm/@emoji-mart/data');
+	const data = await res.json();
+	return data;
+}
+
 export default async function Home() {
 	const letters = await getLetters();
+	const emojiData = await getEmojiData();
 	return (
 		<>
 			<h2 className='text-4xl text-center my-5'>Woggle</h2>
-			<RoomPicker />
+			<RoomPicker emojiData={emojiData} />
 			<main className='flex w-full my-20 max-md:flex-col sm:max-md:flex-wrap'>
 				<section id='played-words' className='w-4/12 min-w-min max-md:w-full'>
 					<PlayedWords />
