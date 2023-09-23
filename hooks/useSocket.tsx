@@ -3,7 +3,7 @@
 import { io, Socket } from 'socket.io-client';
 import { useEffect, useState } from 'react';
 
-function useSocketConnect(emoji: string) {
+function useSocket(emoji: string) {
 	const WS_SERVER_URL = (
 		process.env.NODE_ENV === 'production'
 			? process.env.NEXT_PUBLIC_PROD_WS_SERVER
@@ -57,4 +57,4 @@ function useSocketConnect(emoji: string) {
 
 	return { error, loading, message };
 }
-export default useSocketConnect;
+export default useSocket;

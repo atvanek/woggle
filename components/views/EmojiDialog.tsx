@@ -6,6 +6,7 @@ import {
 	DialogContent,
 	DialogContentText,
 	Button,
+	CircularProgress,
 } from '@mui/material';
 import Picker from '@emoji-mart/react';
 import { Dispatch, SetStateAction, useState, MouseEvent } from 'react';
@@ -16,7 +17,6 @@ type EmojiDialogProps = {
 	setOpen: Dispatch<SetStateAction<boolean>>;
 };
 import { useRouter } from 'next/navigation';
-import { toUnicode } from 'punycode';
 
 interface EmojiClickEvent extends MouseEvent, Emoji {}
 
@@ -34,6 +34,7 @@ const initialEmoji = {
 
 function EmojiDialog({ data, open, setOpen }: EmojiDialogProps) {
 	const [emoji, setEmoji] = useState<Emoji>(initialEmoji);
+	const [navigating, setNavigating] = useState<boolean>(false);
 	const router = useRouter();
 	function handleClose() {
 		setEmoji(initialEmoji);
@@ -54,8 +55,12 @@ function EmojiDialog({ data, open, setOpen }: EmojiDialogProps) {
 				<Button
 					variant='contained'
 					disabled={!emoji.native}
-					onClick={() => router.push(`/room/${emoji.native}`)}>
-					Join Room {emoji.native}
+					onClick={() => {
+						setNavigating(true);
+						router.push(`/room/${emoji.native}`);
+					}}>
+					<CircularProgress sx={{ width: 20 + 'px', height: 20 + 'px' }} />
+					JOIN ROOM {navigating ? <CircularProgress /> : emoji.native}
 				</Button>
 			</DialogContent>
 		</Dialog>

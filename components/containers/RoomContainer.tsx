@@ -1,6 +1,6 @@
 'use client'
 
-import useSocketConnect from '@/hooks/useSocketConnect';
+import useSocketConnect from '@/hooks/useSocket';
 
 function RoomContainer({ emoji}: { emoji: string }) {
 	const { error, loading } = useSocketConnect(emoji);
