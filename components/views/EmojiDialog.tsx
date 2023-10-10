@@ -64,7 +64,7 @@ function EmojiDialog({ data, open, setOpen }: EmojiDialogProps) {
 					JOIN ROOM {emoji.native}
 				</Button>
 			</DialogContent>
-			{navigating && <LinearProgress />}
+			<div className="h-1">{navigating && <LinearProgress />}</div>
 		</Dialog>
 	);
 }
